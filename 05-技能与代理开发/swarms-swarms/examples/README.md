@@ -1,0 +1,475 @@
+# Swarms Examples
+
+This directory contains comprehensive examples demonstrating various capabilities and use cases of the Swarms framework. Each subdirectory focuses on specific aspects of multi-agent systems, single agents, tools, and integrations.
+
+## Directory Overview
+
+### Multi-Agent Systems
+
+| Example | Description |
+|---------|-------------|
+| [multi_agent/](multi_agent/) | Advanced multi-agent patterns including agent rearrangement, auto swarm builder (ASB), batched workflows, caching, concurrent processing, councils, debates, elections, forest swarms, graph workflows, group chats, heavy swarms, hierarchical swarms, LLM council, majority voting, orchestration examples, paper implementations, sequential workflows, social algorithms, simulations, spreadsheet examples, swarm routing, and utilities |
+| [README.md](multi_agent/README.md) | Complete multi-agent examples documentation |
+| [duo_agent.py](multi_agent/duo_agent.py) | Two-agent collaboration example |
+| [tree_swarm_new_updates.py](multi_agent/tree_swarm_new_updates.py) | Tree swarm implementation with latest updates |
+| [agent_rearrange_examples/](multi_agent/agent_rearrange_examples/) | Agent rearrangement and reorganization examples |
+| [agent_router_examples/](multi_agent/agent_router_examples/) | Agent routing and routing patterns |
+| [asb/](multi_agent/asb/) | Auto Swarm Builder (ASB) examples and implementations |
+| [batched_grid_workflow/](multi_agent/batched_grid_workflow/) | Batched grid workflow examples |
+| [caching_examples/](multi_agent/caching_examples/) | Agent caching examples |
+| [concurrent_examples/](multi_agent/concurrent_examples/) | Concurrent processing and parallel execution examples |
+| [council/](multi_agent/council/) | Council pattern examples with judge evaluation |
+| [council_of_judges/](multi_agent/council_of_judges/) | Council of judges pattern implementations |
+| [debate_examples/](multi_agent/debate_examples/) | Multi-agent debate and discussion examples |
+| [election_swarm_examples/](multi_agent/election_swarm_examples/) | Election and voting swarm examples |
+| [exec_utilities/](multi_agent/exec_utilities/) | Execution utilities including uvloop examples |
+| [forest_swarm_examples/](multi_agent/forest_swarm_examples/) | Forest swarm and tree-based swarm examples |
+| [graphworkflow_examples/](multi_agent/graphworkflow_examples/) | Graph workflow and graph-based processing examples |
+| [groupchat/](multi_agent/groupchat/) | Asynchronous self-selecting group chat examples where agents independently decide whether to respond |
+| [heavy_swarm_examples/](multi_agent/heavy_swarm_examples/) | Heavy swarm implementations for complex tasks |
+| [hiearchical_swarm/](multi_agent/hiearchical_swarm/) | Hierarchical swarm structures and patterns |
+| [hscf/](multi_agent/hscf/) | Hierarchical Swarm Control Framework examples |
+| [llm_council_examples/](multi_agent/llm_council_examples/) | LLM Council collaboration patterns |
+| [majority_voting/](multi_agent/majority_voting/) | Majority voting and consensus examples |
+| [mar/](multi_agent/mar/) | Multi-agent rearrangement examples |
+| [moa_examples/](multi_agent/moa_examples/) | Mixture of Agents (MOA) examples |
+| [orchestration_examples/](multi_agent/orchestration_examples/) | Agent orchestration and coordination examples |
+| [paper_implementations/](multi_agent/paper_implementations/) | Research paper implementations |
+| [sequential_workflow/](multi_agent/sequential_workflow/) | Sequential workflow examples |
+| [simulations/](multi_agent/simulations/) | Multi-agent simulation examples |
+| [social_algorithms_examples/](multi_agent/social_algorithms_examples/) | Social algorithm patterns and implementations |
+| [spreadsheet_examples/](multi_agent/spreadsheet_examples/) | Spreadsheet-based agent examples |
+| [swarm_router/](multi_agent/swarm_router/) | Swarm routing and routing patterns |
+| [swarmarrange/](multi_agent/swarmarrange/) | Swarm arrangement examples |
+| [swarms_api_examples/](multi_agent/swarms_api_examples/) | Swarms API integration examples |
+| [utils/](multi_agent/utils/) | Multi-agent utility functions |
+
+### Single Agent Systems
+
+| Example | Description |
+|---------|-------------|
+| [single_agent/README.md](single_agent/README.md) | Full index of single-agent examples |
+| [getting_started/](single_agent/getting_started/) | First runs: minimal agent, interactive mode, onboarding |
+| [getting_started/simple_agent.py](single_agent/getting_started/simple_agent.py) | Basic single agent example |
+| [getting_started/interactive.py](single_agent/getting_started/interactive.py) | Interactive REPL-style agent |
+| [capabilities/tools/](single_agent/capabilities/tools/) | Tool integration: MCP, Exa search, LiteLLM, multi-tool, Solana, structured outputs, browser agents |
+| [capabilities/skills/](single_agent/capabilities/skills/) | Agent skills: dynamic, custom, and pre-built (code review, data viz, financial analysis) |
+| [capabilities/rag/](single_agent/capabilities/rag/) | Retrieval-augmented generation with Pinecone and Qdrant |
+| [capabilities/vision/](single_agent/capabilities/vision/) | Vision and multimodal agents, batch image processing |
+| [capabilities/streaming/](single_agent/capabilities/streaming/) | Token streaming, streaming with tools and loops |
+| [capabilities/prompt_caching/](single_agent/capabilities/prompt_caching/) | Provider-side prompt caching (Anthropic, OpenAI) |
+| [reasoning/](single_agent/reasoning/) | Reasoning agents: judges, consistency, iterative, reasoning duo/router |
+| [autonomy/autonomous_agents/](single_agent/autonomy/autonomous_agents/) | Autonomous loops, sub-agents, `run_bash` looper |
+| [autonomy/handoffs/](single_agent/autonomy/handoffs/) | Agent-to-agent handoffs |
+| [integrations/marketplace/](single_agent/integrations/marketplace/) | Marketplace prompts and publishing agents to the marketplace |
+| [integrations/external_agents/](single_agent/integrations/external_agents/) | Bridges to external agent systems |
+| [demos/](single_agent/demos/) | Applied demos: insurance, persistent legal agent |
+| [utils/](single_agent/utils/) | Config, output formats, autosaving, prompt transforms |
+| _Model/provider examples (Azure, Claude, DeepSeek, Mistral, OpenAI, Qwen, …)_ | Moved to [models/](models/) — see [models/README.md](models/README.md) |
+
+### Tools & Integrations
+
+| Example | Description |
+|---------|-------------|
+| [tools/](tools/) | Tool integration examples including agent-as-tools, base tool implementations, browser automation, Claude integration, Exa search, Firecrawl, multi-tool usage, and Stagehand integration |
+| [README.md](tools/README.md) | Complete tools examples documentation |
+| [agent_as_tools.py](tools/agent_as_tools.py) | Using agents as tools |
+| [browser_use_as_tool.py](tools/browser_use_as_tool.py) | Browser automation tool |
+| [browser_use_demo.py](tools/browser_use_demo.py) | Browser automation demonstration |
+| [claude_as_a_tool.py](tools/claude_as_a_tool.py) | Claude model integration as a tool |
+| [exa_search_agent.py](tools/exa_search_agent.py) | Exa search integration |
+| [exa_search_agent_quant.py](tools/exa_search_agent_quant.py) | Exa search with quantitative analysis |
+| [exa_search_test.py](tools/exa_search_test.py) | Exa search testing examples |
+| [firecrawl_agents_example.py](tools/firecrawl_agents_example.py) | Firecrawl integration |
+| [base_tool_examples/](tools/base_tool_examples/) | Base tool implementation examples |
+| [base_tool_examples.py](tools/base_tool_examples/base_tool_examples.py) | Base tool examples |
+| [conver_funcs_to_schema.py](tools/base_tool_examples/conver_funcs_to_schema.py) | Convert functions to schema |
+| [exa_search_test.py](tools/base_tool_examples/exa_search_test.py) | Exa search test |
+| [example_usage.py](tools/base_tool_examples/example_usage.py) | Base tool usage example |
+| [schema_validation_example.py](tools/base_tool_examples/schema_validation_example.py) | Schema validation example |
+| [test_anthropic_specific.py](tools/base_tool_examples/test_anthropic_specific.py) | Anthropic-specific test |
+| [test_base_tool_comprehensive_fixed.py](tools/base_tool_examples/test_base_tool_comprehensive_fixed.py) | Comprehensive base tool test (fixed) |
+| [test_base_tool_comprehensive.py](tools/base_tool_examples/test_base_tool_comprehensive.py) | Comprehensive base tool test |
+| [test_function_calls_anthropic.py](tools/base_tool_examples/test_function_calls_anthropic.py) | Function calls test (Anthropic) |
+| [test_function_calls.py](tools/base_tool_examples/test_function_calls.py) | Function calls test |
+| [multii_tool_use/](tools/multii_tool_use/) | Multi-tool usage examples |
+| [stagehand/](tools/stagehand/) | Stagehand UI automation |
+| [1_stagehand_wrapper_agent.py](tools/stagehand/1_stagehand_wrapper_agent.py) | Stagehand wrapper agent |
+| [2_stagehand_tools_agent.py](tools/stagehand/2_stagehand_tools_agent.py) | Stagehand tools agent |
+| [3_stagehand_mcp_agent.py](tools/stagehand/3_stagehand_mcp_agent.py) | Stagehand MCP agent |
+| [4_stagehand_multi_agent_workflow.py](tools/stagehand/4_stagehand_multi_agent_workflow.py) | Stagehand multi-agent workflow |
+| [tests/](tools/stagehand/tests/) | Stagehand tests |
+| [test_stagehand_integration.py](tools/stagehand/tests/test_stagehand_integration.py) | Stagehand integration test |
+| [test_stagehand_simple.py](tools/stagehand/tests/test_stagehand_simple.py) | Simple Stagehand test |
+
+### API & Protocols
+
+#### Swarms API
+
+| Example | Description |
+|---------|-------------|
+| [swarms_api/](swarms_api/) | Swarms API usage examples including agent overview, batch processing, client integration, team examples, analysis, and rate limiting |
+| [README.md](swarms_api/README.md) | API examples documentation |
+| [agent_overview.py](swarms_api/agent_overview.py) | Agent overview and listing examples |
+| [client_example.py](swarms_api/client_example.py) | API client example |
+| [batch_example.py](swarms_api/batch_example.py) | Batch processing example |
+| [hospital_team.py](swarms_api/hospital_team.py) | Hospital management team simulation |
+| [legal_team.py](swarms_api/legal_team.py) | Legal team collaboration example |
+| [icd_ten_analysis.py](swarms_api/icd_ten_analysis.py) | ICD-10 medical code analysis |
+| [rate_limits.py](swarms_api/rate_limits.py) | Rate limiting and throttling examples |
+
+#### Model Context Protocol (MCP)
+
+| Example | Description |
+|---------|-------------|
+| [mcp/](mcp/) | Model Context Protocol (MCP) integration examples, split into agents / servers / client |
+| [README.md](mcp/README.md) | Start here — which folder to use and a 30-second example |
+| [agents/](mcp/agents/) | **Give an agent tools from an MCP server** |
+| [01_deepwiki_repo_qa.py](mcp/agents/01_deepwiki_repo_qa.py) | Quickstart: agent + DeepWiki, no API key needed |
+| [02_gitmcp_repo_docs.py](mcp/agents/02_gitmcp_repo_docs.py) | Agent + GitMCP for any public repo's docs/code |
+| [03_microsoft_learn_docs.py](mcp/agents/03_microsoft_learn_docs.py) | Agent + Microsoft Learn official docs |
+| [04_multi_server_agent.py](mcp/agents/04_multi_server_agent.py) | One agent, two MCP servers at once |
+| [05_exa_web_search.py](mcp/agents/05_exa_web_search.py) | Agent + Exa web search (free API key) |
+| [FREE_MCP_SERVERS.md](mcp/agents/FREE_MCP_SERVERS.md) | Catalog of real public MCP servers |
+| [deepwiki_minimal.py](mcp/agents/deepwiki_minimal.py) | Smallest possible `mcp_url` agent |
+| [mcp_connection_object.py](mcp/agents/mcp_connection_object.py) | `MCPConnection` with headers, auth, timeout |
+| [multi_mcp_urls.py](mcp/agents/multi_mcp_urls.py) | `mcp_urls=[...]` for several servers |
+| [multi_mcp_walkthrough.py](mcp/agents/multi_mcp_walkthrough.py) | Longer annotated multi-server walkthrough |
+| [mcp_with_local_tools.py](mcp/agents/mcp_with_local_tools.py) | MCP tools plus your own Python tool schemas |
+| [tools_list_dictionary.py](mcp/agents/tools_list_dictionary.py) | The raw tool-schema format MCP tools become |
+| [finance_agent_mcp.py](mcp/agents/finance_agent_mcp.py) | Realistic finance agent backed by MCP |
+| [servers/](mcp/servers/) | **Build an MCP server agents connect to** |
+| [crypto_price_server.py](mcp/servers/crypto_price_server.py) | FastMCP server exposing crypto prices |
+| [okx_crypto_server.py](mcp/servers/okx_crypto_server.py) | OKX price server (port 8001) |
+| [agent_as_tool_server.py](mcp/servers/agent_as_tool_server.py) | Expose a whole swarms Agent as one MCP tool |
+| [streamable_http_server.py](mcp/servers/streamable_http_server.py) | Stateful vs stateless streamable-HTTP config |
+| [client/](mcp/client/) | **Call MCP directly with `MCPManager`, no Agent** |
+| [01_list_tools.py](mcp/client/01_list_tools.py) | Discover a server's tools; OpenAI vs MCP schema format |
+| [02_call_tool.py](mcp/client/02_call_tool.py) | Call one tool by name, sync and async |
+| [03_execute_llm_tool_calls.py](mcp/client/03_execute_llm_tool_calls.py) | Execute the tool calls in an LLM response |
+| [04_multi_server.py](mcp/client/04_multi_server.py) | Several servers, automatic per-tool routing |
+| [05_auth_and_config.py](mcp/client/05_auth_and_config.py) | API keys, bearer tokens, headers, env secrets, OAuth |
+| [06_remote_agents.py](mcp/client/06_remote_agents.py) | Spawn and run agents on a remote MCP server |
+
+### Advanced Capabilities
+
+| Example | Description |
+|---------|-------------|
+| [reasoning_agents/](reasoning_agents/) | Advanced reasoning capabilities including agent judge evaluation systems, O3 model integration, mixture of agents (MOA) sequential examples, and reasoning agent router examples |
+| [README.md](reasoning_agents/README.md) | Reasoning agents documentation |
+| [moa_seq_example.py](reasoning_agents/moa_seq_example.py) | MOA sequential example |
+| [agent_judge_examples/](reasoning_agents/agent_judge_examples/) | Agent judge evaluation systems |
+| [example1_basic_evaluation.py](reasoning_agents/agent_judge_examples/example1_basic_evaluation.py) | Basic evaluation example |
+| [example2_technical_evaluation.py](reasoning_agents/agent_judge_examples/example2_technical_evaluation.py) | Technical evaluation example |
+| [example3_creative_evaluation.py](reasoning_agents/agent_judge_examples/example3_creative_evaluation.py) | Creative evaluation example |
+| [reasoning_agent_router_examples/](reasoning_agents/reasoning_agent_router_examples/) | Reasoning agent router examples |
+| [agent_judge_example.py](reasoning_agents/reasoning_agent_router_examples/agent_judge_example.py) | Agent judge example |
+| [gkp_agent_example.py](reasoning_agents/reasoning_agent_router_examples/gkp_agent_example.py) | GKP agent example |
+| [ire_example.py](reasoning_agents/reasoning_agent_router_examples/ire_example.py) | IRE example |
+| [reasoning_duo_example.py](reasoning_agents/reasoning_agent_router_examples/reasoning_duo_example.py) | Reasoning duo example |
+| [reflexion_agent_example.py](reasoning_agents/reasoning_agent_router_examples/reflexion_agent_example.py) | Reflexion agent example |
+| [self_consistency_example.py](reasoning_agents/reasoning_agent_router_examples/self_consistency_example.py) | Self-consistency example |
+| [voice_agents/](voice_agents/) | Voice and speech-enabled agent examples including agent speech, agent with speech, debate with speech, Google Calendar integration, hierarchical speech swarm, and autonomous agent with speech |
+| [README.md](voice_agents/README.md) | Voice agents documentation |
+| [agent_speech.py](voice_agents/agent_speech.py) | Agent with speech capabilities |
+| [agent_with_speech.py](voice_agents/agent_with_speech.py) | Speech-enabled agent implementation |
+| [debate_with_speech.py](voice_agents/debate_with_speech.py) | Multi-agent debate with speech capabilities |
+| [google_calendar_agent.py](voice_agents/google_calendar_agent.py) | Google Calendar integration with voice agent |
+| [hiearchical_speech_swarm.py](voice_agents/hiearchical_speech_swarm.py) | Hierarchical speech swarm implementation |
+| [run_auto_agent_with_speech.py](voice_agents/run_auto_agent_with_speech.py) | Autonomous agent with terminal access and streaming TTS |
+
+### Marketplace
+
+| Example | Description |
+|---------|-------------|
+| [marketplace/](marketplace/) | Swarms marketplace prompt integration examples for using pre-built prompts from the marketplace |
+| [zia_agent.py](marketplace/zia_agent.py) | Zia agent implementation using marketplace prompts |
+| [single_agent/integrations/marketplace/](single_agent/integrations/marketplace/) | Single agent marketplace examples including marketplace prompt integration and quant trader agent |
+| [marketplace_prompt_example.py](single_agent/integrations/marketplace/marketplace_prompt_example.py) | Example of using marketplace prompts with agents |
+| [quant_trader_agent.py](single_agent/integrations/marketplace/quant_trader_agent.py) | Quantitative trader agent using marketplace prompts |
+
+### Guides & Tutorials
+
+| Example | Description |
+|---------|-------------|
+| [guides/](guides/) | Comprehensive guides and tutorials including demos, generation length blog, geo guesser agent, graph workflow guide, hackathon examples, hierarchical marketing team, nano banana Jarvis agent, smart database, web scraper agents, workshops, x402 examples, and workshop examples (840_update, 850_workshop) |
+| [README.md](guides/README.md) | Guides documentation |
+| [hiearchical_marketing_team.py](guides/hiearchical_marketing_team.py) | Hierarchical marketing team example |
+| [840_update/](guides/840_update/) | Update examples from version 8.4.0 including agent rearrange, auto swarm builder, and fallback examples |
+| [850_workshop/](guides/850_workshop/) | Workshop examples from version 8.5.0 including MOA, peer review, and concurrent examples |
+| [880_update_changelog_examples/](guides/880_update_changelog_examples/) | Changelog examples showcasing new features including marketplace integration, multi-agent structures, workflow orchestration, voice agents, evaluation & debate, routing, and autosaving |
+| [changelog_890/](guides/changelog_890/) | Changelog examples from January 2026 release including dynamic skills loader, autonomous agent loop, agent handoffs, API key validation, max loops parameter, multi-tool agent tutorial, hierarchical voice agent, and agent rearrange patterns |
+| [mem0/](guides/mem0/) | Mem0 integration examples for memory management with Swarms |
+| [demos/](guides/demos/) | Various demonstration examples including apps, crypto, finance, insurance, legal, medical, real estate, science, and synthetic data |
+| [fairy_swarm/](guides/fairy_swarm/) | Fairy swarm examples and implementations |
+| [generation_length_blog/](guides/generation_length_blog/) | Long-form content generation examples |
+| [geo_guesser_agent/](guides/geo_guesser_agent/) | Geographic guessing agent examples |
+| [graphworkflow_guide/](guides/graphworkflow_guide/) | Comprehensive graph workflow guide and examples |
+| [hackathon_judge_agent/](guides/hackathon_judge_agent/) | Hackathon judging agent examples |
+| [hackathons/](guides/hackathons/) | Hackathon project examples |
+| [nano_banana_jarvis_agent/](guides/nano_banana_jarvis_agent/) | Nano banana Jarvis agent with image generation |
+| [smart_database/](guides/smart_database/) | Smart database examples |
+| [voice_agents/](guides/voice_agents/) | Voice agent examples with speech capabilities |
+| [web_scraper_agents/](guides/web_scraper_agents/) | Web scraper agent examples |
+| [workshops/](guides/workshops/) | Workshop examples |
+| [x402_examples/](guides/x402_examples/) | X402 protocol examples |
+| [deployment/](guides/deployment/) | Deployment strategies: cron jobs and FastAPI examples |
+| [v9_examples/](guides/v9_examples/) | V9 autonomous looper examples (autonomous_looper, tools, sub-agents) |
+
+### Deployment
+
+| Example | Description |
+|---------|-------------|
+| [guides/deployment/](guides/deployment/) | Deployment strategies and patterns including cron job implementations and FastAPI deployment examples |
+| [README.md](guides/deployment/README.md) | Deployment documentation |
+| [fastapi/](guides/deployment/fastapi/) | FastAPI deployment examples |
+| [cron_job_examples/](guides/deployment/cron_job_examples/) | Cron job examples |
+
+### Utilities
+
+| Example | Description |
+|---------|-------------|
+| [utils/](utils/) | Utility functions and helper implementations including agent loader, communication examples, concurrent wrappers, miscellaneous utilities, and telemetry |
+| [README.md](utils/README.md) | Utils documentation |
+| [agent_loader/](utils/agent_loader/) | Agent loading utilities |
+| [communication_examples/](utils/communication_examples/) | Agent communication patterns including DuckDB, Pulsar, Redis, and SQLite |
+| [fetch_prompt.py](utils/fetch_prompt.py) | Prompt fetching utilities |
+| [litellm_connect_issue.py](utils/litellm_connect_issue.py) | LiteLLM connection issue examples |
+| [litellm_network_error_handling.py](utils/litellm_network_error_handling.py) | LiteLLM network error handling |
+| [misc/](utils/misc/) | Miscellaneous utility functions including conversation, CSV agents, and visualization |
+| [agent_map_test.py](utils/misc/agent_map_test.py) | Agent map test |
+| [conversation_simple.py](utils/misc/conversation_simple.py) | Simple conversation example |
+| [conversation_test_truncate.py](utils/misc/conversation_test_truncate.py) | Conversation truncate test |
+| [conversation_test.py](utils/misc/conversation_test.py) | Conversation test |
+| [csvagent_example.py](utils/misc/csvagent_example.py) | CSV agent example |
+| [dict_to_table.py](utils/misc/dict_to_table.py) | Dictionary to table conversion |
+| [swarm_matcher_example.py](utils/misc/swarm_matcher_example.py) | Swarm matcher example |
+| [test_load_conversation.py](utils/misc/test_load_conversation.py) | Load conversation test |
+| [visualizer_test.py](utils/misc/visualizer_test.py) | Visualizer test |
+| [telemetry/](utils/telemetry/) | Telemetry and monitoring utilities |
+
+### User Interface
+
+| Example | Description |
+|---------|-------------|
+| [ui/](ui/) | User interface examples and implementations including chat interfaces |
+| [README.md](ui/README.md) | UI examples documentation |
+| [chat.py](ui/chat.py) | Chat interface example |
+
+### Command Line Interface
+
+| Example | Description |
+|---------|-------------|
+| [cli/](cli/) | CLI command examples demonstrating all available Swarms CLI features including setup, agent management, multi-agent architectures, and utilities |
+| [README.md](cli/README.md) | CLI examples documentation |
+| [01_setup_check.sh](cli/01_setup_check.sh) | Environment setup verification |
+| [02_onboarding.sh](cli/02_onboarding.sh) | User onboarding process |
+| [03_get_api_key.sh](cli/03_get_api_key.sh) | API key retrieval |
+| [04_check_login.sh](cli/04_check_login.sh) | Login status verification |
+| [05_create_agent.sh](cli/05_create_agent.sh) | Create custom agents |
+| [06_run_agents_yaml.sh](cli/06_run_agents_yaml.sh) | Run agents from YAML configuration |
+| [07_load_markdown.sh](cli/07_load_markdown.sh) | Load markdown configurations |
+| [08_llm_council.sh](cli/08_llm_council.sh) | LLM Council collaboration |
+| [09_heavy_swarm.sh](cli/09_heavy_swarm.sh) | HeavySwarm complex analysis |
+| [10_autoswarm.sh](cli/10_autoswarm.sh) | Auto swarm builder examples |
+| [11_features.sh](cli/11_features.sh) | Feature demonstration |
+| [12_help.sh](cli/12_help.sh) | Help and documentation |
+| [13_auto_upgrade.sh](cli/13_auto_upgrade.sh) | Automatic upgrade process |
+| [14_book_call.sh](cli/14_book_call.sh) | Book a call functionality |
+| [run_all_examples.sh](cli/run_all_examples.sh) | Run all CLI examples |
+
+## Quick Start
+
+| Use Case | Example |
+|----------|---------|
+| New to Swarms? | Start with [single_agent/simple_agent.py](single_agent/getting_started/simple_agent.py) for basic concepts |
+| Want to use the CLI? | Check out [cli/](cli/) for all CLI command examples |
+| Want multi-agent workflows? | Check out [multi_agent/duo_agent.py](multi_agent/duo_agent.py) |
+| Need tool integration? | Explore [tools/agent_as_tools.py](tools/agent_as_tools.py) |
+| Want to see social algorithms? | Check out [multi_agent/social_algorithms_examples/](multi_agent/social_algorithms_examples/) |
+| Looking for guides? | Visit [guides/](guides/) for comprehensive tutorials |
+| Need RAG? | Try [single_agent/rag/](single_agent/capabilities/rag/) for RAG examples |
+| Want reasoning agents? | Check out [reasoning_agents/](reasoning_agents/) for reasoning agent examples |
+| Interested in marketplace prompts? | Explore [marketplace/](marketplace/) for marketplace prompt integration examples |
+| Want voice/speech capabilities? | Check out [voice_agents/](voice_agents/) for speech-enabled agent examples |
+| Interested in agent skills? | Explore [single_agent/capabilities/skills/](single_agent/capabilities/skills/) for dynamic skills |
+| Want autonomous agents? | Check out [single_agent/autonomy/autonomous_agents/](single_agent/autonomy/autonomous_agents/) for full autonomy examples |
+| Need agent handoffs? | See [single_agent/handoffs/](single_agent/autonomy/handoffs/) for handoff patterns |
+| Looking for latest features? | Visit [guides/changelog_890/](guides/changelog_890/) for January 2026 release examples |
+
+## Key Examples by Category
+
+### Multi-Agent Patterns
+
+| Example | Description |
+|---------|-------------|
+| [Duo Agent](multi_agent/duo_agent.py) | Two-agent collaboration |
+| [Tree Swarm](multi_agent/tree_swarm_new_updates.py) | Tree swarm with latest updates |
+| [Agent Rearrange](multi_agent/agent_rearrange_examples/) | Agent rearrangement patterns |
+| [Agent Router](multi_agent/agent_router_examples/) | Agent routing implementations |
+| [Agent GRPO](multi_agent/agent_grpo_examples/) | Agent GRPO examples for math and physics problems |
+| [Auto Swarm Builder](multi_agent/asb/) | Auto Swarm Builder (ASB) examples |
+| [Batched Grid Workflow](multi_agent/batched_grid_workflow/) | Batched grid workflow patterns |
+| [Concurrent Processing](multi_agent/concurrent_examples/) | Concurrent and parallel execution |
+| [Council](multi_agent/council/) | Council pattern with judge evaluation |
+| [Council of Judges](multi_agent/council_of_judges/) | Council of judges implementations |
+| [Debates](multi_agent/debate_examples/) | Multi-agent debate examples |
+| [Election Swarm](multi_agent/election_swarm_examples/) | Election and voting swarms |
+| [Forest Swarm](multi_agent/forest_swarm_examples/) | Forest and tree-based swarms |
+| [Hierarchical Swarm](multi_agent/hiearchical_swarm/hierarchical_swarm_example.py) | Hierarchical agent structures |
+| [Heavy Swarm](multi_agent/heavy_swarm_examples/) | Heavy swarm for complex tasks |
+| [Group Chat](multi_agent/groupchat/) | Asynchronous self-selecting group chat where agents choose when to reply |
+| [Graph Workflow](multi_agent/graphworkflow_examples/graph_workflow_example.py) | Graph-based workflows |
+| [LLM Council](multi_agent/llm_council_examples/) | LLM Council collaboration |
+| [Majority Voting](multi_agent/majority_voting/) | Majority voting and consensus |
+| [Mixture of Agents](multi_agent/moa_examples/) | Mixture of Agents (MOA) examples |
+| [Orchestration](multi_agent/orchestration_examples/) | Agent orchestration patterns |
+| [Sequential Workflow](multi_agent/sequential_workflow/) | Sequential workflow examples |
+| [Simulations](multi_agent/simulations/) | Multi-agent simulations |
+| [Social Algorithms](multi_agent/social_algorithms_examples/) | Various social algorithm patterns |
+| [Spreadsheet Examples](multi_agent/spreadsheet_examples/) | Spreadsheet-based agents |
+| [Swarm Router](multi_agent/swarm_router/) | Swarm routing patterns |
+
+### Single Agent Examples
+
+| Example | Description |
+|---------|-------------|
+| [Simple Agent](single_agent/getting_started/simple_agent.py) | Basic agent setup |
+| [Auto Agent](single_agent/autonomy/autonomous_agents/auto_agent.py) | Auto agent implementation |
+| [Agent Skills](single_agent/capabilities/skills/) | Dynamic skills loader and custom skill examples |
+| [Autonomous Agents](single_agent/autonomy/autonomous_agents/) | Full autonomy examples with marketplace integration |
+| [Agent Handoffs](single_agent/autonomy/handoffs/) | Agent handoff patterns and examples |
+| [Marketplace Integration](single_agent/integrations/marketplace/) | Marketplace prompt integration examples |
+| [Reasoning Agents](single_agent/reasoning/) | Advanced reasoning patterns including consistency, GPK, iterative, and reasoning duo |
+| [Vision Agents](single_agent/capabilities/vision/multimodal_example.py) | Vision and multimodal capabilities |
+| [RAG Agents](single_agent/capabilities/rag/) | Retrieval augmented generation |
+| [External Agents](single_agent/integrations/external_agents/) | External agent integrations |
+| [Onboarding](single_agent/getting_started/onboarding/) | Agent onboarding examples |
+| [Tools Integration](single_agent/capabilities/tools/) | Comprehensive tool integration examples |
+| [Voice Agents](voice_agents/) | Speech-enabled agent examples |
+
+### Tool Integrations
+
+| Example | Description |
+|---------|-------------|
+| [Agent as Tools](tools/agent_as_tools.py) | Using agents as tools |
+| [Browser Automation](tools/browser_use_as_tool.py) | Browser control |
+| [Browser Demo](tools/browser_use_demo.py) | Browser automation demonstration |
+| [Claude as Tool](tools/claude_as_a_tool.py) | Claude model as a tool |
+| [Exa Search](tools/exa_search_agent.py) | Search integration |
+| [Exa Search Quant](tools/exa_search_agent_quant.py) | Exa search with quantitative analysis |
+| [Firecrawl](tools/firecrawl_agents_example.py) | Firecrawl web scraping integration |
+| [Stagehand](tools/stagehand/) | UI automation |
+| [Base Tools](tools/base_tool_examples/) | Base tool implementation examples |
+| [Multi-Tool Use](tools/multii_tool_use/) | Multi-tool usage examples |
+
+### Model Integration Examples
+
+| Example | Description |
+|---------|-------------|
+| [OpenAI](models/openai/4o_mini_demo.py) | OpenAI models |
+| [Claude](models/anthropic/claude_4_example.py) | Claude models |
+| [DeepSeek](models/deepseek/deepseek_r1.py) | DeepSeek models |
+| [DeepSeek Groq](models/deepseek/groq_deepseek_agent.py) | DeepSeek with Groq integration |
+| [Azure](models/azure/azure_agent.py) | Azure OpenAI |
+| [Mistral](models/mistral/mistral_example.py) | Mistral models |
+| [O3](models/openai/o3_agent.py) | O3 model integration |
+| [Qwen](models/qwen/qwen_3_base.py) | Qwen model integration |
+| [Ollama](https://docs.swarms.world) | Local Ollama and other providers via LiteLLM—see docs and [models/](models/) |
+
+### Marketplace Examples
+
+| Example | Description |
+|---------|-------------|
+| [Marketplace Prompt](single_agent/integrations/marketplace/marketplace_prompt_example.py) | Using marketplace prompts with agents |
+| [Quant Trader Agent](single_agent/integrations/marketplace/quant_trader_agent.py) | Quantitative trader agent with marketplace prompts |
+| [Zia Agent](marketplace/zia_agent.py) | Zia agent with marketplace prompt integration |
+
+### CLI Examples
+
+| Example | Description |
+|---------|-------------|
+| [Setup Check](cli/01_setup_check.sh) | Verify environment setup |
+| [Onboarding](cli/02_onboarding.sh) | User onboarding process |
+| [Get API Key](cli/03_get_api_key.sh) | API key retrieval |
+| [Check Login](cli/04_check_login.sh) | Login status verification |
+| [Create Agent](cli/05_create_agent.sh) | Create custom agents via CLI |
+| [Run Agents YAML](cli/06_run_agents_yaml.sh) | Run agents from YAML configuration |
+| [Load Markdown](cli/07_load_markdown.sh) | Load markdown configurations |
+| [LLM Council](cli/08_llm_council.sh) | Run LLM Council collaboration |
+| [HeavySwarm](cli/09_heavy_swarm.sh) | Run HeavySwarm for complex tasks |
+| [AutoSwarm](cli/10_autoswarm.sh) | Auto swarm builder examples |
+| [Features](cli/11_features.sh) | Feature demonstration |
+| [Help](cli/12_help.sh) | Help and documentation |
+| [Auto Upgrade](cli/13_auto_upgrade.sh) | Automatic upgrade process |
+| [Book Call](cli/14_book_call.sh) | Book a call functionality |
+| [Research Agent](cli/research_agent_example.sh) | Research agent example |
+| [Run All Examples](cli/run_all_examples.sh) | Run all CLI examples |
+
+
+# MISC
+
+
+| Category | Example | Description | Link |
+|----------|---------|-------------|------|
+| **Basic Examples** | Basic Agent | Simple agent setup and usage | [Basic Agent](https://docs.swarms.world/examples/basic-agent) |
+| **Basic Examples** | Agent with Tools | Using agents with various tools | [Agent with Tools](https://docs.swarms.world/examples/agent-with-tools) |
+| **Basic Examples** | Agent with Structured Outputs | Working with structured data outputs | [Structured Outputs](https://docs.swarms.world/agents/structured-outputs) |
+| **Basic Examples** | Agent with MCP Integration | Model Context Protocol integration | [MCP Integration](https://docs.swarms.world/integrations/mcp) |
+| **Basic Examples** | Vision Processing | Agents with image processing capabilities | [Vision Processing](https://docs.swarms.world/examples/vision-agent) |
+| **Basic Examples** | Multiple Images | Working with multiple images | [Multiple Images](https://docs.swarms.world/examples/vision-agent) |
+| **Basic Examples** | Vision and Tools | Combining vision with tool usage | [Vision and Tools](https://docs.swarms.world/examples/vision-agent) |
+| **Basic Examples** | Agent Streaming | Real-time agent output streaming | [Agent Streaming](https://docs.swarms.world/examples/agents/agent-streaming) |
+| **Basic Examples** | Agent Output Types | Different output formats and types | [Output Types](https://docs.swarms.world/agents/structured-outputs) |
+| **Basic Examples** | Gradio Chat Interface | Building interactive chat interfaces | [Gradio UI](https://docs.swarms.world/examples/basic-agent) |
+| **Model Providers** | Model Providers Overview | Complete guide to supported models | [Model Providers](https://docs.swarms.world/integrations/model-providers) |
+| **Model Providers** | OpenAI | OpenAI model integration | [OpenAI Examples](https://docs.swarms.world/integrations/model-providers) |
+| **Model Providers** | Anthropic | Claude model integration | [Anthropic Examples](https://docs.swarms.world/integrations/model-providers) |
+| **Model Providers** | Groq | Groq model integration | [Groq Examples](https://docs.swarms.world/integrations/model-providers) |
+| **Model Providers** | Cohere | Cohere model integration | [Cohere Examples](https://docs.swarms.world/integrations/model-providers) |
+| **Model Providers** | DeepSeek | DeepSeek model integration | [DeepSeek Examples](https://docs.swarms.world/integrations/model-providers) |
+| **Model Providers** | Ollama | Local Ollama model integration | [Ollama Examples](https://docs.swarms.world/integrations/model-providers) |
+| **Model Providers** | OpenRouter | OpenRouter model integration | [OpenRouter Examples](https://docs.swarms.world/integrations/model-providers) |
+| **Model Providers** | XAI | XAI model integration | [XAI Examples](https://docs.swarms.world/integrations/model-providers) |
+| **Model Providers** | Llama4 | Llama4 model integration | [Llama4 Examples](https://docs.swarms.world/integrations/model-providers) |
+| **Multi-Agent Architecture** | HierarchicalSwarm | Hierarchical agent orchestration | [HierarchicalSwarm Examples](https://docs.swarms.world/examples/hierarchical-swarm-example) |
+| **Multi-Agent Architecture** | Hybrid Hierarchical-Cluster Swarm | Advanced hierarchical patterns | [HHCS Examples](https://docs.swarms.world/api/hhcs) |
+| **Multi-Agent Architecture** | GroupChat | Multi-agent conversations | [GroupChat Examples](https://docs.swarms.world/examples/group-chat-example) |
+| **Multi-Agent Architecture** | Sequential Workflow | Step-by-step agent workflows | [Sequential Examples](https://docs.swarms.world/examples/sequential-workflow-example) |
+| **Multi-Agent Architecture** | SwarmRouter | Universal swarm orchestration | [SwarmRouter Examples](https://docs.swarms.world/architectures/swarm-router) |
+| **Multi-Agent Architecture** | MultiAgentRouter | Minimal router example | [MultiAgentRouter Examples](https://docs.swarms.world/api/multi-agent-router) |
+| **Multi-Agent Architecture** | ConcurrentWorkflow | Parallel agent execution | [Concurrent Examples](https://docs.swarms.world/examples/concurrent-workflow-example) |
+| **Multi-Agent Architecture** | Mixture of Agents | Expert agent collaboration | [MoA Examples](https://docs.swarms.world/examples/mixture-of-agents-example) |
+| **Multi-Agent Architecture** | Unique Swarms | Specialized swarm patterns | [Unique Swarms](https://docs.swarms.world/architectures/overview) |
+| **Multi-Agent Architecture** | Agents as Tools | Using agents as tools in workflows | [Agents as Tools](https://docs.swarms.world/architectures/overview) |
+| **Multi-Agent Architecture** | Aggregate Responses | Combining multiple agent outputs | [Aggregate Examples](https://docs.swarms.world/architectures/mixture-of-agents) |
+| **Multi-Agent Architecture** | Interactive GroupChat | Real-time agent interactions | [Interactive GroupChat](https://docs.swarms.world/examples/group-chat-example) |
+| **Applications** | Advanced Research System | Multi-agent research system inspired by Anthropic's research methodology | [AdvancedResearch](https://github.com/The-Swarm-Corporation/AdvancedResearch) |
+| **Applications** | Hospital Simulation | Healthcare simulation system using multi-agent architecture | [HospitalSim](https://github.com/The-Swarm-Corporation/HospitalSim) |
+| **Applications** | Browser Agents | Web automation with agents | [Browser Agents](https://docs.swarms.world/examples/integrations/browser-use) |
+| **Applications** | Finance Analysis | Financial applications | [Finance Examples](https://docs.swarms.world/examples/use-cases/financial-analysis) |
+| **Cookbook & Templates** | Examples Overview | Complete examples directory | [Examples Index](https://docs.swarms.world/examples/) |
+| **Cookbook & Templates** | Cookbook Index | Curated example collection | [Cookbook](https://docs.swarms.world/examples/overviews/cookbook) |
+| **Cookbook & Templates** | Paper Implementations | Research paper implementations | [Paper Implementations](https://docs.swarms.world/examples/overviews/paper-implementations) |
+| **Cookbook & Templates** | Templates & Applications | Reusable templates | [Templates](https://docs.swarms.world/examples/overviews/templates) |
+
+
+## Documentation
+
+Each subdirectory contains its own README.md file with detailed descriptions and links to all available examples. Click on any folder above to explore its specific examples and use cases.
+
+## Related Resources
+
+- [Main Swarms Documentation](../docs/)
+- [API Reference](../swarms/)
+- [Contributing Guidelines](../CONTRIBUTING.md)
+
+## Contributing
+
+Found an interesting example or want to add your own? Check out our [contributing guidelines](../CONTRIBUTING.md) and feel free to submit pull requests with new examples or improvements to existing ones.
+
+---
+
+*This examples directory is continuously updated with new patterns, integrations, and use cases. Check back regularly for the latest examples!*
+
+

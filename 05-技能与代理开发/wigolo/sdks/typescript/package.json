@@ -1,0 +1,40 @@
+{
+  "name": "wigolo-sdk",
+  "version": "0.2.1",
+  "description": "Thin TypeScript client for a local-first wigolo web-intelligence daemon (search, fetch, crawl, extract, research, and more) over its REST API.",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KnockOutEZ/wigolo",
+    "directory": "sdks/typescript"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./local": {
+      "types": "./dist/local.d.ts",
+      "import": "./dist/local.js",
+      "default": "./dist/local.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc --noEmit -p tsconfig.test.json && vitest run"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vitest": "4.1.6"
+  }
+}

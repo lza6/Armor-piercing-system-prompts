@@ -1,0 +1,23 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      searchBackend:
+        type: string
+        enum:
+          - core
+          - hybrid
+          - searxng
+        default: core
+        description: >-
+          Search backend. "core" uses direct engines with local reranking
+          (default). "hybrid" adds an automatic fallback aggregator. "searxng"
+          uses the legacy aggregator only.
+    required: []
+  commandFunction: |-
+    (config) => ({
+      command: 'npx',
+      args: ['-y', 'wigolo', 'mcp'],
+      env: config.searchBackend ? { WIGOLO_SEARCH: config.searchBackend } : {}
+    })

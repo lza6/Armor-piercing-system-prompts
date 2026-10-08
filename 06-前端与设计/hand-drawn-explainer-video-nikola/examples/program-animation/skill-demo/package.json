@@ -1,0 +1,17 @@
+{
+  "name": "hand-drawn-explainer-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "node -e \"require('fs').copyFileSync('node_modules/gsap/dist/gsap.min.js','assets/gsap.min.js')\"",
+    "predev": "npm run setup",
+    "precheck": "npm run setup",
+    "prerender": "npm run setup",
+    "dev": "npx --yes hyperframes@0.8.20 preview",
+    "check": "npx --yes hyperframes@0.8.20 check",
+    "render": "npx --yes hyperframes@0.8.20 render"
+  },
+  "dependencies": {
+    "gsap": "3.14.2"
+  }
+}

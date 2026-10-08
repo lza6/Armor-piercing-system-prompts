@@ -1,0 +1,4 @@
+interface:
+  display_name: "Loom Triggers"
+  short_description: "Resume work when an external fact changes"
+  default_prompt: "Use $loom-triggers to arm a durable external condition or safely resume from an external_trigger event."

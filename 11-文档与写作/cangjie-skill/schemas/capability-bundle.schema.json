@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cangjie-skill.org/schemas/capability-bundle.schema.json",
+  "title": "Cangjie Capability Bundle (verified.yaml)",
+  "description": "唯一可编译事实源（ADR-002）。Agent/RIA-TV++ 蒸馏产出本文件 + cards/*.md，single 与 pack 只做确定性编译。",
+  "type": "object",
+  "required": ["schema_version", "bundle_id", "book", "entry", "router_entry", "promotion_budget", "capabilities"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "bundle_id": { "type": "string", "pattern": "^bundle\\.[a-z0-9-]+$" },
+    "book": {
+      "type": "object",
+      "required": ["title", "source_pack"],
+      "properties": {
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "source_pack": { "type": "string" },
+        "baseline_tag": { "type": "string" }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "description": "single 模式主入口（人工/Agent 确认，编译器不猜测）",
+      "required": ["name", "description", "core_principles", "out_of_scope", "stop_conditions"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "description": { "type": "string", "minLength": 40 },
+        "core_principles": { "type": "array", "minItems": 3, "maxItems": 7, "items": { "type": "string" } },
+        "out_of_scope": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "stop_conditions": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    },
+    "router_entry": {
+      "type": "object",
+      "description": "compact pack 来源路由入口",
+      "required": ["name", "description"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "description": { "type": "string", "minLength": 40 }
+      }
+    },
+    "promotion_budget": { "type": "integer", "minimum": 2, "default": 8, "description": "可发现入口总预算，含 1 个来源路由入口" },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "https://cangjie-skill.org/schemas/capability.schema.json" }
+    }
+  }
+}

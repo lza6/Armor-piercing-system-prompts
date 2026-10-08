@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cangjie-skill.org/schemas/source-manifest.schema.json",
+  "title": "Cangjie Source Manifest (.cangjie/manifest.yaml)",
+  "type": "object",
+  "required": ["schema_version", "content_pack", "sources"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "content_pack": { "type": "string" },
+    "output": {
+      "type": "object",
+      "description": "持久化的输出策略（update/repair 默认不重新选型）",
+      "properties": {
+        "requested": { "enum": ["auto", "single", "pack"] },
+        "selected": { "enum": ["single", "pack"] },
+        "decision_policy": { "type": "string" },
+        "skill_budget": { "type": "integer" },
+        "preserve_strategy_on_update": { "type": "boolean", "default": true }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["source_id", "kind", "title", "uri", "rights", "trust", "versions"],
+        "properties": {
+          "source_id": { "type": "string", "pattern": "^src-[a-z0-9-]+$" },
+          "kind": { "enum": ["book", "article", "interview", "transcript", "course", "podcast", "other"] },
+          "title": { "type": "string" },
+          "author": { "type": "string" },
+          "uri": { "type": "string" },
+          "rights": { "enum": ["user-provided", "public-domain", "licensed", "unknown"] },
+          "trust": { "enum": ["primary", "secondary", "tertiary"] },
+          "versions": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["version_id", "added_at", "parser", "status"],
+              "properties": {
+                "version_id": { "type": "string", "pattern": "^sha256:[0-9a-f]+$" },
+                "added_at": { "type": "string" },
+                "parser": { "type": "string" },
+                "status": { "enum": ["active", "superseded", "withdrawn"] }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

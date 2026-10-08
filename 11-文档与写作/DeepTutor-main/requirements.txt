@@ -1,0 +1,14 @@
+# ============================================
+# DeepTutor Python Dependencies (Runtime Bundle)
+# ============================================
+# Python >= 3.11 required
+#
+# For targeted installs:
+#   pip install -r requirements/cli.txt            # CLI (full, with RAG + tools)
+#   pip install -r requirements/server.txt         # CLI + API server
+#   pip install -r requirements/math-animator.txt  # + Manim animation engine
+#   pip install -r requirements/dev.txt            # + dev/test tools
+#
+# This file installs the server runtime (CLI + API + TutorBot).
+
+-r requirements/tutorbot.txt

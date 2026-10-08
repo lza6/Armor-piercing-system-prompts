@@ -1,0 +1,7 @@
+{
+  "skill_name": "paid-ads-ops",
+  "evals": [
+    {"id": 1, "prompt": "Audit our paid ads and tell me what to scale.", "expected_output": "Checks tracking, unit economics, structure, audience, creative, landing page, and approval before recommending spend changes.", "assertions": ["Checks tracking", "Checks unit economics", "Checks creative and landing page", "Requires approval for spend changes"]},
+    {"id": 2, "prompt": "Calculate whether this campaign is profitable at a 4 percent conversion rate.", "expected_output": "Requests spend, conversion value, variable costs, attribution window, and assumptions before calculating break-even economics.", "assertions": ["Requests missing inputs", "States assumptions", "Uses break-even economics"]}
+  ]
+}

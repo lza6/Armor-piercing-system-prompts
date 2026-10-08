@@ -1,0 +1,7 @@
+{
+  "skill_name": "social-media-analyzer",
+  "evals": [
+    {"id": 1, "prompt": "Analyze our LinkedIn and Instagram exports and tell us what to post next month.", "expected_output": "Normalizes the date range, separates attention from business outcomes, identifies patterns, and creates a testable publishing adjustment.", "assertions": ["Normalizes date range", "Separates funnel metrics", "Identifies patterns", "Creates tests"]},
+    {"id": 2, "prompt": "Our posts get likes but no leads. What is wrong.", "expected_output": "Checks attribution, audience quality, CTA, landing page, and conversion data before diagnosing ROI.", "assertions": ["Checks attribution", "Checks audience quality", "Checks CTA and landing page", "Avoids unsupported causation"]}
+  ]
+}

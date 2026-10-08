@@ -1,0 +1,4 @@
+interface:
+  display_name: "PopBoom"
+  short_description: "Auto-upload original refs and submit validated videos."
+  default_prompt: "Use $popboom to auto-upload original three-views, submit validated apparel videos, poll tasks, and deliver results."

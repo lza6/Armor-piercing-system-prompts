@@ -1,0 +1,18 @@
+{
+  "profile_scope": "Public safe defaults; explicit user and project settings override",
+  "voice_provider": "volcengine_openspeech",
+  "voice_resource": "seed-tts-2.0",
+  "speaker": "zh_male_liufei_uranus_bigtts",
+  "default_pipeline": "route_by_visual_intent",
+  "stroke_story_backend": "srt-whiteboard-animation",
+  "stroke_story_ink_path": "skeleton",
+  "stroke_story_color_fill": "contour-wipe",
+  "stroke_story_hand_follow": 0.35,
+  "stroke_story_target_scene_seconds": 6,
+  "stroke_story_aspect_policy": "auto_by_story_and_channel",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "background": "#F8F6EF",
+  "credentials": "Never store credentials in this file. Use an authorized environment variable or provider credential store."
+}

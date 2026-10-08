@@ -1,0 +1,226 @@
+# False positives: heredocs to non-executing commands
+#
+# These commands use heredocs to pass DATA to non-executing commands like
+# cat, tee, grep, etc. The heredoc content is not executed as code.
+#
+# This is a critical false positive category because:
+# - Documentation often contains dangerous command examples
+# - Log/config files may contain dangerous patterns
+# - These are data, not executable code
+
+# ============================================================================
+# cat heredocs (text output only)
+# ============================================================================
+
+[[case]]
+description = "cat heredoc with dangerous-looking rm command is DATA"
+command = "cat <<EOF\nrm -rf /home/user\nEOF"
+expected = "allow"
+
+[[case]]
+description = "cat heredoc with git reset is DATA"
+command = "cat <<EOF\ngit reset --hard\nEOF"
+expected = "allow"
+
+[[case]]
+description = "cat heredoc with multiple dangerous commands is DATA"
+command = "cat <<EOF\nrm -rf /\ngit reset --hard\ndocker system prune -af\nEOF"
+expected = "allow"
+
+[[case]]
+description = "cat heredoc with documentation"
+command = "cat <<EOF\n# Dangerous commands to avoid:\n# rm -rf /\n# git reset --hard\nEOF"
+expected = "allow"
+
+# ============================================================================
+# tee heredocs (file writing)
+# ============================================================================
+
+[[case]]
+description = "tee heredoc with dangerous content is DATA"
+command = "tee /tmp/docs.txt <<EOF\nrm -rf /home/user\nEOF"
+expected = "allow"
+
+[[case]]
+description = "tee -a heredoc with dangerous content is DATA"
+command = "tee -a /tmp/log.txt <<EOF\ngit reset --hard\nEOF"
+expected = "allow"
+
+# ============================================================================
+# grep/sed/awk heredocs (text processing)
+# ============================================================================
+
+[[case]]
+description = "grep heredoc is DATA"
+command = "grep -n 'rm' <<EOF\nrm -rf /home/user\nEOF"
+expected = "allow"
+
+[[case]]
+description = "sed heredoc is DATA"
+command = "sed 's/rm/remove/g' <<EOF\nrm -rf /home/user\nEOF"
+expected = "allow"
+
+[[case]]
+description = "awk heredoc is DATA"
+command = "awk '{print $1}' <<EOF\nrm -rf /home/user\nEOF"
+expected = "allow"
+
+# ============================================================================
+# Various text utilities
+# ============================================================================
+
+[[case]]
+description = "wc heredoc is DATA"
+command = "wc -l <<EOF\nrm -rf /\ngit reset --hard\nEOF"
+expected = "allow"
+
+[[case]]
+description = "sort heredoc is DATA"
+command = "sort <<EOF\nrm -rf /\ngit clean -fd\nEOF"
+expected = "allow"
+
+[[case]]
+description = "head heredoc is DATA"
+command = "head -5 <<EOF\nrm -rf /home/user\nEOF"
+expected = "allow"
+
+[[case]]
+description = "tail heredoc is DATA"
+command = "tail -5 <<EOF\nrm -rf /home/user\nEOF"
+expected = "allow"
+
+# ============================================================================
+# Encoding utilities
+# ============================================================================
+
+[[case]]
+description = "base64 heredoc is DATA"
+command = "base64 <<EOF\nrm -rf /home/user\nEOF"
+expected = "allow"
+
+[[case]]
+description = "md5sum heredoc is DATA"
+command = "md5sum <<EOF\nrm -rf /\nEOF"
+expected = "allow"
+
+# ============================================================================
+# Network utilities (send data, don't execute)
+# ============================================================================
+
+[[case]]
+description = "curl -d heredoc is DATA"
+command = "curl -d @- https://example.com <<EOF\nrm -rf /\nEOF"
+expected = "allow"
+
+# ============================================================================
+# Tab-stripped heredocs (<<-)
+# ============================================================================
+
+[[case]]
+description = "cat tab-stripped heredoc is DATA"
+command = "cat <<-EOF\n\trm -rf /home/user\n\tEOF"
+expected = "allow"
+
+[[case]]
+description = "tee tab-stripped heredoc is DATA"
+command = "tee /tmp/file <<-MARKER\n\tgit reset --hard\n\tMARKER"
+expected = "allow"
+
+# ============================================================================
+# Quoted delimiters (no variable expansion)
+# ============================================================================
+
+[[case]]
+description = "cat heredoc with quoted delimiter is DATA"
+command = "cat <<'EOF'\nrm -rf $HOME\nEOF"
+expected = "allow"
+
+[[case]]
+description = "cat heredoc with double-quoted delimiter is DATA"
+command = "cat <<\"EOF\"\nrm -rf /home/user\nEOF"
+expected = "allow"
+
+# ============================================================================
+# Here-strings (<<<) to non-executing commands are DATA
+# ============================================================================
+
+[[case]]
+description = "cat here-string with single quotes is DATA"
+command = "cat <<<'rm -rf /home/user'"
+expected = "allow"
+
+[[case]]
+description = "cat here-string with double quotes is DATA"
+command = "cat <<<\"rm -rf /home/user\""
+expected = "allow"
+
+[[case]]
+description = "cat here-string unquoted is DATA"
+command = "cat <<<dangerous_command"
+expected = "allow"
+
+[[case]]
+description = "grep here-string is DATA"
+command = "grep 'rm' <<<'rm -rf /home/user'"
+expected = "allow"
+
+[[case]]
+description = "tee here-string is DATA"
+command = "tee /tmp/file <<<'git reset --hard'"
+expected = "allow"
+
+[[case]]
+description = "wc here-string is DATA"
+command = "wc -c <<<'rm -rf /'"
+expected = "allow"
+
+# ============================================================================
+# Quoted delimiter into a non-shell interpreter (#357, #363)
+#
+# `<<'EOF'` suppresses every outer-shell expansion, and python3/node/ruby do
+# not run their stdin as shell, so expansion-shaped evidence (`$name` reaching
+# git's argv, a `>` read as an outer-shell redirect) does not exist for these
+# bodies. The bodies are NOT masked: the literal cases in
+# true_positives/git_destructive.toml prove they still flow through the
+# conservative raw-shell scan (#136/#278).
+# ============================================================================
+
+[[case]]
+description = "quoted python heredoc body is not dynamic-branch evidence (#357)"
+command = "python3 - <<'PY'\ngit branch $name\nPY"
+expected = "allow"
+
+[[case]]
+description = "quoted node heredoc body is not dynamic-branch evidence (#357)"
+command = "node - <<'JS'\ngit branch $(cat name)\nJS"
+expected = "allow"
+
+[[case]]
+description = "an editing python heredoc whose body merely mentions a branch (#357)"
+command = "cd /tmp/project && python3 - <<'PY'\ns = open('a.ts').read()\n# git branch $name\nopen('a.ts', 'w').write(s)\nPY"
+expected = "allow"
+
+[[case]]
+description = "line-leading backtick in a quoted heredoc fed to cat inside command substitution (#357)"
+command = "gh api X -f body=\"$(cat <<'EOF'\n`x`\nEOF\n)\""
+expected = "allow"
+
+[[case]]
+description = "markdown fence lines in a quoted cat heredoc inside command substitution (#357)"
+command = "gh api repos/o/r/issues -f body=\"$(cat <<'EOF'\n```ts\nconst x = 1\n```\nEOF\n)\""
+expected = "allow"
+
+[[case]]
+description = "doc prose with <x> placeholders in a quoted python heredoc (#363)"
+command = "python3 - <<'PYEOF'\n- `DATA_DIR` resolves *inside each instance*: `~/.app/instances/<i>/store-data/` — sqlite `index.db` (+ `-wal`/`-shm`) plus `logs/`, `records/`, `blocks/`, `.meta/`, `.backup/`.\n- Every instance's `gw.json` is identically `{\"search\": {\"bm25\": {\"language\": \"en\"}}}` — the **local** backend. No cloud block on any instance.\n- The package DOES ship a Cloud client (`~/.app/plugins/vendor-plugin/src/core/store/client.ts`, wants `url`/`user`/`apiKey`, auth header `Bearer acct=x&api_key=y`) — but it is **dormant**. No url/user/apiKey exists in any instance `.env`, any gw config, or anywhere under `~/.app`.\nPYEOF"
+expected = "allow"
+
+[[case]]
+description = "quoted patch heredoc feeding git apply --cached is patch data, not embedded code (#374)"
+command = "git apply --cached <<'PATCH'\ndiff --git a/README.md b/README.md\n--- a/README.md\n+++ b/README.md\n@@ -1 +1,2 @@\n one\n+two\nPATCH"
+expected = "allow"
+
+[[case]]
+description = "quoted patch heredoc feeding plain git apply is the same stdin data contract (#374)"
+command = "git apply --check <<'PATCH'\ndiff --git a/a.txt b/a.txt\n--- a/a.txt\n+++ b/a.txt\n@@ -1 +1 @@\n-old\n+new\nPATCH"
+expected = "allow"

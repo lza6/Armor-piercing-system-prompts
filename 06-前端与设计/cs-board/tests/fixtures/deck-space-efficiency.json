@@ -1,0 +1,35 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "totalDurationMs": 6000,
+  "totalDurationFrames": 180,
+  "style": "清新治愈手账风",
+  "subtitlesEnabled": false,
+  "pages": [
+    {
+      "id":"compact-tags", "image":"board-02.png", "startFrame":0, "endFrame":90,
+      "seriesTitle":"前额叶的5大硬核训练法", "chapterTitle":"1. 舒尔特方格训练", "pageTitle":"舒尔特方格：练出抗干扰专注力",
+      "layoutType":"focus", "composition":"split-left", "slideRole":"detail", "relationshipType":"none",
+      "coreIdea":"短标签按内容宽度排版", "visualStrategy":"大图配紧凑标签", "narrativeLink":"验证空间利用率",
+      "nodes":["视觉搜索","抑制干扰","写作业更专注"], "conclusion":"先从看得准、排除干扰开始。",
+      "seriesPersistent":false, "chapterPersistent":false,
+      "cues":[
+        {"id":"a","anchorText":"开始","startFrame":3,"endFrame":38,"spokenStartMs":100,"spokenEndMs":1200,"enterIds":["page-title","illustration","node-1"],"focusId":"node-1","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"b","anchorText":"完整","startFrame":38,"endFrame":90,"spokenStartMs":1267,"spokenEndMs":2900,"enterIds":["node-2","node-3","conclusion"],"focusId":"conclusion","alignmentCoverage":1,"alignmentConfidence":1}
+      ]
+    },
+    {
+      "id":"compact-layers", "image":"board-05.png", "startFrame":90, "endFrame":180,
+      "seriesTitle":"前额叶的5大硬核训练法", "chapterTitle":"4. 短时记忆训练", "pageTitle":"短时记忆：扩容大脑的高速缓存",
+      "layoutType":"layers", "composition":"full-width", "slideRole":"detail", "relationshipType":"hierarchy",
+      "coreIdea":"层级条按文字宽度排版", "visualStrategy":"紧凑层级配更大插图", "narrativeLink":"验证空间利用率",
+      "nodes":["记住指令","工作记忆带宽","高速缓存区","处理更顺畅"], "conclusion":"记忆容量提升，信息处理才更顺畅。",
+      "seriesPersistent":true, "chapterPersistent":false,
+      "cues":[
+        {"id":"c","anchorText":"开始","startFrame":93,"endFrame":128,"spokenStartMs":3100,"spokenEndMs":4200,"enterIds":["page-title","illustration","node-1"],"focusId":"node-1","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"d","anchorText":"完整","startFrame":128,"endFrame":180,"spokenStartMs":4267,"spokenEndMs":5900,"enterIds":["node-2","node-3","node-4","conclusion"],"focusId":"conclusion","alignmentCoverage":1,"alignmentConfidence":1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "voice": {
+    "provider": "volcengine_openspeech",
+    "resource": "seed-tts-2.0",
+    "speaker": "zh_male_liufei_uranus_bigtts",
+    "reuse_matching_audio": true
+  },
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30
+  },
+  "stroke_story": {
+    "ink_path": "skeleton",
+    "color_fill": "contour-wipe",
+    "hand_follow": 0.35,
+    "hand_height": 260
+  }
+}

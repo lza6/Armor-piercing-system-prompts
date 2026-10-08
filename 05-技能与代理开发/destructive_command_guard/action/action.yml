@@ -1,0 +1,335 @@
+# Destructive Command Guard - GitHub Action
+#
+# Scans your repository for destructive commands in scripts, Dockerfiles,
+# GitHub Actions workflows, and other executable contexts.
+#
+# USAGE:
+#   - uses: Dicklesworthstone/destructive_command_guard/action@v0.6.9
+#     with:
+#       fail-on: error
+#       paths: .
+#
+# For more information: https://github.com/Dicklesworthstone/destructive_command_guard
+
+name: 'Destructive Command Guard Scan'
+description: 'Scan repository for destructive commands in executable contexts'
+author: 'Dicklesworthstone'
+
+branding:
+  icon: 'shield'
+  color: 'red'
+
+inputs:
+  paths:
+    description: 'Paths to scan (space-separated, or use git-diff mode)'
+    required: false
+    default: '.'
+  git-diff:
+    description: 'Git ref range for diff-based scanning (e.g., "origin/main...HEAD")'
+    required: false
+    default: ''
+  fail-on:
+    description: 'Severity threshold for failure: error, warning, or none'
+    required: false
+    default: 'error'
+  format:
+    description: 'Machine-readable output format (json is required by this action)'
+    required: false
+    default: 'json'
+  max-findings:
+    description: 'Maximum findings to report (0 for unlimited)'
+    required: false
+    default: '100'
+  truncate:
+    description: 'Maximum command preview length'
+    required: false
+    default: '200'
+  comment-on-pr:
+    description: 'Post scan results as PR comment (requires pull-requests: write permission)'
+    required: false
+    default: 'false'
+  dcg-version:
+    description: 'DCG version to use (default: latest release)'
+    required: false
+    default: 'latest'
+
+outputs:
+  exit-code:
+    description: 'Threshold exit code from dcg scan (findings may exist when fail-on is none)'
+    value: ${{ steps.scan.outputs.exit_code }}
+  files-scanned:
+    description: 'Number of files scanned'
+    value: ${{ steps.parse.outputs.files_scanned }}
+  findings-total:
+    description: 'Total number of findings'
+    value: ${{ steps.parse.outputs.findings_total }}
+  errors:
+    description: 'Number of error-severity findings'
+    value: ${{ steps.parse.outputs.errors }}
+  warnings:
+    description: 'Number of warning-severity findings'
+    value: ${{ steps.parse.outputs.warnings }}
+  results-file:
+    description: 'Path to JSON results file'
+    value: ${{ steps.scan.outputs.results_file }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Download DCG binary
+      id: download
+      shell: bash
+      env:
+        INPUT_DCG_VERSION: ${{ inputs.dcg-version }}
+      run: |
+        set -euo pipefail
+
+        VERSION="$INPUT_DCG_VERSION"
+
+        if [ "$VERSION" = "latest" ]; then
+          # Get latest release tag
+          if ! VERSION=$(curl -fsSL https://api.github.com/repos/Dicklesworthstone/destructive_command_guard/releases/latest | jq -er '.tag_name | select(type == "string" and length > 0)'); then
+            echo "::warning::Could not resolve the latest release; falling back to v0.6.9"
+            VERSION="v0.6.9"
+          fi
+        fi
+        if ! [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z][0-9A-Za-z.-]*)?$ ]]; then
+          echo "::error::dcg-version must be 'latest' or a v-prefixed semantic version"
+          exit 1
+        fi
+
+        echo "Installing DCG version: $VERSION"
+
+        # Determine platform
+        case "$(uname -s)-$(uname -m)" in
+          Linux-x86_64)  PLATFORM="x86_64-unknown-linux-musl" ;;
+          Linux-aarch64) PLATFORM="aarch64-unknown-linux-gnu" ;;
+          Darwin-x86_64) PLATFORM="x86_64-apple-darwin" ;;
+          Darwin-arm64)  PLATFORM="aarch64-apple-darwin" ;;
+          *)
+            echo "::error::Unsupported platform: $(uname -s)-$(uname -m)"
+            exit 1
+            ;;
+        esac
+
+        # Download the exact release artifact and its mandatory checksum.
+        ARCHIVE="dcg-${PLATFORM}.tar.xz"
+        DOWNLOAD_URL="https://github.com/Dicklesworthstone/destructive_command_guard/releases/download/${VERSION}/${ARCHIVE}"
+        CHECKSUM_URL="${DOWNLOAD_URL}.sha256"
+
+        echo "Downloading from: $DOWNLOAD_URL"
+
+        # Use a private, unique directory so two action invocations in one job
+        # cannot reuse an earlier binary or archive.
+        WORK_DIR=$(mktemp -d "${RUNNER_TEMP}/dcg.XXXXXX")
+        chmod 700 "$WORK_DIR"
+        cd "$WORK_DIR"
+
+        # Download with retry. Falling back to a source build is acceptable only
+        # when the archive itself is unavailable; an archive without a valid
+        # checksum must never be installed.
+        for i in 1 2 3; do
+          if curl -fsSL "$DOWNLOAD_URL" -o "$ARCHIVE"; then
+            break
+          fi
+          if [ "$i" -eq 3 ]; then
+            echo "::warning::Could not download pre-built binary, falling back to cargo install"
+            cargo install --locked --git https://github.com/Dicklesworthstone/destructive_command_guard --tag "$VERSION" || cargo install --locked destructive_command_guard --version "=${VERSION#v}"
+            echo "dcg_path=$(command -v dcg)" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          sleep 2
+        done
+
+        curl -fsSL "$CHECKSUM_URL" -o "${ARCHIVE}.sha256"
+        EXPECTED_SHA256=$(awk 'NR == 1 { print $1 }' "${ARCHIVE}.sha256")
+        if ! [[ "$EXPECTED_SHA256" =~ ^[[:xdigit:]]{64}$ ]]; then
+          echo "::error::Release checksum is not a valid SHA-256 value"
+          exit 1
+        fi
+
+        if command -v sha256sum >/dev/null 2>&1; then
+          ACTUAL_SHA256=$(sha256sum "$ARCHIVE" | awk '{ print $1 }')
+        else
+          ACTUAL_SHA256=$(shasum -a 256 "$ARCHIVE" | awk '{ print $1 }')
+        fi
+        ACTUAL_SHA256=$(printf '%s' "$ACTUAL_SHA256" | tr '[:upper:]' '[:lower:]')
+        EXPECTED_SHA256=$(printf '%s' "$EXPECTED_SHA256" | tr '[:upper:]' '[:lower:]')
+        if [ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]; then
+          echo "::error::SHA-256 verification failed for $ARCHIVE"
+          exit 1
+        fi
+
+        MEMBERS=$(tar -tJf "$ARCHIVE")
+        MEMBER_TYPE=$(tar -tvJf "$ARCHIVE" | cut -c1)
+        if [ "$MEMBERS" != "dcg" ] || [ "$MEMBER_TYPE" != "-" ]; then
+          echo "::error::$ARCHIVE must contain exactly one root-level regular member named dcg"
+          exit 1
+        fi
+        tar -xOJf "$ARCHIVE" dcg > dcg.extracted
+        if [ ! -s dcg.extracted ]; then
+          echo "::error::$ARCHIVE contained an empty or non-regular dcg member"
+          exit 1
+        fi
+        chmod 0755 dcg.extracted
+
+        echo "dcg_path=$WORK_DIR/dcg.extracted" >> "$GITHUB_OUTPUT"
+        echo "DCG installed successfully"
+
+    - name: Run DCG scan
+      id: scan
+      shell: bash
+      env:
+        DCG_PATH: ${{ steps.download.outputs.dcg_path }}
+        INPUT_FORMAT: ${{ inputs.format }}
+        INPUT_FAIL_ON: ${{ inputs.fail-on }}
+        INPUT_MAX_FINDINGS: ${{ inputs.max-findings }}
+        INPUT_TRUNCATE: ${{ inputs.truncate }}
+        INPUT_GIT_DIFF: ${{ inputs.git-diff }}
+        INPUT_PATHS: ${{ inputs.paths }}
+      run: |
+        set -euo pipefail
+
+        DCG="$DCG_PATH"
+        RESULTS_FILE="$RUNNER_TEMP/dcg-scan-results.json"
+
+        [ "$INPUT_FORMAT" = "json" ] || { echo "::error::The composite action requires format=json so outputs remain machine-readable"; exit 1; }
+        case "$INPUT_FAIL_ON" in error|warning|none) ;; *) echo "::error::Invalid fail-on input"; exit 1;; esac
+        [[ "$INPUT_MAX_FINDINGS" =~ ^[0-9]+$ ]] || { echo "::error::max-findings must be a non-negative integer"; exit 1; }
+        [[ "$INPUT_TRUNCATE" =~ ^[0-9]+$ ]] || { echo "::error::truncate must be a non-negative integer"; exit 1; }
+
+        # Build command arguments
+        ARGS=(
+          scan
+          --format "$INPUT_FORMAT"
+          --fail-on "$INPUT_FAIL_ON"
+          --max-findings "$INPUT_MAX_FINDINGS"
+          --truncate "$INPUT_TRUNCATE"
+        )
+
+        # Add paths or git-diff
+        if [ -n "$INPUT_GIT_DIFF" ]; then
+          ARGS+=(--git-diff "$INPUT_GIT_DIFF")
+        else
+          read -r -a SCAN_PATHS <<< "$INPUT_PATHS"
+          if [ "${#SCAN_PATHS[@]}" -eq 0 ]; then
+            echo "::error::paths must contain at least one path"
+            exit 1
+          fi
+          ARGS+=(--paths "${SCAN_PATHS[@]}")
+        fi
+
+        echo "Running: $DCG ${ARGS[*]}"
+
+        # Run scan and capture exit code
+        set +e
+        "$DCG" "${ARGS[@]}" > "$RESULTS_FILE" 2>dcg-stderr.log
+        EXIT_CODE=$?
+        set -e
+
+        # Log stderr if any
+        if [ -s dcg-stderr.log ]; then
+          echo "::group::DCG stderr"
+          cat dcg-stderr.log
+          echo "::endgroup::"
+        fi
+
+        echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+        echo "results_file=$RESULTS_FILE" >> $GITHUB_OUTPUT
+
+    - name: Parse scan results
+      id: parse
+      shell: bash
+      run: |
+        RESULTS_FILE="${{ steps.scan.outputs.results_file }}"
+
+        if [ -f "$RESULTS_FILE" ] && [ -s "$RESULTS_FILE" ]; then
+          FILES_SCANNED=$(jq -r '.summary.files_scanned // 0' "$RESULTS_FILE" 2>/dev/null || echo 0)
+          FINDINGS_TOTAL=$(jq -r '.summary.findings_total // 0' "$RESULTS_FILE" 2>/dev/null || echo 0)
+          ERRORS=$(jq -r '.summary.severities.error // 0' "$RESULTS_FILE" 2>/dev/null || echo 0)
+          WARNINGS=$(jq -r '.summary.severities.warning // 0' "$RESULTS_FILE" 2>/dev/null || echo 0)
+        else
+          FILES_SCANNED=0
+          FINDINGS_TOTAL=0
+          ERRORS=0
+          WARNINGS=0
+        fi
+
+        echo "files_scanned=$FILES_SCANNED" >> $GITHUB_OUTPUT
+        echo "findings_total=$FINDINGS_TOTAL" >> $GITHUB_OUTPUT
+        echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+        echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
+
+    - name: Generate step summary
+      shell: bash
+      run: |
+        RESULTS_FILE="${{ steps.scan.outputs.results_file }}"
+        EXIT_CODE="${{ steps.scan.outputs.exit_code }}"
+        FINDINGS_TOTAL=$(jq -r '.summary.findings_total // 0' "$RESULTS_FILE" 2>/dev/null || echo 0)
+
+        echo "## Destructive Command Guard Scan" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        if [ "$FINDINGS_TOTAL" = "0" ]; then
+          echo ":white_check_mark: **No destructive commands detected**" >> $GITHUB_STEP_SUMMARY
+        else
+          echo ":warning: **Destructive commands detected**" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        echo "| Metric | Count |" >> $GITHUB_STEP_SUMMARY
+        echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Files scanned | ${{ steps.parse.outputs.files_scanned }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Total findings | ${{ steps.parse.outputs.findings_total }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Errors | ${{ steps.parse.outputs.errors }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Warnings | ${{ steps.parse.outputs.warnings }} |" >> $GITHUB_STEP_SUMMARY
+
+        # Show top findings if any
+        if [ -f "$RESULTS_FILE" ] && [ -s "$RESULTS_FILE" ]; then
+          if [ "$FINDINGS_TOTAL" -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Top Findings" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            jq -r '.findings[:10][] | "\(.file):\(.line) [\(.severity)] \(.rule_id // .extractor_id)"' "$RESULTS_FILE" 2>/dev/null >> $GITHUB_STEP_SUMMARY || true
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+        fi
+
+    - name: Post PR comment
+      if: inputs.comment-on-pr == 'true' && github.event_name == 'pull_request'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        RESULTS_FILE="${{ steps.scan.outputs.results_file }}"
+        FINDINGS_TOTAL="${{ steps.parse.outputs.findings_total }}"
+
+        # Build comment body
+        COMMENT="## :shield: Destructive Command Guard Scan\n\n"
+
+        if [ "$FINDINGS_TOTAL" = "0" ]; then
+          COMMENT+="**No destructive commands detected** :white_check_mark:\n\n"
+        else
+          COMMENT+="**$FINDINGS_TOTAL findings detected** :warning:\n\n"
+        fi
+
+        COMMENT+="| Metric | Count |\n"
+        COMMENT+="|--------|-------|\n"
+        COMMENT+="| Files scanned | ${{ steps.parse.outputs.files_scanned }} |\n"
+        COMMENT+="| Errors | ${{ steps.parse.outputs.errors }} |\n"
+        COMMENT+="| Warnings | ${{ steps.parse.outputs.warnings }} |\n"
+
+        if [ "$FINDINGS_TOTAL" -gt 0 ] && [ -f "$RESULTS_FILE" ]; then
+          COMMENT+="\n<details><summary>View findings</summary>\n\n\`\`\`\n"
+          COMMENT+=$(jq -r '.findings[:20][] | "\(.file):\(.line) [\(.severity)] \(.rule_id // .extractor_id): \(.reason // "")"' "$RESULTS_FILE" 2>/dev/null | head -40)
+          COMMENT+="\n\`\`\`\n</details>\n"
+        fi
+
+        echo -e "$COMMENT" | gh pr comment "${{ github.event.pull_request.number }}" --body-file -
+
+    - name: Fail on findings
+      if: steps.scan.outputs.exit_code != '0'
+      shell: bash
+      run: |
+        echo "::error::DCG scan found destructive commands. Review the findings above."
+        exit ${{ steps.scan.outputs.exit_code }}

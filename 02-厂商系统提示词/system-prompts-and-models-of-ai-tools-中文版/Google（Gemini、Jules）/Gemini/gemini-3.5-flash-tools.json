@@ -1,0 +1,84 @@
+[
+  {
+    "name": "google:ds_python_interpreter",
+    "description": "在安全、隔离的沙盒 Linux 容器（gVisor）中执行 Python 代码。环境已预装主要的数据科学、科学计算和机器学习库（如 NumPy、Pandas、Scipy、Scikit-learn、PyTorch、TensorFlow）。用于高级计算、数据分析和算法脚本编写。",
+    "parameters": {
+      "properties": {
+        "code": {
+          "description": "要在该环境中执行的精确 Python 代码脚本。",
+          "type": "STRING"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "type": "OBJECT"
+    }
+  },
+  {
+    "name": "google:search",
+    "description": "当需要最新知识或事实核验时，搜索网页上的相关信息。结果将包含网页中的相关摘要片段。",
+    "parameters": {
+      "properties": {
+        "queries": {
+          "description": "用于发起搜索的查询列表。",
+          "items": {
+            "type": "STRING"
+          },
+          "type": "ARRAY"
+        }
+      },
+      "required": [
+        "queries"
+      ],
+      "type": "OBJECT"
+    }
+  },
+  {
+    "name": "gemkick_corpus:search",
+    "description": "此操作会根据用户查询，检索并获取用户 Google Workspace 项目的内容。目前仅支持 Gmail 和 Google Drive。\n",
+    "parameters": {
+      "properties": {
+        "corpus": {
+          "description": "要搜索的 Google Workspace 语料库。目前仅支持 `GMAIL` 和 `GOOGLE_DRIVE`。\n",
+          "nullable": true,
+          "type": "STRING"
+        },
+        "query": {
+          "description": "用于从 Gmail 或 Google Drive 获取信息的查询。它应是自然语言查询，并且只应包含与 Google Workspace 中邮件或文件相关的信息。如果对当前搜索相关，请包含对话历史中的关键词。\n",
+          "type": "STRING"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "type": "OBJECT"
+    }
+  },
+  {
+    "name": "youtube:search",
+    "description": "在 YouTube 上搜索视频、频道或播放列表。搜索无法按热度筛选。搜索可以根据给定查询字符串找到相关视频、频道和播放列表。请使用此端点为给定的开放式问题查找相关视频，例如“funny cats and dog videos”。除与视频热度相关的问题外，关于视频的查询始终使用 youtube。",
+    "parameters": {
+      "properties": {
+        "query": {
+          "description": "执行搜索所使用的查询。",
+          "type": "STRING"
+        },
+        "result_type": {
+          "description": "用于指定搜索结果类型的枚举。设为 VIDEO 可搜索视频，设为 CHANNEL 可搜索频道、艺人或用户，设为 PLAYLIST 可搜索播放列表、电台或混音。",
+          "enum": [
+            "VIDEO",
+            "CHANNEL",
+            "PLAYLIST"
+          ],
+          "nullable": true,
+          "type": "STRING"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "type": "OBJECT"
+    }
+  }
+]

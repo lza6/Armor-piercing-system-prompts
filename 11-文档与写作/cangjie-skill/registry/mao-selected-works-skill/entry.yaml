@@ -1,0 +1,13 @@
+schema_version: 1
+slug: mao-selected-works-skill
+name: 毛泽东选集 Skill
+summary: 从《毛泽东选集》五卷中蒸馏的调查、战略、组织与执行方法。
+source_type: github
+source_url: https://github.com/kangarooking/mao-selected-works-skill
+skill_count: 25
+domains: [战略, 组织]
+language: [zh-CN]
+status: active
+quality: verified
+featured: false
+use_cases: [开展调查研究, 分析主要矛盾, 设计组织行动]

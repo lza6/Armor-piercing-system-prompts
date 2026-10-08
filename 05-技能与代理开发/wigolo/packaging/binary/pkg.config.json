@@ -1,0 +1,31 @@
+{
+  "//": "pkg config for the wigolo single-file binary. Copied to the repo root as pkg.build.json at build time so all globs resolve relative to the repo root (pkg resolves scripts/assets relative to the CONFIG file's directory — round-1 finding). The entry fed to pkg is the esbuild CJS bundle at dist/cli/agents/wigolo.bundle.cjs; `scripts` stays empty because the bundle is self-contained JS. Native .node/.dylib and asset-carrier packages are declared here so pkg's require-hook can extract them at runtime.",
+  "pkg": {
+    "scripts": [],
+    "assets": [
+      "package.json",
+      "dist/package.json",
+      "dist/cli/package.json",
+      "assets/blocks/**/*",
+      "assets/legacy-skill-hashes.json",
+      "skills/**/*",
+      "node_modules/playwright/cli.js",
+      "node_modules/playwright/package.json",
+      "node_modules/playwright/index.js",
+      "node_modules/playwright/lib/**/*.js",
+      "node_modules/playwright-core/package.json",
+      "node_modules/playwright-core/browsers.json",
+      "node_modules/playwright-core/cli.js",
+      "node_modules/playwright-core/**/*.js",
+      "node_modules/better-sqlite3/build/Release/better_sqlite3.node",
+      "node_modules/onnxruntime-node/bin/napi-v3/darwin/arm64/onnxruntime_binding.node",
+      "node_modules/onnxruntime-node/bin/napi-v3/darwin/arm64/libonnxruntime.1.21.0.dylib",
+      "node_modules/sqlite-vec-darwin-arm64/vec0.dylib",
+      "node_modules/@napi-rs/keyring-darwin-arm64/keyring.darwin-arm64.node",
+      "node_modules/wreq-js/rust/wreq-js.darwin-arm64.node",
+      "node_modules/@anush008/tokenizers-darwin-universal/tokenizers.darwin-universal.node",
+      "node_modules/@img/sharp-darwin-arm64/**/*",
+      "node_modules/@img/sharp-libvips-darwin-arm64/**/*"
+    ]
+  }
+}

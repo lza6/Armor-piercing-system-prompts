@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Onboarding"
+  short_description: "Map architecture, ownership, and verification strategy before coding."
+  default_prompt: "Use repo-onboarding to analyze scope, affected modules, and validation commands for this task."

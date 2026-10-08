@@ -1,0 +1,7 @@
+{
+  "skill_name": "competitive-teardown",
+  "evals": [
+    {"id": 1, "prompt": "Tear down this competitor's pricing page and onboarding flow.", "expected_output": "Separates observations from interpretations, records sources, scores risks, and recommends tests or positioning actions.", "assertions": ["Separates evidence from interpretation", "Records sources", "Reviews pricing and onboarding", "Recommends actions"]},
+    {"id": 2, "prompt": "What can we learn from this competitor's jobs and customer reviews.", "expected_output": "Uses permitted public sources, identifies signals, and avoids claiming private roadmap or revenue information.", "assertions": ["Uses public sources", "Analyzes jobs and reviews", "Avoids invented private data"]}
+  ]
+}

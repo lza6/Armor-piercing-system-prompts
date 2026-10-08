@@ -1,0 +1,41 @@
+{
+  "name": "loki-mode-sdk",
+  "version": "5.55.0",
+  "description": "TypeScript SDK for Loki Mode - autonomous multi-agent development platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "scripts/normalize-package-permissions.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepack": "node scripts/normalize-package-permissions.mjs .",
+    "prepublishOnly": "npm run build",
+    "test": "node --test tests/client.test.js"
+  },
+  "keywords": [
+    "loki-mode", "autonomous", "ai-agents", "multi-agent",
+    "developer-tools", "sdk", "devtools", "automation",
+    "claude", "anthropic"
+  ],
+  "author": "Lokesh Mure <lokesh@autonomi.dev>",
+  "license": "BUSL-1.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asklokesh/loki-mode.git",
+    "directory": "sdk/typescript"
+  },
+  "homepage": "https://github.com/asklokesh/loki-mode",
+  "bugs": {
+    "url": "https://github.com/asklokesh/loki-mode/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

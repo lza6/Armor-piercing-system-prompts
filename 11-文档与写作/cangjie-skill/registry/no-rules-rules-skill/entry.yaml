@@ -1,0 +1,13 @@
+schema_version: 1
+slug: no-rules-rules-skill
+name: 不拘一格 Skill
+summary: 围绕人才密度、坦诚反馈和情境管理的组织设计与管理实践工具。
+source_type: github
+source_url: https://github.com/kangarooking/no-rules-rules-skill
+skill_count: 10
+domains: [管理, 组织]
+language: [zh-CN]
+status: active
+quality: verified
+featured: false
+use_cases: [设计团队规则, 建立反馈机制, 评估人才密度]

@@ -1,0 +1,52 @@
+{
+  "skill": "happiness-skill",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我什么都有了还是觉得不快乐，问题出在哪？",
+      "expected_behavior": "激活 happiness-skill, 用欲望契约/缺憾感/活在当下诊断",
+      "notes": "正面场景: 满足感缺失"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "我总是想要更多，买了这个想要那个，怎么停下来？",
+      "expected_behavior": "激活 happiness-skill, 应用一次只留一个重大欲望+欲望契约识别",
+      "notes": "正面场景: 欲望管理"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "怎么才能把幸福当技能来练？",
+      "expected_behavior": "激活 happiness-skill, 给幸福训练计划(冥想/习惯/同伴/接受+基线复盘)",
+      "notes": "正面场景: 幸福训练"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我脑子停不下来，躺下就焦虑，怎么办？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 monkey-mind-meditation (心猴/调试模式)",
+      "notes": "跨 skill 混淆诱饵: 幸福框架 vs 思维工具"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "给我算一下 2026 年的运势",
+      "expected_behavior": "占卜请求, 不调用任何 skill",
+      "notes": "诱饵: 非自助场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我连续三周情绪很低落，什么都不想做，是我不够努力吗？",
+      "expected_behavior": "边缘: 警惕临床抑郁信号, 优先建议专业求助; 确认非医疗问题后才应用幸福技能流程",
+      "notes": "边界: 可训练 vs 需要医疗"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

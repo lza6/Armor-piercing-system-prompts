@@ -1,0 +1,87 @@
+# True positives: rm commands that MUST be blocked
+#
+# These commands have high risk of data loss.
+
+[[case]]
+description = "rm -rf with root path"
+command = "rm -rf /"
+expected = "deny"
+rule_id = "core.filesystem:rm-rf-root-home"
+
+[[case]]
+description = "rm -rf with home directory"
+command = "rm -rf ~"
+expected = "deny"
+rule_id = "core.filesystem:rm-rf-root-home"
+
+[[case]]
+description = "rm -rf with home expansion"
+command = "rm -rf $HOME"
+expected = "deny"
+rule_id = "core.filesystem:rm-rf-root-home"
+
+[[case]]
+description = "rm -rf with glob"
+command = "rm -rf *"
+expected = "deny"
+rule_id = "core.filesystem:rm-rf-general"
+
+[[case]]
+description = "rm -rf with hidden files glob"
+command = "rm -rf .*"
+expected = "deny"
+rule_id = "core.filesystem:rm-rf-general"
+
+[[case]]
+description = "rm -rf on relative path (still blocked)"
+command = "rm -rf ./build"
+expected = "deny"
+rule_id = "core.filesystem:rm-rf-general"
+
+[[case]]
+description = "rm --recursive --force outside temp is blocked"
+command = "rm --recursive --force /etc"
+expected = "deny"
+rule_id = "core.filesystem:rm-recursive-force-root-home"
+
+[[case]]
+description = "rm with recursive and force flags separate"
+command = "rm -r -f ./build"
+expected = "deny"
+rule_id = "core.filesystem:rm-r-f-separate"
+
+[[case]]
+description = "bare recursive rm on an ordinary tree is blocked"
+command = "rm -r ./build"
+expected = "deny"
+rule_id = "core.filesystem:rm-recursive-general"
+
+[[case]]
+description = "uppercase recursive flag on an ordinary tree is blocked"
+command = "rm -R Desktop"
+expected = "deny"
+rule_id = "core.filesystem:rm-recursive-general"
+
+[[case]]
+description = "long recursive rm on an absolute system tree is critical"
+command = "rm --recursive /etc"
+expected = "deny"
+rule_id = "core.filesystem:rm-recursive-root-home"
+
+[[case]]
+description = "home recursive deletion is critical without force"
+command = "rm -r $HOME"
+expected = "deny"
+rule_id = "core.filesystem:rm-recursive-root-home"
+
+[[case]]
+description = "a trailing force overrides earlier interactive mode"
+command = "rm -r -i -f ./build"
+expected = "deny"
+rule_id = "core.filesystem:rm-r-f-separate"
+
+[[case]]
+description = "interactive never does not make recursive deletion safe"
+command = "rm -r --interactive=never ./build"
+expected = "deny"
+rule_id = "core.filesystem:rm-recursive-general"

@@ -1,0 +1,13 @@
+schema_version: 1
+slug: sunzi-bingfa-skill
+name: 孙子兵法 Skill
+summary: 将《孙子兵法》转化为形势判断、资源控制与行动选择工具。
+source_type: github
+source_url: https://github.com/qbdx-hub/sunzi-bingfa-skill
+skill_count: 8
+domains: [战略, 决策]
+language: [zh-CN]
+status: active
+quality: community
+featured: false
+use_cases: [判断竞争形势, 分配有限资源, 选择行动时机]

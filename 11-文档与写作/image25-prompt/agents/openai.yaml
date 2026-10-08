@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image 2.5 Prompt"
+  short_description: "Draft and review Image 2.5 prompts and edits"
+  default_prompt: "Use $image25-prompt to turn my brief into a ready-to-use image prompt with focused review checks."

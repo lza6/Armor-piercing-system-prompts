@@ -1,0 +1,50 @@
+{
+  "skill_name": "ecommerce-product-opportunity-researcher",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Find 10 low-competition products for a Shopify store.",
+      "expected_output": "States missing market and constraint assumptions, separates hypotheses from evidence, defines competition, and does not guarantee low competition.",
+      "assertions": [
+        "States assumptions or requests material missing context",
+        "Separates evidence from hypotheses",
+        "Defines how competition will be assessed",
+        "Does not guarantee low competition"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Use current marketplace data to rank reusable travel products under $50.",
+      "expected_output": "Records geography, date, sources, observed and target prices, evidence confidence, unit economics, risks, and a validation gate.",
+      "assertions": [
+        "Records source dates and geography",
+        "Labels observed and target prices",
+        "Uses confidence levels",
+        "Includes unit economics or missing cost inputs",
+        "Includes a validation decision gate"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Make a profitable supplement idea from Amazon reviews.",
+      "expected_output": "Analyzes supplied evidence without inventing profit, flags supplement and claims risk, and identifies required compliance and cost verification.",
+      "assertions": [
+        "Does not guarantee profitability",
+        "Flags ingestible and health-claim risks",
+        "Separates review evidence from interpretation",
+        "Identifies required verification"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Turn our existing customer reviews into product opportunities.",
+      "expected_output": "Extracts repeated problems and requested features, protects customer identity, separates quotes from paraphrase, and routes follow-up work to customer research or ecommerce content.",
+      "assertions": [
+        "Extracts repeated problems and requests",
+        "Protects customer identity",
+        "Separates direct quotes from paraphrase",
+        "Routes follow-up work to related skills"
+      ]
+    }
+  ]
+}

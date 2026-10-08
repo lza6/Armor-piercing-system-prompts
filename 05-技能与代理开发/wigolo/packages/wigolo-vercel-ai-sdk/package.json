@@ -1,0 +1,53 @@
+{
+  "name": "wigolo-vercel-ai-sdk",
+  "version": "0.2.1",
+  "description": "Vercel AI SDK tools for wigolo — local-first web search MCP server",
+  "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "vercel-ai-sdk",
+    "ai-sdk",
+    "wigolo",
+    "mcp",
+    "web-search",
+    "tools",
+    "agent"
+  ],
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KnockOutEZ/wigolo",
+    "directory": "packages/wigolo-vercel-ai-sdk"
+  },
+  "peerDependencies": {
+    "ai": ">=4.0.0",
+    "zod": ">=3.0.0"
+  },
+  "devDependencies": {
+    "ai": "^4.0.0",
+    "zod": "^3.23.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,61 @@
+# Autonomi Loki Mode - High Availability Values
+# -----------------------------------------------
+# Use with: helm install autonomi ./deploy/helm/autonomi \
+#   -f deploy/helm/autonomi/values-production.yaml \
+#   -f deploy/helm/autonomi/values-ha.yaml
+
+# The control plane writes a tamper-evident, hash-chain audit log
+# (dashboard/audit.py). That chain head lives in a per-PROCESS module global, so
+# the audit writer is SINGLE-WRITER by construction: running >1 replica against a
+# shared audit volume interleaves entries from independent chains and the on-disk
+# log no longer verifies. HA therefore keeps a single audit-writing control
+# plane (replicas=1). A render-time preflight (autonomi.controlplane.preflight)
+# fails the install if replicas>1 is set against the chart's ReadWriteOnce audit
+# volume, so this constraint is enforced, not just documented. To scale the
+# control plane horizontally you must give each replica an independent audit
+# chain (the chart does not do this for you).
+controlplane:
+  replicas: 1
+
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                  - controlplane
+          topologyKey: kubernetes.io/hostname
+
+# The worker is a run-to-completion Job: a single pod per release. replicas,
+# autoscaling, and worker pod-anti-affinity (which spreads multiple replicas)
+# do not apply and are intentionally omitted.
+
+persistence:
+  # /workspace durable volume. ReadWriteOnce is correct: a single Job pod (and
+  # its retry) mounts it. ReadWriteMany is NOT needed for the Job model and is
+  # intentionally not set here.
+  checkpoints:
+    enabled: true
+    size: 100Gi
+
+  # Control-plane hash-chain audit volume. Left at the chart default
+  # (ReadWriteOnce), which is correct for the single audit-writing control plane
+  # (controlplane.replicas=1 above). Do NOT switch this to ReadWriteMany to share
+  # one volume across replicas: the hash chain is single-writer and a shared
+  # write target silently corrupts it (see the controlplane block above).
+  auditLogs:
+    enabled: true
+    size: 200Gi
+
+security:
+  networkPolicy:
+    enabled: true
+
+  rbac:
+    enabled: true
+
+pdb:
+  enabled: true
+  minAvailable: 1

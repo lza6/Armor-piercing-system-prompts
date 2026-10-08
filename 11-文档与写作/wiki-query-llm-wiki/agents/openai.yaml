@@ -1,0 +1,8 @@
+interface:
+  display_name: "Wiki Query"
+  short_description: "Read-only, index-first answers from an llm-wiki with exact file citations."
+  brand_color: "#2F855A"
+  default_prompt: "Answer this question from the selected llm-wiki without changing any files."
+
+policy:
+  allow_implicit_invocation: false

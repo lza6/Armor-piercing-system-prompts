@@ -1,0 +1,52 @@
+{
+  "skill": "self-liberation",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "爸妈一直说我这岁数该结婚了，我压力好大。",
+      "expected_behavior": "激活 self-liberation, 拆分期望与约定, 给出『他们的期望不是你的合同』的边界处理",
+      "notes": "正面场景: 家庭期望"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "我特别容易生气，一点小事就爆炸，怎么控制？",
+      "expected_behavior": "激活 self-liberation, 用愤怒=热煤/自我契约机制给拆解练习",
+      "notes": "正面场景: 愤怒管理"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我不想总是讨好别人了，怎么建立自己的边界？",
+      "expected_behavior": "激活 self-liberation, 给期望边界+就业自由缓冲+说不的步骤",
+      "notes": "正面场景: 边界建立"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我答应了朋友的事做不到，该怎么跟他说？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 honesty-communication (怎么说) 或先履行约定",
+      "notes": "跨 skill 混淆诱饵: 边界 vs 表达"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我订一张去北京的机票",
+      "expected_behavior": "工具任务, 不调用任何 skill",
+      "notes": "诱饵: 非求助场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "房贷车贷都靠这份工作，但我老板 PUA 我，能直接辞职吗？",
+      "expected_behavior": "边缘: 激活但先算就业自由缓冲(支出/收入比), 给降支/找退路计划而非裸辞建议",
+      "notes": "边界: 自由 vs 现实约束"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

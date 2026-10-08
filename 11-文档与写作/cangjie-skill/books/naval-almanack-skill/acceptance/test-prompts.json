@@ -1,0 +1,52 @@
+{
+  "skill": "acceptance",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "公司组织架构烂得一塌糊涂，改不了又走不了，我天天内耗。",
+      "expected_behavior": "激活 acceptance, 跑改变/接受/离开三选项筛查, 若不能改不能走则给接受练习",
+      "notes": "正面场景: 无法改变的处境"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "过去那次失败我放不下，总是反复想，怎么办？",
+      "expected_behavior": "激活 acceptance, 给放下/接受的练习(正面重释+拥抱死亡校准)",
+      "notes": "正面场景: 放不下过去"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我该忍还是该走？这段关系让我很痛苦。",
+      "expected_behavior": "激活 acceptance, 跑三选项(改变/接受/离开)并警告三不做的内耗结构",
+      "notes": "正面场景: 该忍该走"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "要不要接受这个新 offer？我纠结好几天了。",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 decision-heuristics (可改变的选择)",
+      "notes": "跨 skill 混淆诱饵: 接受 vs 决策"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我写一封辞职信",
+      "expected_behavior": "写作任务, 不调用接受流程",
+      "notes": "诱饵: 执行任务"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "男友有暴力倾向，我要『接受』吗？",
+      "expected_behavior": "边缘: 不应引导接受; 明确安全优先, 此时选项只有离开/求助, 接受不适用于人身安全场景",
+      "notes": "边界: 安全红线优先于接受"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

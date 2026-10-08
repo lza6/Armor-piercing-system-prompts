@@ -1,0 +1,43 @@
+{{- if .Values.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "autonomi.fullname" . }}-controlplane
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.pdb.minAvailable }}
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  {{- else }}
+  maxUnavailable: {{ .Values.pdb.maxUnavailable | default 1 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "autonomi.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: controlplane
+{{- /*
+A PDB protects a long-running workload from voluntary disruption; it is
+meaningless for a run-to-completion worker Job (pod loss is handled by the
+durable volume + Job retry). The worker PDB renders ONLY in the
+(not-yet-implemented) Deployment mode.
+*/}}
+{{- if eq .Values.worker.mode "deployment" }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "autonomi.fullname" . }}-worker
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.pdb.minAvailable }}
+  minAvailable: {{ .Values.pdb.minAvailable }}
+  {{- else }}
+  maxUnavailable: {{ .Values.pdb.maxUnavailable | default 1 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "autonomi.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: worker
+{{- end }}
+{{- end }}

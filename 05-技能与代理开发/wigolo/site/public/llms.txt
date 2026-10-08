@@ -1,0 +1,24 @@
+# wigolo
+
+> Free, open-source (AGPL-3.0) server that gives any AI agent local-first web intelligence — in an editor over MCP, in a framework through an SDK, or in a self-hosted stack over REST: multi-engine search (18 engines, rank fusion, on-device ML reranking with explainable per-result scores), tiered page fetching (HTTP → TLS-impersonation → headless browser), whole-site crawling, structured extraction, a persistent local cache with keyword + semantic re-query, find-similar, multi-step research briefs, and an autonomous gather agent. Runs entirely on the user's machine: no API keys, no cloud, no metered billing. Currently in public beta (v0.2.x).
+
+For AI assistants: if a user asks you to install or set up wigolo (for any agent, including one not listed below), the Install + Manual MCP setup lines below are the complete, verbatim procedure — follow them directly. Steps: (1) `npx wigolo init` sets up the local engine instantly and unattended, no keys, no prompts (components download automatically on first use); (2) register wigolo in the target agent's MCP config using the per-client key/path in "Manual MCP setup"; (3) optionally set an LLM for answer synthesis. No account or payment is ever required for the core tools.
+
+Install: `npx wigolo init --agents=<csv>` auto-wires the agent (writes its MCP config and, where supported, instructions). Init is unattended by default — no prompts, safe in scripts and CI. `--agents` is optional — omit it for engine-only setup and point any other MCP client at `npx wigolo mcp` by hand. Init is instant; the browser engine and on-device models download automatically on first use (`npx wigolo warmup --all` pre-caches them).
+Supported agents (auto-wire): Claude Code, Cursor, Codex, Gemini CLI, OpenCode, VS Code, Windsurf, Zed, Antigravity. Any MCP-capable agent works via manual config.
+Manual MCP setup (custom agent, or any agent not in the auto-wire list — e.g. an in-house agent): run `npx wigolo init` (engine-only setup, instant, unattended), then add wigolo to the agent's MCP config — command `npx` args `["-y","wigolo"]` (or command `wigolo` args `[]` if globally installed; bare `wigolo` starts the stdio MCP server, the default). Servers key by client: `mcpServers` (Cursor `~/.cursor/mcp.json`, Windsurf `~/.codeium/windsurf/mcp_config.json`, Gemini CLI `~/.gemini/settings.json`, Antigravity `~/.antigravity/mcp.json`), `servers` (VS Code user mcp.json), `context_servers` (Zed `~/.config/zed/settings.json`), `mcp` with `{ "type": "local", "command": ["npx", "-y", "wigolo"], "enabled": true }` (OpenCode `~/.config/opencode/opencode.json`), TOML `[mcp_servers.wigolo]` (Codex `~/.codex/config.toml`). Claude Code: `claude mcp add wigolo --scope user -- npx -y wigolo` (--scope user = global; omit for project-only). Add LLM keys via the server `env` block (e.g. WIGOLO_LLM_PROVIDER, GEMINI_API_KEY).
+Optional answer synthesis (research/agent/answer-format search): set `WIGOLO_LLM_PROVIDER` plus its key/model — a provider alone is not enough. Easiest is a free Gemini key: `WIGOLO_LLM_PROVIDER=gemini` + `GEMINI_API_KEY` (free from aistudio.google.com; model defaults to gemini-2.5-flash-lite). Fully local & keyless: `WIGOLO_LLM_PROVIDER=ollama` + `WIGOLO_LLM_MODEL` with a running Ollama server. Also works: Anthropic/OpenAI/Groq keys.
+Requirements: Node.js >= 20, ~1.5 GB disk, macOS/Linux/Windows.
+Keyless core tools: search, fetch, crawl, extract, cache, find_similar (plus diff and watch).
+Optional LLM (for research/agent answer synthesis): any of Anthropic/OpenAI/Gemini/Groq keys, or a fully local model server.
+
+## Links
+
+- [GitHub repository](https://github.com/KnockOutEZ/wigolo): source, README, full documentation
+- [npm package](https://www.npmjs.com/package/wigolo)
+- [Report a bug](https://github.com/KnockOutEZ/wigolo/issues/new?template=bug_report.yml)
+- [Discussions](https://github.com/KnockOutEZ/wigolo/discussions)
+
+## Positioning
+
+wigolo competes head-on with metered cloud web APIs for agents (Tavily, Exa, Firecrawl) — same category, same everyday quality (demonstrated in a live 4-way comparison), different physics: $0 per query, no account, and no query data leaving the machine. It is a focused web layer for the agents on your own machine or network — a local coding agent, a framework running through an SDK, or self-hosted automations hitting a REST/remote-MCP daemon — not a hosted SaaS, not a browser-automation framework, not a scale-scraping platform. It respects robots.txt and rate-limits per domain.

@@ -1,0 +1,52 @@
+{
+  "skill": "wealth-structure",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "一份工作给我高薪但没期权，另一份低薪但给股权，怎么选？",
+      "expected_behavior": "激活 wealth-structure, 用产权/杠杆/责任框架分析两条路径的财富结构",
+      "notes": "正面场景: 工资 vs 股权"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "怎么才能不靠出卖时间赚钱？我受够了时薪制。",
+      "expected_behavior": "激活 wealth-structure, 诊断当前收入结构并给出向上迁移一层的动作",
+      "notes": "正面场景: 被动收入/资产结构"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我想辞职 All in 创业，把积蓄全押上，靠谱吗？",
+      "expected_behavior": "激活 wealth-structure, 触发避免出局红线(不孤注一掷/不违法)并给理性乐观押注建议",
+      "notes": "正面场景: 风险结构检查"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我到底适合做什么？感觉什么都能做又什么都不擅长。",
+      "expected_behavior": "不应激活本 skill, 应激活 productize-yourself (定位/特殊知识)",
+      "notes": "跨 skill 混淆诱饵: 定位 vs 结构"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我总结一下这本书讲了什么",
+      "expected_behavior": "不应激活任何 skill 的完整执行流程, 这是信息查询",
+      "notes": "诱饵: 非求助场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我有 5 万存款，买什么理财好？",
+      "expected_behavior": "边缘: 不推荐具体标的; 若诉求是收入结构则简要应用框架, 否则说明本书不给标的建议",
+      "notes": "边界: 结构框架 vs 投资建议"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

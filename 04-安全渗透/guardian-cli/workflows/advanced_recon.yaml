@@ -1,0 +1,39 @@
+# Advanced Reconnaissance Workflow
+# Uses Amass for deep subdomain enumeration and Masscan for rapid port discovery
+
+name: advanced_recon
+description: Deep reconnaissance using Amass and Masscan
+version: 1.0.0
+author: Guardian AI
+
+steps:
+  - name: subdomain_enum
+    tool: amass
+    description: Passive and active subdomain enumeration
+    args:
+      passive: true
+      active: true
+      timeout: 15 # minutes
+
+  - name: port_scan_fast
+    tool: masscan
+    description: Rapid port scanning of discovered assets
+    args:
+      ports: "1-65535"
+      rate: 1000
+    dependencies:
+      - subdomain_enum
+
+  - name: service_discovery
+    tool: nmap
+    description: Detailed service version detection on found ports
+    args:
+      scan_type: "-sV -sC"
+    dependencies:
+      - port_scan_fast
+
+  - name: web_probing
+    tool: httpx
+    description: Probe for working HTTP services
+    dependencies:
+      - subdomain_enum

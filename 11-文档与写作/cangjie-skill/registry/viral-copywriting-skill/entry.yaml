@@ -1,0 +1,13 @@
+schema_version: 1
+slug: viral-copywriting-skill
+name: 爆款文案 Skill
+summary: 将《爆款文案》转成销售文案写作、诊断与转化优化的实用工作流。
+source_type: github
+source_url: https://github.com/kangarooking/viral-copywriting-skill
+skill_count: 14
+domains: [写作, 营销]
+language: [zh-CN]
+status: active
+quality: verified
+featured: true
+use_cases: [生成销售文案, 诊断转化问题, 重写产品卖点]

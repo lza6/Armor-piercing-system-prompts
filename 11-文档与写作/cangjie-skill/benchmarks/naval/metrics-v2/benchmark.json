@@ -1,0 +1,125 @@
+{
+  "tool": "cangjie-tools v2.1.0-dev",
+  "generated_at": "2026-08-25T15:00:18+0800",
+  "a_class_metrics": {
+    "tool": "count_tokens.py v0.1",
+    "config": "benchmarks/naval/token-config-v2.json",
+    "config_sha256_16": "adfa3d60ff2f0378",
+    "load_model_note": "见脚本 docstring；全部为静态假设，不代表任何宿主实际计费",
+    "results": {
+      "cl100k_base": {
+        "atomic_pack_baseline": {
+          "type": "atomic_pack",
+          "root": "books/naval-almanack-skill",
+          "entrypoint_count": 19,
+          "discovery_payload": 3897,
+          "per_task_payload": {
+            "min": 2070,
+            "median": 2207,
+            "max": 2345,
+            "n": 19
+          },
+          "corpus_installable": 49901,
+          "corpus_total": 254521
+        },
+        "single_compiled": {
+          "type": "single",
+          "root": "dist/naval-almanack-single",
+          "entrypoint_count": 1,
+          "capability_count": 19,
+          "discovery_payload": 340,
+          "entry_tokens": 2623,
+          "per_task_payload": {
+            "min": 4396,
+            "median": 4534,
+            "max": 4650,
+            "n": 19
+          },
+          "per_task_upper_bound": 6578,
+          "corpus_total": 48669
+        },
+        "compact_pack_compiled": {
+          "type": "compact_pack",
+          "root": "dist/naval-almanack-pack",
+          "entrypoint_count": 7,
+          "capability_count": 19,
+          "promoted_count": 6,
+          "discovery_payload": 1575,
+          "per_task_payload_promoted_hit": {
+            "min": 2190,
+            "median": 2271,
+            "max": 2354,
+            "n": 6
+          },
+          "per_task_payload_router_hit": {
+            "min": 4623,
+            "median": 4761,
+            "max": 4877,
+            "n": 19
+          },
+          "corpus_total": 62558
+        }
+      },
+      "o200k_base": {
+        "atomic_pack_baseline": {
+          "type": "atomic_pack",
+          "root": "books/naval-almanack-skill",
+          "entrypoint_count": 19,
+          "discovery_payload": 2682,
+          "per_task_payload": {
+            "min": 1531,
+            "median": 1616,
+            "max": 1704,
+            "n": 19
+          },
+          "corpus_installable": 37230,
+          "corpus_total": 185162
+        },
+        "single_compiled": {
+          "type": "single",
+          "root": "dist/naval-almanack-single",
+          "entrypoint_count": 1,
+          "capability_count": 19,
+          "discovery_payload": 222,
+          "entry_tokens": 1972,
+          "per_task_payload": {
+            "min": 3290,
+            "median": 3380,
+            "max": 3450,
+            "n": 19
+          },
+          "per_task_upper_bound": 4854,
+          "corpus_total": 35299
+        },
+        "compact_pack_compiled": {
+          "type": "compact_pack",
+          "root": "dist/naval-almanack-pack",
+          "entrypoint_count": 7,
+          "capability_count": 19,
+          "promoted_count": 6,
+          "discovery_payload": 1092,
+          "per_task_payload_promoted_hit": {
+            "min": 1612,
+            "median": 1669,
+            "max": 1699,
+            "n": 6
+          },
+          "per_task_payload_router_hit": {
+            "min": 3459,
+            "median": 3549,
+            "max": 3619,
+            "n": 19
+          },
+          "corpus_total": 45468
+        }
+      }
+    }
+  },
+  "eval_reports": [],
+  "process_proxy_metrics": [],
+  "notes": [
+    "A 类为固定 tokenizer 的文件计数与静态载荷模型，不代表宿主实际计费（§5.1）",
+    "B 类为过程代理量（prepared_input），标注为估算，禁止改称真实 Prompt 输入",
+    "路线 C 下不存在可信的 input/output/cached tokens，本报告不含这三项"
+  ]
+}

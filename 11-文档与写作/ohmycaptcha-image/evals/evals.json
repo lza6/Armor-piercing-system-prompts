@@ -1,0 +1,23 @@
+{
+  "skill_name": "ohmycaptcha-image",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a README hero image concept for OhMyCaptcha showing its dual-model architecture (local SGLang + cloud API).",
+      "expected_output": "A public-safe hero image prompt emphasizing the local/cloud model split, API flows, browser automation, and multimodal vision without exposing secrets.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Generate a documentation illustration for the local model deployment guide using SGLang and Qwen3.5-2B.",
+      "expected_output": "A clear visual concept showing SGLang serving a local model with an OpenAI-compatible API endpoint feeding into OhMyCaptcha's image classification pipeline.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I need an architecture diagram showing how OhMyCaptcha routes browser tasks to Playwright and image tasks to the local model.",
+      "expected_output": "A technical diagram prompt showing task routing: browser tasks → Playwright, image tasks → local model (SGLang), audio tasks → cloud model.",
+      "files": []
+    }
+  ]
+}

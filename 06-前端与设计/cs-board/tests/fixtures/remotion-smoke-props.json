@@ -1,0 +1,62 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "totalDurationMs": 2000,
+  "totalDurationFrames": 60,
+  "style": "粗线扁平国风卡通",
+  "pages": [
+    {
+      "id": "page-1",
+      "image": "board-01.png",
+      "startFrame": 0,
+      "endFrame": 60,
+      "seriesTitle": "严格语义时间轴",
+      "chapterTitle": "测试章节",
+      "pageTitle": "元素跟随旁白出现",
+      "layoutType": "focus",
+      "nodes": ["真实语音锚点", "禁止平均估算"],
+      "conclusion": "先听到，再看到",
+      "seriesPersistent": false,
+      "chapterPersistent": false,
+      "cues": [
+        {
+          "id": "cue-1",
+          "anchorText": "真实语音",
+          "startFrame": 15,
+          "endFrame": 30,
+          "spokenStartMs": 500,
+          "spokenEndMs": 900,
+          "enterIds": ["page-title", "illustration", "node-1"],
+          "focusId": "node-1",
+          "alignmentCoverage": 1,
+          "alignmentConfidence": 0.95
+        },
+        {
+          "id": "cue-2",
+          "anchorText": "禁止估算",
+          "startFrame": 30,
+          "endFrame": 45,
+          "spokenStartMs": 1000,
+          "spokenEndMs": 1350,
+          "enterIds": ["node-2"],
+          "focusId": "node-2",
+          "alignmentCoverage": 1,
+          "alignmentConfidence": 0.95
+        },
+        {
+          "id": "cue-3",
+          "anchorText": "最终结论",
+          "startFrame": 45,
+          "endFrame": 60,
+          "spokenStartMs": 1500,
+          "spokenEndMs": 1900,
+          "enterIds": ["conclusion"],
+          "focusId": "conclusion",
+          "alignmentCoverage": 1,
+          "alignmentConfidence": 0.95
+        }
+      ]
+    }
+  ]
+}

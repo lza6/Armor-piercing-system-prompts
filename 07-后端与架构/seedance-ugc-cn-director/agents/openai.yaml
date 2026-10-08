@@ -1,0 +1,4 @@
+interface:
+  display_name: "Seedance UGC CN Director"
+  short_description: "Compile evidence-bound US and German apparel UGC."
+  default_prompt: "Use $seedance-ugc-cn-director to select the correct US or German market profile, lock global audiovisual, asset-invariant, and per-shot physical deadlines, build a schema 1.4 apparel timeline, bind each selected pain and claim to one matching frame, proof action, endpoint, and market-language line, preserve continuous phone/prop state, and produce a canonical_prompt_v7 PopBoom prompt with a separate Chinese voiceover review."

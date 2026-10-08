@@ -1,0 +1,53 @@
+[project]
+name = "loki-mode-sdk"
+version = "7.4.5"
+description = "Python SDK for Loki Mode - autonomous multi-agent development platform"
+readme = "README.md"
+license = "BUSL-1.1"
+requires-python = ">=3.10"
+authors = [
+    {name = "Lokesh Mure", email = "lokesh@autonomi.dev"}
+]
+keywords = [
+    "agent-orchestration", "ai", "ai-agents", "anthropic",
+    "automation", "autonomous",
+    "claude", "claude-code", "cli", "code-generation", "codex", "coding-assistant", "consensus",
+    "developer-tools", "devtools", "distributed-systems",
+    "embeddings", "enterprise",
+    "gemini", "gemini-cli", "gpt",
+    "hive-mind",
+    "large-language-model", "llm", "loki-mode",
+    "machine-learning", "mcp", "mistral", "model-context-protocol", "multi-agent",
+    "ollama", "openai", "openclaw", "opencode", "orchestration",
+    "prd",
+    "sdk", "self-learning", "swarm", "swarm-intelligence",
+    "workflow",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Build Tools",
+]
+dependencies = [
+    "httpx>=0.24.0",
+    "pydantic>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/asklokesh/loki-mode"
+Repository = "https://github.com/asklokesh/loki-mode"
+Documentation = "https://github.com/asklokesh/loki-mode/wiki"
+"Bug Tracker" = "https://github.com/asklokesh/loki-mode/issues"
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["loki_mode_sdk*"]

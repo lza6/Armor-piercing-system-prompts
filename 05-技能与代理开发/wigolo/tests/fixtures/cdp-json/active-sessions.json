@@ -1,0 +1,38 @@
+[
+  {
+    "description": "",
+    "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:9222/devtools/page/ABC123",
+    "id": "ABC123",
+    "title": "Google Search",
+    "type": "page",
+    "url": "https://www.google.com/",
+    "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/ABC123"
+  },
+  {
+    "description": "",
+    "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:9222/devtools/page/DEF456",
+    "id": "DEF456",
+    "title": "GitHub - octocat/Hello-World",
+    "type": "page",
+    "url": "https://github.com/octocat/Hello-World",
+    "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/DEF456"
+  },
+  {
+    "description": "",
+    "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:9222/devtools/page/GHI789",
+    "id": "GHI789",
+    "title": "React \u2013 A JavaScript library for building user interfaces",
+    "type": "page",
+    "url": "https://react.dev/",
+    "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/GHI789"
+  },
+  {
+    "description": "",
+    "devtoolsFrontendUrl": "",
+    "id": "SVC001",
+    "title": "",
+    "type": "service_worker",
+    "url": "https://www.google.com/sw.js",
+    "webSocketDebuggerUrl": "ws://localhost:9222/devtools/page/SVC001"
+  }
+]

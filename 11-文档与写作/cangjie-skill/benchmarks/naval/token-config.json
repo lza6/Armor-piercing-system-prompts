@@ -1,0 +1,20 @@
+{
+  "tokenizers": ["cl100k_base", "o200k_base"],
+  "versions": {
+    "A-original-pack": {
+      "type": "atomic_pack",
+      "root": "books/naval-almanack-skill",
+      "entry_glob": "*/SKILL.md"
+    },
+    "B-single": {
+      "type": "single",
+      "root": "benchmarks/naval/prototypes/single/naval-almanack"
+    },
+    "C-compact-pack": {
+      "type": "compact_pack",
+      "root": "benchmarks/naval/prototypes/compact-pack",
+      "router": "naval-almanack",
+      "promoted_glob": "*/SKILL.md"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "MCP Maintainer"
+  short_description: "Maintain MCP tools, policy gates, and host integration."
+  default_prompt: "Use mcp-maintainer to update MCP tooling safely and verify runtime integrity."

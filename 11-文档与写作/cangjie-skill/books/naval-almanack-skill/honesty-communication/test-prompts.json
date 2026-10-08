@@ -1,0 +1,52 @@
+{
+  "skill": "honesty-communication",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "怎么批评下属/同事又不伤关系？",
+      "expected_behavior": "激活 honesty-communication, 用具体表扬一般批评(对事不对人+具体到细节)",
+      "notes": "正面场景: 反馈技巧"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "我不想说场面话，但又怕得罪人，怎么真诚地拒绝？",
+      "expected_behavior": "激活 honesty-communication, 给诚实句式+具体表扬一般批评结构",
+      "notes": "正面场景: 真诚拒绝"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我发现我最近在骗自己，怎么纠正？",
+      "expected_behavior": "激活 honesty-communication, 用撒谎先骗自己机制+事实句式重述",
+      "notes": "正面场景: 自欺检查"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我总是讨好别人，怎么改变？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 self-liberation (边界/期望) 或 identity-work",
+      "notes": "跨 skill 混淆诱饵: 表达 vs 边界"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我压缩这个视频文件",
+      "expected_behavior": "工具任务, 不调用任何 skill",
+      "notes": "诱饵: 工具任务"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "朋友问我新发型好不好看，我觉得很丑，要说实话吗？",
+      "expected_behavior": "边缘: 激活但提示诚实≠无礼(不主动说消极), 给出诚实且友善的表达(诚实+积极总是可能)",
+      "notes": "边界: 诚实 vs 体贴"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

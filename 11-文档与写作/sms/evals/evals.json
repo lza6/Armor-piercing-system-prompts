@@ -1,0 +1,7 @@
+{
+  "skill_name": "sms",
+  "evals": [
+    {"id": 1, "prompt": "Write a three-message abandoned cart SMS sequence.", "expected_output": "Checks consent, identity, timing, frequency, STOP handling, link tracking, and conversion measurement before copy.", "assertions": ["Checks consent", "Includes identity", "Includes opt-out handling", "Defines measurement"]},
+    {"id": 2, "prompt": "Can I text this purchased list to promote our sale.", "expected_output": "Does not approve the campaign without consent and jurisdiction details and explains the missing compliance inputs.", "assertions": ["Does not assume consent", "Requests jurisdiction", "Explains missing compliance inputs"]}
+  ]
+}

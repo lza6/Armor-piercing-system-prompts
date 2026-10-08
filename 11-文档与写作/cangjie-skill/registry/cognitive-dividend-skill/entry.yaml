@@ -1,0 +1,13 @@
+schema_version: 1
+slug: cognitive-dividend-skill
+name: 认知红利 Skill
+summary: 将《认知红利》的核心框架转化为可调用的思考、学习与问题分析工具。
+source_type: github
+source_url: https://github.com/kangarooking/cognitive-dividend-skill
+skill_count: 15
+domains: [认知, 学习]
+language: [zh-CN]
+status: active
+quality: verified
+featured: true
+use_cases: [拆解复杂问题, 识别认知偏差, 设计个人学习路径]

@@ -1,0 +1,33 @@
+{
+  "task_set_version": 1,
+  "note": "Phase 0 粗筛任务集（20 条）。expected_capability 用 capability-map.yaml 的 slug；overview/glossary 表示非能力类查询；out-of-scope 表示应触发边界判停。acceptable 列出可接受的次优命中。",
+  "categories": {
+    "book_lookup": "书名/章节/术语查询",
+    "topic_consult": "主题咨询",
+    "executable_task": "可执行任务",
+    "near_neighbor": "近邻意图混淆",
+    "out_of_scope": "超范围（应判停）"
+  },
+  "tasks": [
+    { "id": "T01", "category": "book_lookup", "prompt": "《纳瓦尔宝典》的作者是谁？这本书大概讲了什么？", "expected": "overview", "acceptable": [] },
+    { "id": "T02", "category": "book_lookup", "prompt": "纳瓦尔宝典第一章「财富」部分的核心观点是什么？", "expected": "overview", "acceptable": ["wealth-structure"] },
+    { "id": "T03", "category": "book_lookup", "prompt": "纳瓦尔说的「特殊知识」是什么意思？", "expected": "glossary", "acceptable": ["productize-yourself"] },
+    { "id": "T04", "category": "book_lookup", "prompt": "纳瓦尔讲的「杠杆」分哪几种？哪种最好？", "expected": "glossary", "acceptable": ["wealth-structure"] },
+    { "id": "T05", "category": "topic_consult", "prompt": "我工资不低但总觉得钱不够花，越赚越焦虑，怎么办？", "expected": "happiness-skill", "acceptable": ["wealth-structure", "self-liberation"] },
+    { "id": "T06", "category": "topic_consult", "prompt": "同事升职了，我表面祝贺心里很不是滋味，怎么调整？", "expected": "game-selection", "acceptable": ["happiness-skill"] },
+    { "id": "T07", "category": "topic_consult", "prompt": "我最近对什么都提不起劲，总觉得活着没什么意义。", "expected": "life-meaning", "acceptable": ["happiness-skill"] },
+    { "id": "T08", "category": "topic_consult", "prompt": "朋友拉我去上身心灵课程，说能开悟，我该不该信？", "expected": "rational-buddhism", "acceptable": [] },
+    { "id": "T09", "category": "topic_consult", "prompt": "为什么大公司的人都在磨洋工，小创业公司的人却拼命干？", "expected": "principal-agent", "acceptable": [] },
+    { "id": "T10", "category": "executable_task", "prompt": "我拿到两个 offer：大厂高薪岗和初创公司期权岗，帮我分析该怎么选。", "expected": "wealth-structure", "acceptable": ["decision-heuristics"] },
+    { "id": "T11", "category": "executable_task", "prompt": "我想做副业但不知道方向，帮我梳理我的独特优势。", "expected": "productize-yourself", "acceptable": [] },
+    { "id": "T12", "category": "executable_task", "prompt": "我纠结要不要离开老家搬去上海工作，列了利弊表还是定不下来，帮我做决定。", "expected": "decision-heuristics", "acceptable": [] },
+    { "id": "T13", "category": "executable_task", "prompt": "每周家务和报销占我 10 小时，该自己做还是花钱外包？", "expected": "hourly-rate-time", "acceptable": [] },
+    { "id": "T14", "category": "executable_task", "prompt": "我想系统入门经济学，该选什么书、怎么读？", "expected": "reading-metaskill", "acceptable": [] },
+    { "id": "T15", "category": "executable_task", "prompt": "我每天刷短视频四五个小时停不下来，帮我制定一个戒断计划。", "expected": "screen-detox", "acceptable": [] },
+    { "id": "T16", "category": "near_neighbor", "prompt": "和婆婆住一起三年了一直很压抑，她不可能改，我该继续忍还是搬出去？", "expected": "acceptance", "acceptable": ["self-liberation"] },
+    { "id": "T17", "category": "near_neighbor", "prompt": "我总控制不住对家人发火，事后又后悔，怎么改？", "expected": "self-liberation", "acceptable": ["monkey-mind-meditation", "acceptance"] },
+    { "id": "T18", "category": "near_neighbor", "prompt": "睡前脑子里反复回放白天说错的话，根本停不下来。", "expected": "monkey-mind-meditation", "acceptable": ["acceptance"] },
+    { "id": "T19", "category": "out_of_scope", "prompt": "帮我分析宁德时代这只股票现在值不值得买入。", "expected": "out-of-scope", "acceptable": [] },
+    { "id": "T20", "category": "out_of_scope", "prompt": "我连续一个月失眠心悸、情绪低落，是不是得了抑郁症？该吃什么药？", "expected": "out-of-scope", "acceptable": [] }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "errors": [],
+  "warnings": [],
+  "checks_scope": "Decoded media and timeline",
+  "human_review_required": true,
+  "limitations": "No ASR, pronunciation, semantic synchronization or visual quality acceptance. Motion statistics do not prove independent element animation.",
+  "caption_text_checked": true,
+  "alignment": "reused_verified_sentence_timeline",
+  "size": [
+    1920,
+    1080
+  ],
+  "fps": 30.0,
+  "frames_decoded": 1155,
+  "video_duration": 38.5,
+  "scene_samples": [
+    {
+      "scene": 1,
+      "time": 4.833333333333333
+    },
+    {
+      "scene": 2,
+      "time": 11.233333333333333
+    },
+    {
+      "scene": 3,
+      "time": 16.166666666666668
+    },
+    {
+      "scene": 4,
+      "time": 21.233333333333334
+    },
+    {
+      "scene": 5,
+      "time": 27.033333333333335
+    },
+    {
+      "scene": 6,
+      "time": 33.03333333333333
+    },
+    {
+      "scene": 7,
+      "time": 37.333333333333336
+    }
+  ],
+  "motion_roi": [
+    0.0,
+    0.0,
+    1.0,
+    0.84
+  ],
+  "audio_duration": 38.528,
+  "audio_peak": 0.571364164352417,
+  "near_full_scale_samples": 0,
+  "audible_span": [
+    0.24279166666666666,
+    37.746291666666664
+  ],
+  "audio_timestamp_start": 0.0,
+  "audio_timestamp_end": 38.528000000000006,
+  "art_motion": [
+    {
+      "scene": 1,
+      "max_mean_change": 20.026782989501953
+    },
+    {
+      "scene": 2,
+      "max_mean_change": 25.67797088623047
+    },
+    {
+      "scene": 3,
+      "max_mean_change": 28.249813079833984
+    },
+    {
+      "scene": 4,
+      "max_mean_change": 24.5156307220459
+    },
+    {
+      "scene": 5,
+      "max_mean_change": 24.024646759033203
+    },
+    {
+      "scene": 6,
+      "max_mean_change": 27.707164764404297
+    },
+    {
+      "scene": 7,
+      "max_mean_change": 38.90938186645508
+    }
+  ],
+  "automated_checks_passed": true
+}

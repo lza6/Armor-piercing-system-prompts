@@ -1,0 +1,31 @@
+{
+  "query": "typescript tutorial",
+  "number_of_results": 3,
+  "results": [
+    {
+      "title": "TypeScript: Handbook",
+      "url": "https://www.typescriptlang.org/docs/handbook/",
+      "content": "The TypeScript Handbook is the definitive guide to the TypeScript language.",
+      "score": 0.95,
+      "engine": "google",
+      "engines": ["google", "bing"]
+    },
+    {
+      "title": "Learn TypeScript - Free Tutorial",
+      "url": "https://www.learn-ts.org/",
+      "content": "An interactive TypeScript tutorial for beginners.",
+      "score": 0.82,
+      "engine": "bing",
+      "engines": ["bing"],
+      "publishedDate": "2026-04-01T00:00:00Z"
+    },
+    {
+      "title": "TypeScript for JavaScript Developers",
+      "url": "https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html",
+      "content": "TypeScript offers all of JavaScript's features with an additional layer.",
+      "score": null,
+      "engine": "duckduckgo",
+      "engines": ["duckduckgo"]
+    }
+  ]
+}

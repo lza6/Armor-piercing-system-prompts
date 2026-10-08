@@ -1,0 +1,52 @@
+{
+  "skill": "life-meaning",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "人到中年突然觉得一切都没意义，活着到底为了什么？",
+      "expected_behavior": "激活 life-meaning, 给三个答案+愿意为之受苦的挖掘练习",
+      "notes": "正面场景: 虚无感"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "我很害怕变老和死亡，怎么面对？",
+      "expected_behavior": "激活 life-meaning, 用拥抱死亡+萤火虫比喻给意义校准",
+      "notes": "正面场景: 死亡恐惧"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "做的工作没意义，我该怎么找到人生方向？",
+      "expected_behavior": "激活 life-meaning, 给意义创造(私人版本/受苦清单/死亡校准)流程",
+      "notes": "正面场景: 方向迷失"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我放不下三年前那次失败，反复内耗怎么办？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 acceptance (放下/接受) 或 monkey-mind-meditation",
+      "notes": "跨 skill 混淆诱饵: 意义 vs 当下处境"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我写一首关于秋天的诗",
+      "expected_behavior": "创作任务, 不调用意义探寻流程",
+      "notes": "诱饵: 创作场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "最近状态很差，经常想'活着没意思'，我该做这个意义练习吗？",
+      "expected_behavior": "边缘: 先筛查自杀风险/抑郁, 有风险立即转介专业帮助; 无风险才进入意义探讨",
+      "notes": "边界: 哲学探讨 vs 危机干预"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

@@ -1,0 +1,59 @@
+---
+name: seedance-vocab-ja
+description: "This skill should be used when the user asks for Japanese Seedance 2.0 prompt wording, Japanese cinematic vocabulary, or translation of camera, lighting, action, VFX, audio, and production terms into Japanese."
+license: MIT
+user-invocable: true
+tags:
+  - japanese
+  - vocabulary
+  - seedance-20
+metadata:
+  version: "6.7.0"
+  updated: "2026-08-01"
+  parent: "seedance-20"
+  author: "Iamemily2050 (@iamemily2050)"
+  repository: "https://github.com/Emily2040/seedance-2.0"
+  openclaw:
+    emoji: "🎬"
+    homepage: "https://github.com/Emily2040/seedance-2.0"
+---
+
+# seedance-vocab-ja
+
+Before producing prompt text, a prompt-ready block, a rewrite, an example, or a compiled clip, load the [Director's Read](../../references/directors-read.md), classify the brief, and complete its canonical narrative or non-narrative record. Translate that record into visible or audible carriers and keep its internal labels out of final generation prose.
+
+Use Japanese cinematic vocabulary when the user asks for Japanese prompt wording, bilingual delivery, compact translation, or production vocabulary for camera, lighting, motion, VFX, and audio. Preserve actual reference tags exactly; their spelling is independent of the prompt language.
+
+Before adapting a reference example below, load [Using Reference Examples](../../references/surface-prompt-profiles.md#using-reference-examples). Bind its placeholders to real assets by the requested role, then preserve the actual token, including its script, case, spacing and punctuation. A written example token does not attach a file.
+
+## Intent
+
+Japanese prompt direction can combine concise clauses with established production loanwords. Choose one readable clause order, keep each term attached to a concrete shot instruction, and avoid literal English syntax where a shorter production construction is available. The shipped independent review artifact is empty, so treat these choices as working production wording pending locale-specialist review.
+
+## Usage Rule
+
+Prefer concise production Japanese over literal translation. Keep the structure readable: subject, action, camera, lighting, sound, and preservation constraint.
+
+| Function | Japanese wording |
+|---|---|
+| Camera | `ゆっくりドリーイン`, `横移動のトラッキング`, `固定の中景`, `低いアングル`, `クローズアップ` |
+| Lighting | `逆光`, `柔らかい窓光`, `暖かいプラクティカルライト`, `冷たい月明かり`, `輪郭光` |
+| Motion | `ゆっくり振り返る`, `画面を素早く横切る`, `水滴が下へ流れる`, `煙が薄く広がる` |
+| Audio | `静かな環境音`, `短い台詞`, `金属音`, `音楽なし` |
+| Constraints | `ロゴ、ラベル、形状を正確に維持する` |
+
+## Compact Pattern
+
+`@Image1を参照として、被写体の顔/商品形状/ロゴを正確に維持する。変化は[動き/光/カメラ]のみ。カメラ：[一つの動き]。音：[音声指示]。`
+
+## Register Rule
+
+Preserve user-supplied dialogue. When drafting or adapting speech, load Register (文体) in [the vocabulary guide](../../references/vocab/ja.md) and keep the relationship and intended tone explicit. Offer register choices only where they affect the brief. Measure the actual spoken line; do not use a fixed multiplier or change politeness to fit an invented sync budget. Record any unresolved locale-review need.
+
+## De-Slop Rule
+
+When an adjective leaves the intended shot unclear, load Slop Traps in [Japanese vocabulary](../../references/vocab/ja.md). Preserve a useful style or aesthetic term and add only the scene-specific action, framing, light, or sound needed to clarify it. The table offers authored options, not a default look or a proven model-performance rule. Keep the user's chosen energy, dialogue, reference tags, and settings. Offer distinct choices only when the ambiguity changes the scene; if the user delegated the choice, decide within that scope.
+
+## Output Contract
+
+Return Japanese prompt wording, optional English gloss when useful, and unchanged reference tags.

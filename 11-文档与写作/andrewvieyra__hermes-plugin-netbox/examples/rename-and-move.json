@@ -1,0 +1,7 @@
+{
+  "description": "Rename sw1 to core-sw1 and move it to SFO",
+  "operations": [
+    {"op": "update", "endpoint": "dcim/devices", "match": {"name": "sw1"},
+     "data": {"name": "core-sw1", "site": {"slug": "sfo"}}}
+  ]
+}

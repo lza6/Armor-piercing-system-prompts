@@ -1,0 +1,9 @@
+[package]
+name = "ubs_async_clean"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[[bin]]
+name = "ubs_async_clean"
+path = "async_errors.rs"

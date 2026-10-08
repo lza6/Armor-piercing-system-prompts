@@ -1,0 +1,12 @@
+# ============================================
+# DeepTutor Math Animator — Addon
+# ============================================
+# Install: pip install -r requirements/math-animator.txt
+# Addon for `deeptutor animate`. Install alongside cli.txt or server.txt.
+#
+# System prerequisites (installed outside pip):
+# - LaTeX runtime (`latex`) for Tex/MathTex rendering
+# - pkg-config, cairo, cmake (for pycairo/manimpango build paths)
+# - ffmpeg (video encoding)
+
+manim>=0.19.0

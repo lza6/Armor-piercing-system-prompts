@@ -1,0 +1,57 @@
+{
+  "duration": 36,
+  "audio_duration": 34.848,
+  "voice": "zh_male_liufei_uranus_bigtts",
+  "alignment": "Full narration with scene boundaries chosen at measured sentence pauses; not word-level forced alignment.",
+  "scenes": [
+    {
+      "n": 1,
+      "start": 0,
+      "end": 3.96,
+      "caption": "每次让 AI 做周报，你是不是都要重新解释一遍要求？"
+    },
+    {
+      "n": 2,
+      "start": 3.96,
+      "end": 8.49,
+      "caption": "你可以把固定做法，整理成一套能反复使用的工作说明。"
+    },
+    {
+      "n": 3,
+      "start": 8.49,
+      "end": 12.14,
+      "caption": "这就是 Skill：告诉 AI，这类任务应该怎么做。"
+    },
+    {
+      "n": 4,
+      "start": 12.14,
+      "end": 17.16,
+      "caption": "比如周报：先看本周记录，再整理进展、问题和下周计划。"
+    },
+    {
+      "n": 5,
+      "start": 17.16,
+      "end": 21.49,
+      "caption": "需要时，还能附上模板、参考资料，或者处理数据的脚本。"
+    },
+    {
+      "n": 6,
+      "start": 21.49,
+      "end": 25.78,
+      "caption": "以后遇到同类任务，就能请 AI 照着做，少些重复交代。"
+    },
+    {
+      "n": 7,
+      "start": 25.78,
+      "end": 30.3,
+      "caption": "但 Skill 不会自动开通工具权限，也不能保证结果全对。"
+    },
+    {
+      "n": 8,
+      "start": 30.3,
+      "end": 36.0,
+      "caption": "记住，Skill，就是给 AI 准备的可复用工作指南。"
+    }
+  ],
+  "narration_text": "每次让AI做周报，你是不是都要重新解释一遍要求？\n你可以把固定做法，整理成一套能反复使用的工作说明。\n这就是Skill：告诉AI，这类任务应该怎么做。\n比如周报：先看本周记录，再整理进展、问题和下周计划。\n需要时，还能附上模板、参考资料，或者处理数据的脚本。\n以后遇到同类任务，就能请AI照着做，少些重复交代。\n但Skill不会自动开通工具权限，也不能保证结果全对。\n记住，Skill，就是给AI准备的可复用工作指南。"
+}

@@ -1,0 +1,306 @@
+{
+  "_comment": "Canonical model catalog. Update this single file when a provider ships a new model. Providers/web-app/docs read from here.",
+  "_source_of_truth": "models[] is authoritative. Each entry's `tier` decides what that tier resolves to, first match wins, so order within models[] is load-bearing. The top-level latest_<tier> keys are DERIVED mirrors kept only for existing readers (dashboard/server.py, tools/probe-model-catalog.py, tests); never hand-edit them out of step with models[] -- tests/test-model-catalog-single-source.sh fails when they disagree. A provider whose models[] has no entry for a tier must declare `tier_fallback` saying which tier substitutes; there is no implicit fallback.",
+  "schema_version": 1,
+  "updated": "2026-09-09",
+  "providers": {
+    "claude": {
+      "latest_planning": "claude-opus-5",
+      "latest_development": "claude-sonnet-5",
+      "latest_fast": "claude-haiku-4-5",
+      "cli_aliases": {
+        "fable": "claude-fable-5-1",
+        "opus": "claude-opus-5",
+        "sonnet": "claude-sonnet-5",
+        "haiku": "claude-haiku-4-5"
+      },
+      "models": [
+        {
+          "id": "claude-fable-5-1",
+          "alias": "fable",
+          "tier": "advisor",
+          "context_window": 1000000,
+          "max_output": 128000,
+          "notes": "Top-tier advisory model, released 2026-09-01. Pricing $10/$50 per MTok. Cache reads are 0.025x base input ($0.25/MTok), not the usual 0.1x. Doc-supported for architecture/root-cause; opt-in only (cost). Refuses cyber content, so NOT used for security review."
+        },
+        {
+          "id": "claude-opus-5",
+          "alias": "opus",
+          "tier": "planning",
+          "context_window": 1000000,
+          "max_output": 128000,
+          "notes": "Adaptive thinking, xhigh effort for agentic coding"
+        },
+        {
+          "id": "claude-sonnet-5",
+          "alias": "sonnet",
+          "tier": "development",
+          "context_window": 1000000,
+          "max_output": 64000,
+          "notes": "Default execution model as of v7.104.0. Intro price $2/$10 per MTok through 2026-08-31; list price $3/$15 per MTok."
+        },
+        {
+          "id": "claude-haiku-4-5",
+          "alias": "haiku",
+          "tier": "fast",
+          "context_window": 200000,
+          "max_output": 64000
+        },
+        {
+          "id": "claude-fable-5",
+          "tier": "legacy",
+          "context_window": 1000000,
+          "max_output": 128000,
+          "notes": "Superseded by claude-fable-5-1 (2026-09-01). Catalog-only; not a latest_* or alias target."
+        }
+      ]
+    },
+    "codex": {
+      "latest_planning": "gpt-5.6-sol",
+      "latest_development": "gpt-5.6-terra",
+      "latest_fast": "gpt-5.6-luna",
+      "models": [
+        {
+          "id": "gpt-5.6-sol",
+          "tier": "planning",
+          "notes": "high tier. OpenAI: 'Frontier model for complex professional work'. Verified against developers.openai.com/api/docs/models."
+        },
+        {
+          "id": "gpt-5.6-terra",
+          "tier": "development",
+          "notes": "medium tier, the DEFAULT. OpenAI: balances performance with affordability."
+        },
+        {
+          "id": "gpt-5.6-luna",
+          "tier": "fast",
+          "notes": "small tier. OpenAI: budget-conscious, high-volume."
+        },
+        {
+          "id": "gpt-5.3-codex",
+          "tier": "legacy",
+          "notes": "Prior default, superseded by the gpt-5.6 line. Kept discoverable, not dispatched."
+        },
+        {
+          "id": "o3",
+          "tier": "planning",
+          "notes": "Alternative planning model. NOT the default -- gpt-5.3-codex is listed first and first match wins."
+        },
+        {
+          "id": "o4-mini",
+          "tier": "legacy",
+          "notes": "Was tier=fast, which made the cheap tier resolve to o4-mini while latest_fast said gpt-5.3-codex. Codex does not differentiate tiers by model, so it is not any tier's default; parked at tier=legacy so it stays discoverable without being dispatched."
+        }
+      ],
+      "notes": "Codex uses a single model with effort level (xhigh/high/low) for tier differentiation, so development and fast declare an explicit tier_fallback to planning rather than naming separate models."
+    },
+    "cline": {
+      "latest_planning": "openrouter/deepseek/deepseek-v3.2",
+      "latest_development": "openrouter/deepseek/deepseek-v3.2",
+      "latest_fast": "openrouter/deepseek/deepseek-chat",
+      "models": [
+        {
+          "id": "openrouter/deepseek/deepseek-v3.2",
+          "tier": "planning",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/deepseek/deepseek-v3.2",
+          "tier": "development",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/deepseek/deepseek-chat",
+          "tier": "fast",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/z-ai/glm-4.6",
+          "tier": "development",
+          "open_weights": true
+        }
+      ]
+    },
+    "aider": {
+      "latest_planning": "openrouter/deepseek/deepseek-v3.2",
+      "latest_development": "openrouter/deepseek/deepseek-v3.2",
+      "latest_fast": "openrouter/deepseek/deepseek-chat",
+      "models": [
+        {
+          "id": "openrouter/deepseek/deepseek-v3.2",
+          "tier": "planning",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/deepseek/deepseek-v3.2",
+          "tier": "development",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/deepseek/deepseek-chat",
+          "tier": "fast",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/minimax/minimax-m2.1",
+          "tier": "development",
+          "open_weights": true
+        },
+        {
+          "id": "ollama_chat/deepseek-coder",
+          "tier": "fast",
+          "open_weights": true
+        }
+      ]
+    },
+    "opencode": {
+      "latest_planning": "openrouter/deepseek/deepseek-v3.2",
+      "latest_development": "openrouter/deepseek/deepseek-v3.2",
+      "latest_fast": "openrouter/deepseek/deepseek-chat",
+      "models": [
+        {
+          "id": "openrouter/deepseek/deepseek-v3.2",
+          "tier": "planning",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/deepseek/deepseek-v3.2",
+          "tier": "development",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/deepseek/deepseek-chat",
+          "tier": "fast",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/z-ai/glm-4.6",
+          "tier": "development",
+          "open_weights": true
+        },
+        {
+          "id": "openrouter/minimax/minimax-m2.1",
+          "tier": "development",
+          "open_weights": true
+        },
+        {
+          "id": "ollama/qwen2.5-coder",
+          "tier": "fast",
+          "open_weights": true
+        }
+      ]
+    },
+    "generic": {
+      "_comment": "Fallback for ANY provider not named above (bring-your-own endpoint). All three tiers collapse to one open model, the same shape codex uses, declared via tier_fallback. Override per tier with LOKI_<PROVIDER>_MODEL_<TIER> or wholesale with LOKI_<PROVIDER>_MODEL.",
+      "latest_planning": "openrouter/deepseek/deepseek-v3.2",
+      "latest_development": "openrouter/deepseek/deepseek-v3.2",
+      "latest_fast": "openrouter/deepseek/deepseek-v3.2",
+      "tier_fallback": {
+        "planning": "development",
+        "fast": "development"
+      },
+      "models": [
+        {
+          "id": "openrouter/deepseek/deepseek-v3.2",
+          "tier": "development",
+          "open_weights": true
+        }
+      ]
+    },
+    "minimax": {
+      "_comment": "Catalog-only compatibility metadata. MiniMax is not a fifth --provider value; select these models through the existing Claude or Aider adapters with the matching endpoint variables.",
+      "latest_planning": "MiniMax-M3",
+      "latest_development": "MiniMax-M2.7",
+      "latest_fast": "MiniMax-M2.7",
+      "tier_fallback": {
+        "fast": "development"
+      },
+      "endpoints": [
+        {
+          "region": "global_en",
+          "openai_base_url": "https://api.minimax.io/v1",
+          "anthropic_base_url": "https://api.minimax.io/anthropic",
+          "docs_root": "https://platform.minimax.io/docs"
+        },
+        {
+          "region": "cn_zh",
+          "openai_base_url": "https://api.minimaxi.com/v1",
+          "anthropic_base_url": "https://api.minimaxi.com/anthropic",
+          "docs_root": "https://platform.minimaxi.com/docs"
+        }
+      ],
+      "models": [
+        {
+          "id": "MiniMax-M3",
+          "tier": "planning",
+          "context_window": 1000000,
+          "input_modalities": [
+            "text",
+            "image",
+            "video"
+          ],
+          "thinking": [
+            "adaptive",
+            "disabled"
+          ],
+          "pricing_usd_per_million_tokens": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.06,
+            "cache_write": null
+          },
+          "pricing_tiers_usd_per_million_tokens": [
+            {
+              "service_tier": "standard",
+              "input_tokens_lte": 512000,
+              "input": 0.3,
+              "output": 1.2,
+              "cache_read": 0.06,
+              "cache_write": null
+            },
+            {
+              "service_tier": "standard",
+              "input_tokens_gt": 512000,
+              "input": 0.6,
+              "output": 2.4,
+              "cache_read": 0.12,
+              "cache_write": null
+            },
+            {
+              "service_tier": "priority",
+              "input_tokens_lte": 512000,
+              "input": 0.45,
+              "output": 1.8,
+              "cache_read": 0.09,
+              "cache_write": null
+            },
+            {
+              "service_tier": "priority",
+              "input_tokens_gt": 512000,
+              "input": 0.9,
+              "output": 3.6,
+              "cache_read": 0.18,
+              "cache_write": null
+            }
+          ]
+        },
+        {
+          "id": "MiniMax-M2.7",
+          "tier": "development",
+          "context_window": 204800,
+          "input_modalities": [
+            "text"
+          ],
+          "thinking": [
+            "always_on"
+          ],
+          "pricing_usd_per_million_tokens": {
+            "input": 0.3,
+            "output": 1.2,
+            "cache_read": 0.06,
+            "cache_write": 0.375
+          }
+        }
+      ]
+    }
+  }
+}

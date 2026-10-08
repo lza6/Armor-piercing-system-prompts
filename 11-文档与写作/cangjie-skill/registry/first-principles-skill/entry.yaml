@@ -1,0 +1,13 @@
+schema_version: 1
+slug: first-principles-skill
+name: 第一性原理 Skill
+summary: 用基本事实拆解问题、突破默认假设并重建解决方案的认知工具。
+source_type: github
+source_url: https://github.com/kangarooking/first-principles-skill
+skill_count: 10
+domains: [认知, 创新]
+language: [zh-CN]
+status: active
+quality: verified
+featured: false
+use_cases: [拆掉隐含假设, 从基本事实推演, 重构产品方案]

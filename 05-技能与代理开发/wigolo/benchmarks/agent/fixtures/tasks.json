@@ -1,0 +1,84 @@
+{
+  "version": "1.0.0",
+  "tasks": [
+    {
+      "id": "fact-001",
+      "type": "fact-lookup",
+      "description": "Find the latest TypeScript version and its key features",
+      "query": "latest TypeScript version features",
+      "expectedDomains": ["typescriptlang.org"],
+      "tags": ["typescript"]
+    },
+    {
+      "id": "fact-002",
+      "type": "fact-lookup",
+      "description": "Find Node.js LTS schedule",
+      "query": "Node.js LTS release schedule 2026",
+      "expectedDomains": ["nodejs.org"],
+      "tags": ["nodejs"]
+    },
+    {
+      "id": "fact-003",
+      "type": "fact-lookup",
+      "description": "Find vitest configuration options",
+      "query": "vitest configuration file options",
+      "expectedDomains": ["vitest.dev"],
+      "tags": ["vitest", "testing"]
+    },
+    {
+      "id": "research-001",
+      "type": "multi-step-research",
+      "description": "Compare Playwright vs Puppeteer for web scraping",
+      "query": "playwright vs puppeteer web scraping comparison",
+      "maxSteps": 6,
+      "tags": ["browser", "scraping"]
+    },
+    {
+      "id": "research-002",
+      "type": "multi-step-research",
+      "description": "Research SQLite FTS5 best practices",
+      "query": "SQLite FTS5 full text search best practices",
+      "maxSteps": 6,
+      "tags": ["sqlite", "search"]
+    },
+    {
+      "id": "extract-001",
+      "type": "data-extraction",
+      "description": "Extract the Express.js middleware API",
+      "query": "express.js middleware function signature parameters",
+      "expectedDomains": ["expressjs.com"],
+      "tags": ["express", "api"]
+    },
+    {
+      "id": "extract-002",
+      "type": "data-extraction",
+      "description": "Extract Playwright browser launch options",
+      "query": "playwright browser launch options API",
+      "expectedDomains": ["playwright.dev"],
+      "tags": ["playwright", "api"]
+    },
+    {
+      "id": "compare-001",
+      "type": "comparison",
+      "description": "Compare bun vs node.js performance characteristics",
+      "query": "bun vs node.js performance startup speed",
+      "maxSteps": 6,
+      "tags": ["runtime", "performance"]
+    },
+    {
+      "id": "docs-001",
+      "type": "code-docs",
+      "description": "Find the Zod schema validation library usage",
+      "query": "zod typescript schema validation usage examples",
+      "tags": ["zod", "validation"]
+    },
+    {
+      "id": "docs-002",
+      "type": "code-docs",
+      "description": "Find better-sqlite3 API documentation",
+      "query": "better-sqlite3 API prepare run all",
+      "expectedDomains": ["github.com"],
+      "tags": ["sqlite", "api"]
+    }
+  ]
+}

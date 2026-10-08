@@ -1,0 +1,52 @@
+{
+  "skill": "decision-heuristics",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "要不要跳槽去另一家公司？我列了十条利弊还是拿不定主意。",
+      "expected_behavior": "激活 decision-heuristics, 跑决策门(无法决定就答否)并检查是否重大决定",
+      "notes": "正面场景: 重大选择纠结"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "该不该搬去另一个城市发展？这个决定影响我未来十年。",
+      "expected_behavior": "激活 decision-heuristics, 按三个重大决定框架(住哪/和谁/做什么)给调研规划",
+      "notes": "正面场景: 城市选择"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "两个项目都还行，一个前期很痛苦但长期更有价值，选哪个？",
+      "expected_behavior": "激活 decision-heuristics, 应用短期痛苦原则(选短期更痛苦=长期收益)",
+      "notes": "正面场景: 短期痛苦原则"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我老公/老婆有些习惯改不了，我该忍着还是怎么办？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 acceptance (改变/接受/离开三选项)",
+      "notes": "跨 skill 混淆诱饵: 可改变 vs 不可改变"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我查一下明天的天气",
+      "expected_behavior": "信息查询, 不调用决策 skill",
+      "notes": "诱饵: 非决策场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "今晚吃火锅还是日料？我纠结半天了。",
+      "expected_behavior": "边缘: 不激活完整启发式流程(日常琐碎选择不属于本书决策门), 直接给轻量建议或随机决定",
+      "notes": "边界: 重大决定 vs 日常选择"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

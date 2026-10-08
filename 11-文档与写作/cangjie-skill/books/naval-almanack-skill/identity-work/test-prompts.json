@@ -1,0 +1,52 @@
+{
+  "skill": "identity-work",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我发现我总在为自己的立场辩护，明明没认真想过却不肯松口。",
+      "expected_behavior": "激活 identity-work, 做信念审计+从基本原则重估",
+      "notes": "正面场景: 身份锁死认知"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "我每次都下定决心改变，但每次都坚持不下去，为什么？",
+      "expected_behavior": "激活 identity-work, 用自我形象更新+对外承诺替代自律",
+      "notes": "正面场景: 改变失败"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我是不是在自欺欺人？怎么面对自己不愿意承认的真相？",
+      "expected_behavior": "激活 identity-work, 用痛苦=真相时刻+公开认错防自欺流程",
+      "notes": "正面场景: 面对现实"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "老板总给我画饼，我怎么不受他影响？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 self-liberation (期望边界) 或 honesty-communication",
+      "notes": "跨 skill 混淆诱饵: 内部身份 vs 外部期望"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我格式化一下这个 U 盘",
+      "expected_behavior": "技术操作, 不调用任何 skill",
+      "notes": "诱饵: 工具任务"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我出柜/转行后家人不认同，我要『放下身份』吗？",
+      "expected_behavior": "边缘: 警惕把身份清空误用为否定自我; 本 skill 针对『认知牢笼』而非真实身份认同, 应区分并保护用户的核心身份",
+      "notes": "边界: 身份清空 vs 身份认同"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

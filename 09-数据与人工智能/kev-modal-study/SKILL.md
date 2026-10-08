@@ -1,0 +1,55 @@
+---
+name: kev-modal-study
+description: Launch, monitor and pull Kev training studies, probes and benchmarks on Modal (modal_app.py, modal_probe35.py). Use when running trials, delta fine-tunes, base probes or remote evals for the Kev repo.
+---
+
+# Kev on Modal — study workflow
+
+All GPU work in this repo goes through two files. Never train large models locally (a 32 GB Mac swaps with an 8B in bf16 while Chrome is open).
+
+## Studies (training trials): `modal_app.py`
+
+1. **Plan file** in `experiments/<name>.json`: a list of trial dicts. Allowed keys: `kev/experiment.py::DEFAULTS`, `CHOICES`, plus `base`, `base_revision` (40-hex, required if the suite does not pin the base), `train_sources`, `anchor*`, `init_from` (Hub id[@rev] or `/runs/...` path), `data` (`evals/**/*.jsonl`), `replay` (int). Validate locally first:
+   `uv run python -c "from pathlib import Path; from kev.experiment import load_plan; print(len(load_plan(Path('evals/v7/decision-v7'), Path('experiments/X.json'))))"`
+2. **Deploy if `kev/*.py` changed** (the launcher refuses otherwise: "deployed app has different kev/*.py"): `uv run modal deploy modal_app.py`. Redeploying while trials run is safe — in-flight containers keep their image — but wait for trials that are seconds from finishing if you can.
+3. **Launch** (each trial is spawned as its own call on the deployed app; survives disconnects):
+   `uv run modal run modal_app.py::study --suite evals/v7/decision-v7 --plan experiments/X.json --name X --transfer evals/v4/transfer-v4 --budget 30 --timeout 5400`
+   Names are immutable: a failed study needs a new name (`X2`). Timeout max 14400. Bound cost is printed; H100 ≈ $3.95/h.
+4. **Monitor**: `uv run modal app logs kev-research | grep -a -E "step .*/|evaluated|Error" | tail`. Per-trial status without logs:
+   ```python
+   import json, modal
+   for name, cid in json.load(open("runs/X.spawn.json"))["calls"].items():
+       fc = modal.FunctionCall.from_id(cid)
+       try: print(name, fc.get(timeout=1)["clean_acc"])
+       except TimeoutError: print(name, "running")
+   ```
+   A trial's own log: `uv run modal volume get kev-runs /X/00-trial-0/train.log /tmp/x.log --force`.
+5. **Pull** when done: `uv run modal run modal_app.py::pull --name X` → `runs/X/<trial>/{result.json, provenance.json, checkpoint/, transfer/rows.json}`. Then `PYTHONPATH=. uv run python scripts/compare_q35.py` or a paired bootstrap (`kev.metrics.paired_bootstrap(rows_a, rows_b, metric="acc")`) against the released checkpoint's `transfer/rows.json`.
+6. **Locked test** (once per candidate, selected on dev only): `uv run modal run --detach modal_app.py::locked_test --trial X/00-trial-0 --name <candidate> --decision evals/v7/decision-v7`; result at volume `/locked/<candidate>/summary.json`.
+
+Timing (H100, row-batched hybrid): 0.8B ≈ 20 min, 4B ≈ 60 min, 9B ≈ 90 min for the full v7 recipe; deltas (1 epoch over ~1k records + 2k replay) ≈ 10–20 min. Set `--timeout` with ≥ 50 % headroom; a timed-out container loses everything.
+
+## Probes and remote benchmarks: `modal_probe35.py`
+
+Image has transformers 5 + fla; mounts `evals/` and `scripts/` at run time (no deploy step). Run with `--detach` in the background and read the log.
+
+- Untrained-base probe (zero-shot letter logits, same items as every README row):
+  `KEV_PROBE_GPU=H200 uv run modal run --detach modal_probe35.py::main --bases Qwen/X-Base --revision <sha> [--suite evals/v9/transfer-v9] [--prompt semif] [--adapter /runs/.../checkpoint --tag name]`
+  Output pulled to `runs/probes/<base>-base-<suite>/report.json`. Use H200 for ≥ 30B bf16.
+- Benchmark any checkpoint on any suite or `--data` JSONL (`run@suite@name` triples):
+  `uv run modal run --detach modal_probe35.py::benchmarks --jobs "jaredpalmer/kev-9b@evals/external/semif-v1@kev-9b-semif,/runs/X/00-trial-0/checkpoint@evals/v9/transfer-v9@x-v9"`
+  Output pulled to `runs/<name>/report.json`. Both entrypoints skip names that already exist locally / on the volume.
+- Always give the entrypoint (`::main`, `::benchmarks`): the file has several.
+
+## Gotchas
+- If `study` dies locally with a transient error (e.g. `Authorization check failed`) the trials may already have been spawned on the deployed app: run `modal container list` before relaunching, and never relaunch under the same name (the trials refuse to overwrite `/runs/<name>/<trial>` and every copy fails). To kill a running trial use `FunctionCall.from_id(cid).cancel()` from the spawn.json; `modal container stop` only re-queues the input to a fresh container. Orphans without a spawn.json: `modal volume rm -r kev-runs /<name>` after they fail, then relaunch under a new name.
+- Wall-clock check in the first 5 minutes: count optimizer steps/min from `modal container logs` and divide the printed denominator by it (`ep0 step N/M` — **M is the total optimizer steps over all epochs**, not per epoch); the printed `s/rec` is compute only and undercounts by 2-4× on MoE bases. Cancel and relaunch with fewer epochs if it will not fit the cap — a timed-out trial saves nothing.
+- `--gpu H200` on `study` only works if the deployed app was deployed with `KEV_GPU=H200` (the GPU is fixed at deploy time); deploy H200, launch, then redeploy H100 for the small jobs.
+- Symptom "config=... printed, then nothing, and `Modal Client → Modal Worker Heartbeat attempt failed`" = the container is thrashing host memory (checkpoint staging). Check `run_trial`'s `memory=` against the checkpoint size (bf16 bytes ≈ 2 × params); big bases need ≥ weights + 20 GB.
+- Training progress is only visible via `modal container logs <ta-id>` (`modal container list` to find it); `modal app logs` shows the last ~50 lines across containers, and the volume's train.log is committed at the end.
+- Modal rate-limits app creation: launching more than ~3 detached `modal run`s within a minute fails with "App create rate limit exceeded" (the log shows it; nothing runs). Space launches ≥ 30 s apart or batch jobs into one `benchmarks` call.
+- A failed `bench`/`probe` leaves its output directory on the volume; relaunch under a new name (`-2`) or the next run fails with FileExistsError.
+- `RuntimeError: aclose(): asynchronous generator is already running` at the end of a detached run is noise; the result line follows it.
+- Report dicts must not gain top-level keys that collide with benchmark blocks (`unknowable`, `clean`, `tasks`).
+- Modal's HF cache volume (`kev-hf-cache`) persists base weights; first pull of a new base adds minutes.
+- Jev calls go through Vercel AI Gateway (`kev.jev`); the key is created with `vercel ai-gateway keys create` (no `--scope`) and kept in the environment only.

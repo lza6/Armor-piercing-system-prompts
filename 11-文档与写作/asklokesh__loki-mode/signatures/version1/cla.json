@@ -1,0 +1,52 @@
+{
+  "signedContributors": [
+    {
+      "name": "vishnujayvel",
+      "id": 2764507,
+      "comment_id": 4195084370,
+      "created_at": "2026-04-06T21:22:30Z",
+      "repoId": 1123323771,
+      "pullRequestNo": 151
+    },
+    {
+      "name": "alilxxey",
+      "id": 10925436,
+      "comment_id": 4209431856,
+      "created_at": "2026-04-08T20:31:59Z",
+      "repoId": 1123323771,
+      "pullRequestNo": 152
+    },
+    {
+      "name": "iizotov",
+      "id": 7712335,
+      "comment_id": 4853833138,
+      "created_at": "2026-07-01T11:19:37Z",
+      "repoId": 1123323771,
+      "pullRequestNo": 178
+    },
+    {
+      "name": "octo-patch",
+      "id": 266937838,
+      "comment_id": 4965133175,
+      "created_at": "2026-07-14T03:32:31Z",
+      "repoId": 1123323771,
+      "pullRequestNo": 180
+    },
+    {
+      "name": "Marc-oss-hub",
+      "id": 315200685,
+      "comment_id": 5307850515,
+      "created_at": "2026-08-16T14:10:55Z",
+      "repoId": 1123323771,
+      "pullRequestNo": 193
+    },
+    {
+      "name": "robert-clayton",
+      "id": 41345902,
+      "comment_id": 5469653243,
+      "created_at": "2026-08-30T15:43:41Z",
+      "repoId": 1123323771,
+      "pullRequestNo": 196
+    }
+  ]
+}

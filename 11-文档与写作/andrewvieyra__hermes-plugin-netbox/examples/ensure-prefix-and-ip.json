@@ -1,0 +1,10 @@
+{
+  "description": "Ensure the management prefix and gateway IP exist (idempotent)",
+  "operations": [
+    {"op": "create", "endpoint": "ipam/prefixes", "match": {"prefix": "10.42.0.0/24"},
+     "data": {"prefix": "10.42.0.0/24", "status": "active", "description": "Management"}},
+    {"op": "create", "endpoint": "ipam/ip-addresses", "match": {"address": "10.42.0.1/24"},
+     "data": {"address": "10.42.0.1/24", "status": "active", "dns_name": "gw.mgmt.example.net",
+              "tags": [{"slug": "gateway"}]}}
+  ]
+}

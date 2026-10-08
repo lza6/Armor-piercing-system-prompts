@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "wigolo-llamaindex"
+version = "0.2.1"
+description = "LlamaIndex reader for wigolo — local-first web search MCP server"
+readme = "README.md"
+license = "AGPL-3.0-only"
+requires-python = ">=3.10"
+authors = [{ name = "KnockOutEZ" }]
+keywords = ["llama-index", "llamaindex", "mcp", "web-search", "reader", "rag"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: Other/Proprietary License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "llama-index-core>=0.11.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "pytest-mock>=3.14",
+]
+
+[project.urls]
+Homepage = "https://github.com/KnockOutEZ/wigolo"
+Repository = "https://github.com/KnockOutEZ/wigolo/tree/main/packages/wigolo-llamaindex"
+Issues = "https://github.com/KnockOutEZ/wigolo/issues"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

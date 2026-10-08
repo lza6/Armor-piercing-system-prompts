@@ -1,0 +1,376 @@
+{
+    "tools": [
+      {
+        "name": "restart_workflow",
+        "description": "重启（或启动）工作流",
+        "parameters": {
+          "properties": {
+            "name": {
+              "description": "工作流名称",
+              "type": "string"
+            }
+          },
+          "required": ["name"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "search_filesystem",
+        "description": "该工具用于搜索并打开代码库中的相关文件",
+        "parameters": {
+          "properties": {
+            "class_names": {
+              "default": [],
+              "description": "需在代码库中搜索的特定类名列表（区分大小写且仅支持完全匹配）。用于查找类定义或其使用情况。",
+              "items": {"type": "string"},
+              "type": "array"
+            },
+            "code": {
+              "default": [],
+              "description": "需在代码库中搜索的精确代码片段列表（非关键词，需为完整代码片段）。用于定位特定实现或模式。",
+              "items": {"type": "string"},
+              "type": "array"
+            },
+            "function_names": {
+              "default": [],
+              "description": "需搜索的特定函数/方法名列表（区分大小写且仅支持完全匹配）。用于定位函数定义或调用位置。",
+              "items": {"type": "string"},
+              "type": "array"
+            },
+            "query_description": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "default": null,
+              "description": "自然语言查询语句，用于语义相似性搜索。例如：'查找数据库连接中的错误处理' 或 '定位认证中间件实现'。"
+            }
+          },
+          "type": "object"
+        }
+      },
+      {
+        "name": "packager_tool",
+        "description": "安装编程语言环境（如需）并管理依赖库。使用此工具替代手动执行shell命令或编辑文件来安装依赖。通过设置language_or_system=`system`可安装系统级依赖（替代apt install）。首次安装库时会自动创建项目文件（如package.json等）。此操作将自动重启所有工作流。",
+        "parameters": {
+          "properties": {
+            "dependency_list": {
+              "default": [],
+              "description": "需安装的系统依赖或库列表。系统依赖为Nixpkgs中的包路径（示例：['jq', 'ffmpeg']），库为编程语言包（示例：['express']）。",
+              "items": {"type": "string"},
+              "type": "array"
+            },
+            "install_or_uninstall": {
+              "description": "安装或卸载操作",
+              "enum": ["install", "uninstall"],
+              "type": "string"
+            },
+            "language_or_system": {
+              "description": "目标语言环境（如'nodejs'、'python'），设为`system`则安装系统依赖。",
+              "type": "string"
+            }
+          },
+          "required": ["install_or_uninstall", "language_or_system"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "programming_language_install_tool",
+        "description": "当程序无法运行时，可能需安装编程语言环境。使用此工具安装指定语言（如'python-3.11'或'nodejs-20'）。注意：该工具会同步安装语言对应的包管理器，无需单独安装。",
+        "parameters": {
+          "properties": {
+            "programming_languages": {
+              "description": "需安装的编程语言ID列表",
+              "items": {"type": "string"},
+              "type": "array"
+            }
+          },
+          "required": ["programming_languages"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "create_postgresql_database_tool",
+        "description": "为项目创建PostgreSQL数据库。成功后可通过以下环境变量连接数据库：DATABASE_URL, PGPORT, PGUSER, PGPASSWORD, PGDATABASE, PGHOST。",
+        "parameters": {
+          "properties": {},
+          "type": "object"
+        }
+      },
+      {
+        "name": "check_database_status",
+        "description": "检查指定数据库的可用性与连接状态。",
+        "parameters": {
+          "properties": {},
+          "type": "object"
+        }
+      },
+      {
+        "name": "str_replace_editor",
+        "description": "文件编辑工具（支持查看/创建/修改/撤销操作）。\n- 状态在多次调用间持续保留\n- `view`命令显示带行号的文件内容（目录则显示两级非隐藏结构）\n- 已存在的文件路径不可用`create`命令\n- 长输出会被截断并标记`<response clipped>`\n\n`str_replace`使用须知：\n- `old_str`需完全匹配原文件中的连续行（注意空格！）\n- 若`old_str`不唯一则替换失败，需包含足够上下文确保唯一性\n- `new_str`为替换后的新内容",
+        "parameters": {
+          "properties": {
+            "command": {
+              "description": "操作命令：`view`查看、`create`创建、`str_replace`替换、`insert`插入、`undo_edit`撤销",
+              "enum": ["view", "create", "str_replace", "insert", "undo_edit"],
+              "type": "string"
+            },
+            "file_text": {
+              "description": "`create`命令所需参数：新文件内容",
+              "type": "string"
+            },
+            "insert_line": {
+              "description": "`insert`命令所需参数：在指定行号后插入内容",
+              "type": "integer"
+            },
+            "new_str": {
+              "description": "`str_replace`/`insert`命令参数：新字符串内容",
+              "type": "string"
+            },
+            "old_str": {
+              "description": "`str_replace`命令参数：待替换的原字符串",
+              "type": "string"
+            },
+            "path": {
+              "description": "文件/目录绝对路径（如`/repo/file.py`）",
+              "type": "string"
+            },
+            "view_range": {
+              "description": "`view`命令可选参数：指定行号范围（如[11,12]显示11-12行，[10,-1]显示10行至末尾）",
+              "items": {"type": "integer"},
+              "type": "array"
+            }
+          },
+          "required": ["command", "path"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "bash",
+        "description": "在bash shell中执行命令\n- 参数无需XML转义\n- 支持常见Linux/Python包（apt/pip）\n- 状态在多次调用间持续保留\n- 查看文件特定行范围示例：'sed -n 10,25p /path/to/file'\n- 避免产生过量输出的命令\n- 长时任务需后台运行（如'sleep 10 &'）",
+        "parameters": {
+          "properties": {
+            "command": {
+              "description": "需执行的bash命令（重启工具时非必填）",
+              "type": "string"
+            },
+            "restart": {
+              "description": "设为true可重启工具",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      },
+      {
+        "name": "workflows_set_run_config_tool",
+        "description": "配置后台任务（如开发服务器/构建进程）。\n若为服务端程序，需在`wait_for_port`指定监听端口以确保服务就绪后才视为启动完成。\n\n示例：\n- Node.js服务：`name`设为'Server'，`command`设为'npm run dev'，`wait_for_port`设为5000\n- Python脚本：`name`设为'Data Processing'，`command`设为'python process_data.py'\n\n注意：所有服务必须绑定5000端口（唯一非防火墙端口）。",
+        "parameters": {
+          "properties": {
+            "command": {
+              "description": "需后台执行的shell命令",
+              "type": "string"
+            },
+            "name": {
+              "description": "任务唯一标识名",
+              "type": "string"
+            },
+            "wait_for_port": {
+              "anyOf": [{"type": "integer"}, {"type": "null"}],
+              "default": null,
+              "description": "服务监听端口号（用于检测服务就绪状态）"
+            }
+          },
+          "required": ["name", "command"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "workflows_remove_run_config_tool",
+        "description": "移除已配置的后台任务",
+        "parameters": {
+          "properties": {
+            "name": {
+              "description": "需移除的任务名称",
+              "type": "string"
+            }
+          },
+          "required": ["name"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "execute_sql_tool",
+        "description": "执行SQL查询/修复数据库错误/访问数据库结构。\n\n使用规则：\n1. 优先通过SQL修复问题而非直接操作代码\n2. 提供格式规范的SQL语句\n3. 专注于数据库交互与数据操作\n\n适用场景：\n- 数据库问题排查\n- 数据结构探索\n- 数据修改\n- 临时SQL执行\n\n不适用场景：\n- NoSQL/文件数据库操作\n- 数据库迁移（需使用Drizzle等迁移工具）",
+        "parameters": {
+          "properties": {
+            "sql_query": {
+              "description": "需执行的SQL查询语句",
+              "type": "string"
+            }
+          },
+          "required": ["sql_query"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "suggest_deploy",
+        "description": "当项目达到可部署状态时调用此工具。\n用户需手动触发部署流程，Replit将自动处理构建/托管/TLS配置等。\n部署后应用可通过.replit.app域名访问（支持自定义域名）。",
+        "parameters": {
+          "description": "无需参数",
+          "properties": {},
+          "type": "object"
+        }
+      },
+      {
+        "name": "report_progress",
+        "description": "用户确认任务完成后调用此工具。\n在`summary`中简要总结已完成事项（限5条，每条≤30字）。\n格式要求：\n- 已完成项前加✓\n- 进行中项前加→\n- 使用用户语言（非技术术语）\n- 结尾询问后续操作",
+        "parameters": {
+          "properties": {
+            "summary": {
+              "description": "进度摘要（每条前加✓或→，语言通俗，结尾询问后续操作）",
+              "type": "string"
+            }
+          },
+          "required": ["summary"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "web_application_feedback_tool",
+        "description": "通过截图与日志验证Web应用运行状态。\n当应用运行正常且任务完成时调用，避免不必要延迟。",
+        "parameters": {
+          "properties": {
+            "query": {
+              "description": "向用户提出的问题（语言通俗，限1个问题）",
+              "type": "string"
+            },
+            "website_route": {
+              "anyOf": [{"type": "string"}, {"type": "null"}],
+              "default": null,
+              "description": "网站特定路径（如'/dashboard'）"
+            },
+            "workflow_name": {
+              "description": "运行服务的工作流名称（用于确定端口）",
+              "type": "string"
+            }
+          },
+          "required": ["query", "workflow_name"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "shell_command_application_feedback_tool",
+        "description": "执行交互式shell命令并获取CLI应用/Python程序的实时反馈。\n\n规则：\n1. 提供明确的交互命令与具体问题\n2. 每次仅提1个关于交互行为的问题\n3. 指定完整命令（含必要参数）\n\n示例：\n命令: python interactive_script.py\n问题: 输入姓名后能否收到个性化问候？",
+        "parameters": {
+          "properties": {
+            "query": {
+              "description": "关于shell应用的反馈问题",
+              "type": "string"
+            },
+            "shell_command": {
+              "description": "需执行的交互式shell命令",
+              "type": "string"
+            },
+            "workflow_name": {
+              "description": "关联工作流名称",
+              "type": "string"
+            }
+          },
+          "required": ["query", "shell_command", "workflow_name"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "vnc_window_application_feedback",
+        "description": "通过VNC窗口测试桌面应用程序的交互行为。\n\n规则：\n1. 提供完整执行命令与具体问题\n2. 每次仅提1个交互相关问题\n\n示例：\n命令: python pygame_snake.py\n问题: 键盘操作能否控制蛇的移动方向？",
+        "parameters": {
+          "properties": {
+            "query": {
+              "description": "关于VNC应用的反馈问题",
+              "type": "string"
+            },
+            "vnc_execution_command": {
+              "description": "生成VNC窗口的shell命令",
+              "type": "string"
+            },
+            "workflow_name": {
+              "description": "关联工作流名称",
+              "type": "string"
+            }
+          },
+          "required": ["query", "vnc_execution_command", "workflow_name"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "ask_secrets",
+        "description": "向用户请求API密钥等敏感信息。\n\n优质示例：\n- 需STRIPE_SECRET_KEY以配置安全支付\n- 需TWILIO凭证以发送SMS通知\n\n禁止示例：\n- 直接索要电话号码/邮箱/密码\n- 请求REPLIT_DOMAINS等系统固有密钥",
+        "parameters": {
+          "properties": {
+            "secret_keys": {
+              "description": "需申请的密钥标识列表（如[\"OPENAI_API_KEY\"]）",
+              "items": {"type": "string"},
+              "type": "array"
+            },
+            "user_message": {
+              "description": "解释密钥用途的友好提示（需包含基础概念说明，假设用户首次接触API密钥）",
+              "type": "string"
+            }
+          },
+          "required": ["secret_keys", "user_message"],
+          "type": "object"
+        }
+      },
+      {
+        "name": "check_secrets",
+        "description": "检查环境变量中是否存在指定密钥（不暴露实际值）。",
+        "parameters": {
+          "properties": {
+            "secret_keys": {
+              "description": "待检查的密钥列表",
+              "items": {"type": "string"},
+              "type": "array"
+            }
+          },
+          "required": ["secret_keys"],
+          "type": "object"
+        }
+      }
+    ],
+    "internal_tags": [
+      {
+        "name": "View",
+        "description": "包含文件系统信息与仓库详情"
+      },
+      {
+        "name": "policy_spec",
+        "description": "包含沟通策略、主动性策略与数据完整性策略"
+      },
+      {
+        "name": "file_system",
+        "description": "展示目录结构"
+      },
+      {
+        "name": "repo_overview",
+        "description": "包含代码摘要"
+      },
+      {
+        "name": "important",
+        "description": "包含关键策略提醒"
+      },
+      {
+        "name": "workflow_console_logs",
+        "description": "包含工作流运行日志"
+      },
+      {
+        "name": "automatic_updates",
+        "description": "包含系统自动生成的更新"
+      },
+      {
+        "name": "webview_console_logs",
+        "description": "包含用户浏览器日志"
+      },
+      {
+        "name": "function_results",
+        "description": "包含工具/函数调用结果"
+      }
+    ]
+  }

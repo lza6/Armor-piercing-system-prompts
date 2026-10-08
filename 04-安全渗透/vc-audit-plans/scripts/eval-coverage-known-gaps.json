@@ -1,0 +1,130 @@
+{
+  "_comment": "Components with no tagged scenario that are intentionally deferred. Each entry requires a component name (taxonomy-prefixed) and a reason. Format: { component, reason, acknowledged_date }.",
+  "acknowledged_gaps": [
+    {
+      "component": "skill:vc-plan-discovery",
+      "reason": "Tier-0 skill runs inline (not via Skill tool); skillInvoked is a dead signal; NOT-LIVE-OBSERVABLE. Acknowledged per self-improvement-loop.md §5.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-agent-browser",
+      "reason": "Browser automation helper skill; invoked for long browser sessions and CDP scripting. Not yet tagged in harness scenarios — authoring a covering scenario is deferred to a future eval expansion cycle.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-audit-context",
+      "reason": "Context audit skill; invoked during UPDATE PROCESS to validate context routing. Covered indirectly via phase:EVL and UPDATE PROCESS phase scenarios. Direct tagging deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-audit-plans",
+      "reason": "Plan audit skill; invoked during UPDATE PROCESS and periodic audits. Covered indirectly via update-process phase scenarios. Direct tagging deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-audit-vc",
+      "reason": "Harness audit skill; invoked during UPDATE PROCESS for harness/agent/skill edits. Covered indirectly via update-process phase scenarios. Direct tagging deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-debug",
+      "reason": "Systematic debug helper skill; invoked alongside vc-debugger agent for root-cause analysis. Agent-level coverage exists via agent:vc-debugger. Direct skill tagging deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-feasibility-test",
+      "reason": "Feasibility probe skill; invoked when VC-FEASIBILITY-PROBE-NEEDED signal fires during SPEC/INNOVATE. The signal pathway is complex and not yet covered by a deterministic unit scenario. Deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-frontend-design",
+      "reason": "Frontend design helper skill; surfaced alongside vc-research-agent for UI/UX requests. Not yet tagged in harness scenarios — authoring a covering scenario is deferred to future eval expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-generate-context",
+      "reason": "Context generation contract skill; invoked when context docs are missing or stale. Not yet tagged in harness scenarios — deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-generate-spec",
+      "reason": "SPEC artifact generation contract skill; vc-spec-agent invokes it during the SPEC phase. SPEC phase coverage exists via phase:SPEC and agent:vc-spec-agent scenarios. Direct skill tagging deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-problem-solving",
+      "reason": "Problem-solving helper skill; invoked when an agent is stuck. Not yet tagged in harness scenarios — low-frequency invocation path; deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-publish",
+      "reason": "Kit publish contract skill; invoked to push harness improvements to the remote kit repo. Not a regular orchestration path; NOT-LIVE-OBSERVABLE in standard scenarios. Deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-risk-evidence-pack",
+      "reason": "Risk evidence pack contract skill; invoked for high-risk work classes (auth, billing, schema). Not yet tagged in harness scenarios — deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-scenario",
+      "reason": "Edge-case/scenario generation helper skill; invoked after implementing new functions/endpoints. Not yet tagged in harness scenarios — deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-sequential-thinking",
+      "reason": "Sequential thinking helper skill; invoked when plan step ordering is ambiguous. Low-frequency invocation path; not yet tagged in harness scenarios. Deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-setup",
+      "reason": "Interactive harness setup skill; invoked for new project bootstrapping. Not a regular orchestration path in this repo. Deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-update",
+      "reason": "Kit update contract skill; invoked to pull harness improvements from the remote kit repo. Not a regular orchestration path; NOT-LIVE-OBSERVABLE in standard scenarios. Deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-web-testing",
+      "reason": "Web testing helper skill; invoked for Playwright/Vitest/k6 test authoring guidance. Not yet tagged in harness scenarios — deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "agent:vc-code-reviewer",
+      "reason": "Code reviewer specialist agent; invoked after each implementation sub-step during EXECUTE. Coverage exists indirectly via phase:EXECUTE scenarios. Direct agent tagging deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "agent:vc-fast-mode-agent",
+      "reason": "Fast mode agent; runs the compressed R→I→P→V→PAUSE→E flow. Fast mode scenarios are nondeterministic and complex to isolate; coverage deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "agent:vc-quick-fix-agent",
+      "reason": "Quick fix specialist agent; handles small low-risk fixes in the QUICK FIX lane. Not yet tagged in harness scenarios — deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "agent:vc-tester",
+      "reason": "Tester specialist agent; runs EVL gate commands during the execute-validate loop. EVL coverage exists via phase:EVL scenarios. Direct agent tagging deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "agent:vc-ui-ux-designer",
+      "reason": "UI/UX designer specialist agent; invoked during EXECUTE for UI implementation tasks. Not yet tagged in harness scenarios — deferred to future harness expansion.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "phase:UPDATE",
+      "reason": "UPDATE PROCESS phase behavior is covered indirectly via phase:EVL and phase:PVL scenario tags; NOT-LIVE-OBSERVABLE as a discrete phase signal. Acknowledged per self-improvement-loop.md §5.",
+      "acknowledged_date": "2026-06-11"
+    },
+    {
+      "component": "skill:vc-autopilot",
+      "reason": "Autopilot Mode contract skill; owns the provisional goal block artifact format and resume detection. Invoked by the orchestrator at Autopilot trigger. Direct harness scenario coverage deferred to a future eval expansion cycle focused on the autopilot flow.",
+      "acknowledged_date": "2026-06-14"
+    }
+  ]
+}

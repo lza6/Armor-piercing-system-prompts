@@ -1,0 +1,3 @@
+# JS 逆向交付物 Python 依赖契约
+# 安装：pip install -r requirements.txt
+curl_cffi>=0.7.0

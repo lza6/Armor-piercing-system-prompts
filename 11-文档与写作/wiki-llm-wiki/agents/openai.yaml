@@ -1,0 +1,8 @@
+interface:
+  display_name: "Wiki Manager"
+  short_description: "Research with personal specialists, shape Ideas, and maintain llm-wiki knowledge bases."
+  brand_color: "#2F855A"
+  default_prompt: "Use a personal specialist, shape an Idea, research a topic, or compile knowledge into a structured wiki."
+
+policy:
+  allow_implicit_invocation: true

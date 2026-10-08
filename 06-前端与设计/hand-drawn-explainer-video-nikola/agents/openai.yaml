@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nikola 手绘讲解视频"
+  short_description: "制作逐笔故事或程序图形的中文手绘视频"
+  default_prompt: "使用 $hand-drawn-explainer-video-nikola 把我的中文内容制作成手绘讲解视频；先选择逐笔故事或程序动画，逐笔路线再选择画面结构与 Q 版人物、小黑风格等视觉风格，成片默认沿用火山引擎刘飞配音，并在交付前验证真实 MP4。"

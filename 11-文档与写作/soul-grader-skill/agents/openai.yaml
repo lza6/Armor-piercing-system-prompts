@@ -1,0 +1,10 @@
+interface:
+  display_name: "SOUL.md Grader"
+  short_description: "Grade SOUL.md identity while preserving the AGENTS.md split"
+  default_prompt: >-
+    Use $soul-grader to review, grade, or rewrite a Hermes Agent SOUL.md using
+    the bundled identity-only rubric, placement model, system-level blockers,
+    positive role boundaries, and public-safe field guide.
+
+policy:
+  allow_implicit_invocation: true

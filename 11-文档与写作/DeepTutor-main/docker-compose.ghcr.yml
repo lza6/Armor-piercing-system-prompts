@@ -1,0 +1,92 @@
+# ============================================
+# DeepTutor Docker Compose — Pre-built GHCR Image
+# ============================================
+# Run DeepTutor using the official pre-built image from GitHub Container Registry.
+# No local build required — the image is pulled automatically.
+#
+# Usage:
+#   docker compose -f docker-compose.ghcr.yml up -d
+#
+# To pin a specific version:
+#   Edit the image tag below, e.g. ghcr.io/hkuds/deeptutor:1.0.0
+#
+# Prerequisites:
+#   1. Copy .env.example to .env and fill in your API keys
+#   2. Read the API URL note below before starting
+#
+# ============================================
+# IMPORTANT: Frontend-to-Backend API URL
+# ============================================
+# The frontend (Next.js) runs entirely in the user's browser — not in the container.
+# This means "localhost" in the browser refers to the USER'S MACHINE, not the Docker host.
+#
+# LOCAL deployment (Docker on the same machine you browse from):
+#   Leave NEXT_PUBLIC_API_BASE_EXTERNAL blank. The default http://localhost:8001 works
+#   because Docker maps port 8001 from the container to your local machine.
+#
+# REMOTE SERVER deployment (Docker on a server, accessed from another machine):
+#   Set NEXT_PUBLIC_API_BASE_EXTERNAL to your server's public IP or hostname, e.g.:
+#     NEXT_PUBLIC_API_BASE_EXTERNAL=http://203.0.113.10:8001
+#   Without this, the browser will try to reach localhost:8001 on the USER'S laptop
+#   (not the server), and all API calls will fail.
+# ============================================
+
+services:
+  deeptutor:
+    image: ghcr.io/hkuds/deeptutor:latest
+    container_name: deeptutor
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-8001}:${BACKEND_PORT:-8001}"
+      - "${FRONTEND_PORT:-3782}:${FRONTEND_PORT:-3782}"
+
+    # Load environment variables from .env file
+    env_file:
+      - .env
+
+    environment:
+      # LLM Configuration (Required)
+      - LLM_BINDING=${LLM_BINDING:-openai}
+      - LLM_MODEL=${LLM_MODEL}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_HOST=${LLM_HOST}
+      - LLM_API_VERSION=${LLM_API_VERSION:-}
+      - DISABLE_SSL_VERIFY=${DISABLE_SSL_VERIFY:-false}
+      # Embedding Configuration (Required for Knowledge Base)
+      - EMBEDDING_BINDING=${EMBEDDING_BINDING:-openai}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-text-embedding-3-large}
+      - EMBEDDING_API_KEY=${EMBEDDING_API_KEY}
+      - EMBEDDING_HOST=${EMBEDDING_HOST}
+      - EMBEDDING_DIMENSION=${EMBEDDING_DIMENSION:-3072}
+      - EMBEDDING_API_VERSION=${EMBEDDING_API_VERSION:-}
+      # Web Search Configuration (Optional)
+      - SEARCH_PROVIDER=${SEARCH_PROVIDER:-}
+      - SEARCH_API_KEY=${SEARCH_API_KEY:-}
+      - SEARCH_BASE_URL=${SEARCH_BASE_URL:-}
+      # Service Ports
+      - BACKEND_PORT=${BACKEND_PORT:-8001}
+      - FRONTEND_PORT=${FRONTEND_PORT:-3782}
+      # API URL for remote/cloud deployment (see note above)
+      # LOCAL:  leave blank
+      # REMOTE: set to http://<your-server-ip>:8001 or https://your-domain.com:8001
+      - NEXT_PUBLIC_API_BASE_EXTERNAL=${NEXT_PUBLIC_API_BASE_EXTERNAL:-}
+      - NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE:-}
+
+    volumes:
+      # Persistent data (created automatically on first start)
+      - ./data/user:/app/data/user
+      - ./data/knowledge_bases:/app/data/knowledge_bases
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${BACKEND_PORT:-8001}/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    networks:
+      - deeptutor-network
+
+networks:
+  deeptutor-network:
+    driver: bridge

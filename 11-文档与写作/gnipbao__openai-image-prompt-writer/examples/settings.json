@@ -1,0 +1,7 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "size": "1152x1536",
+  "quality": "high",
+  "background": "transparent",
+  "output_format": "png"
+}

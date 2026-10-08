@@ -1,0 +1,17 @@
+{
+  "name": "wigolo-vercel-ai-sdk-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "demo": "tsc && node dist/tools.js"
+  },
+  "dependencies": {
+    "ai": "^4.0.0",
+    "wigolo-vercel-ai-sdk": "^0.2.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "samples": [
+    {
+      "description": "react docs homepage via Bing redirect",
+      "encoded": "https://www.bing.com/ck/a?!&&p=abc123&ptn=3&hsh=1&fclid=00000000-0000-0000-0000-000000000000&psq=react&u=a1aHR0cHM6Ly9yZWFjdC5kZXYv",
+      "expected": "https://react.dev/"
+    },
+    {
+      "description": "MDN JS reference via Bing redirect",
+      "encoded": "https://www.bing.com/ck/a?!&&u=a1aHR0cHM6Ly9kZXZlbG9wZXIubW96aWxsYS5vcmcvZW4tVVMvZG9jcy9XZWIvSmF2YVNjcmlwdA",
+      "expected": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+    },
+    {
+      "description": "URL-safe base64 with - (encoded +) requiring conversion",
+      "encoded": "https://www.bing.com/ck/a?&u=a1aHR0cHM6Ly9leGFtcGxlLmNvbS9-dXNlci9maWxl",
+      "expected": "https://example.com/~user/file"
+    }
+  ]
+}

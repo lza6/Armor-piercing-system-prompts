@@ -1,0 +1,84 @@
+# Autonomi Enterprise - Single Node Evaluation
+# Usage: docker compose up -d
+# Dashboard: http://localhost:57374
+#
+# Observability mode (adds OTEL collector + Jaeger):
+#   docker compose --profile observability up -d
+#   Jaeger UI: http://localhost:16686
+#
+# See .env.example for all configurable variables.
+
+services:
+  autonomi:
+    image: asklokesh/loki-mode:latest
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    ports:
+      - "${LOKI_DASHBOARD_PORT:-57374}:57374"
+    volumes:
+      - checkpoints:/workspace/.loki/state
+      - audit:/workspace/.loki/audit
+      - projects:/workspace
+    environment:
+      # Core
+      - LOKI_MODE=standalone
+      - LOKI_DASHBOARD=true
+      - LOKI_DASHBOARD_HOST=0.0.0.0
+      - LOKI_DASHBOARD_PORT=57374
+      # Enterprise features (all opt-in via .env)
+      - LOKI_OTEL_ENDPOINT=${LOKI_OTEL_ENDPOINT:-}
+      - LOKI_AUDIT_ENABLED=${LOKI_AUDIT_ENABLED:-true}
+      - LOKI_ENTERPRISE_AUTH=${LOKI_ENTERPRISE_AUTH:-false}
+      # Slack integration
+      - LOKI_SLACK_BOT_TOKEN=${LOKI_SLACK_BOT_TOKEN:-}
+      - LOKI_SLACK_SIGNING_SECRET=${LOKI_SLACK_SIGNING_SECRET:-}
+      # Microsoft Teams integration
+      - LOKI_TEAMS_WEBHOOK_URL=${LOKI_TEAMS_WEBHOOK_URL:-}
+      - LOKI_TEAMS_WEBHOOK_SECRET=${LOKI_TEAMS_WEBHOOK_SECRET:-}
+      # Jira integration
+      - LOKI_JIRA_URL=${LOKI_JIRA_URL:-}
+      - LOKI_JIRA_TOKEN=${LOKI_JIRA_TOKEN:-}
+      # OIDC authentication
+      - LOKI_OIDC_ISSUER=${LOKI_OIDC_ISSUER:-}
+      - LOKI_OIDC_CLIENT_ID=${LOKI_OIDC_CLIENT_ID:-}
+      # LLM providers (at least one required)
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:57374/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+  # Optional: OpenTelemetry Collector for distributed tracing
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.96.0
+    profiles: ["observability"]
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - ./otel-config.yaml:/etc/otelcol-contrib/config.yaml:ro
+    depends_on:
+      jaeger:
+        condition: service_started
+    restart: unless-stopped
+
+  # Optional: Jaeger for trace visualization
+  jaeger:
+    image: jaegertracing/all-in-one:1.54
+    profiles: ["observability"]
+    ports:
+      - "16686:16686"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    restart: unless-stopped
+
+volumes:
+  checkpoints:
+  audit:
+  projects:

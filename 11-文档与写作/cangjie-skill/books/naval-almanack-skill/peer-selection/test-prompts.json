@@ -1,0 +1,52 @@
+{
+  "skill": "peer-selection",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我最好的朋友永远在抱怨，我也越来越消极，要不要疏远？",
+      "expected_behavior": "激活 peer-selection, 用五只黑猩猩+负向关系处理(改造/边界/切割)",
+      "notes": "正面场景: 被负能量朋友影响"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "搬去新城市后怎么交到高质量的朋友？",
+      "expected_behavior": "激活 peer-selection, 给主动选择+场景配置(工作圈更成功/玩乐圈更快乐)+价值观检查",
+      "notes": "正面场景: 换圈子"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "选伴侣最重要的是什么？",
+      "expected_behavior": "激活 peer-selection, 给价值观一致性+同伴关系标准(结合书中的婚姻案例)",
+      "notes": "正面场景: 伴侣选择"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "有个投资人想长期合作，怎么判断靠不靠谱？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 long-term-compounding (生意伙伴/复利) 或 judgment-training",
+      "notes": "跨 skill 混淆诱饵: 生活同伴 vs 商业伙伴"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我查一下附近的健身房",
+      "expected_behavior": "信息查询, 不调用任何 skill",
+      "notes": "诱饵: 查询场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "同事天天阴阳怪气但我不能换组，怎么办？",
+      "expected_behavior": "边缘: 激活但给出边界/减少非必要接触的方案, 不鼓励直接切割不可切割的职场关系",
+      "notes": "边界: 可选关系 vs 被迫共事"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

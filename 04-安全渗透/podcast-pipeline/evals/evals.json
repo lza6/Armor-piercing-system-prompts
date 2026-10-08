@@ -1,0 +1,7 @@
+{
+  "skill_name": "podcast-pipeline",
+  "evals": [
+    {"id": 1, "prompt": "Turn this podcast transcript into a content package.", "expected_output": "Verifies source and permissions, extracts themes and quotes, builds an asset map, and creates channel-specific drafts.", "assertions": ["Checks source and permission", "Extracts themes", "Builds asset map", "Creates channel-specific drafts"]},
+    {"id": 2, "prompt": "Use the guest's exact quote in a public post.", "expected_output": "Preserves quote accuracy and identifies the need for guest approval when required.", "assertions": ["Preserves quote accuracy", "Identifies approval need"]}
+  ]
+}

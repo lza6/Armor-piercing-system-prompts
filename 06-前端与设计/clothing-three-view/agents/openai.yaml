@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clothing Three View"
+  short_description: "Create white-background front, side, and back clothing views."
+  default_prompt: "Use $clothing-three-view with Codex's built-in cloud ImageGen tool to turn these clothing model photos into white-background three-view product images."

@@ -1,0 +1,13 @@
+schema_version: 1
+slug: duan-yongping-skill
+name: 段永平投资问答录 Skill
+summary: 从段永平投资问答中提炼商业逻辑、企业文化与长期投资判断方法。
+source_type: github
+source_url: https://github.com/kangarooking/duan-yongping-skill
+skill_count: 15
+domains: [投资, 商业]
+language: [zh-CN]
+status: active
+quality: verified
+featured: true
+use_cases: [判断商业模式, 评估企业文化, 建立长期投资检查清单]

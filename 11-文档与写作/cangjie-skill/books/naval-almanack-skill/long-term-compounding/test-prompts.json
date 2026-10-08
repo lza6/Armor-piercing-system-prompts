@@ -1,0 +1,52 @@
+{
+  "skill": "long-term-compounding",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "有个人想拉我长期合伙，说能一起做十年，我该从哪些方面判断？",
+      "expected_behavior": "激活 long-term-compounding, 跑『一辈子测试』+ 检查负向信号(愤世嫉俗/短期思维)",
+      "notes": "正面场景: 长期合作评估"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "一笔生意来钱快但要做点伤口碑的事，值得吗？",
+      "expected_behavior": "激活 long-term-compounding, 用复利/声誉逻辑拒绝短期交易",
+      "notes": "正面场景: 短期快钱 vs 长期复利"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我怎么让机会主动来找我？感觉好机会都被别人抢了。",
+      "expected_behavior": "激活 long-term-compounding, 用声誉复利/长期游戏解释并给复利存款动作",
+      "notes": "正面场景: 声誉积累"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "朋友总在抱怨，我也被带得越来越消极，要不要疏远他？",
+      "expected_behavior": "不应激活本 skill, 应激活 peer-selection (同伴选择/五只黑猩猩)",
+      "notes": "跨 skill 混淆诱饵: 生意伙伴 vs 生活同伴"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "这个 API 的调用参数是什么？",
+      "expected_behavior": "纯技术信息查询, 不调用任何策略 skill",
+      "notes": "诱饵: 非决策场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我和他认识三个月，但感觉非常合拍，该直接承诺长期吗？",
+      "expected_behavior": "边缘: 激活并提醒长期判断需要时间证据(长期游戏靠多年验证), 不建议三个月下定论",
+      "notes": "边界: 快速好感 vs 复利验证"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

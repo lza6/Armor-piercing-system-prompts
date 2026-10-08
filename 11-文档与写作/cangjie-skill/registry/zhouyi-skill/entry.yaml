@@ -1,0 +1,13 @@
+schema_version: 1
+slug: zhouyi-skill
+name: 周易 Skill
+summary: 从《周易》中提炼处境诊断、时位判断、变化观察与进退边界。
+source_type: github
+source_url: https://github.com/qbdx-hub/zhouyi-skill
+skill_count: 8
+domains: [传统文化, 决策]
+language: [zh-CN]
+status: active
+quality: community
+featured: false
+use_cases: [判断所处阶段, 观察变化条件, 分析行动边界]

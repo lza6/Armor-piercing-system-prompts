@@ -1,0 +1,90 @@
+---
+name: code-quality
+description: "Load before writing or modifying code."
+summary: "Code-authoring standards for dev agents: correctness over convenience, no fail-open branches, comment rules, over-engineering limits, prove-your-guards."
+license: MIT
+user-invocable: true
+dependencies:
+  required: [docs-writing]
+metadata:
+  author: vanillagreen
+  source: kendex
+  repository: "https://github.com/vanillagreencom/kendex"
+  bugs: "https://github.com/vanillagreencom/kendex/issues"
+  version: "1.0.0"
+tags: [review]
+---
+
+<!-- kendex:project-instructions:start -->
+## Project Instructions
+
+<!-- kendex:shared-instructions:start -->
+Problems with a kendex-owned skill go through `kendex report`; check ownership in the file first.
+<!-- kendex:shared-instructions:end -->
+<!-- kendex:project-instructions:end -->
+
+# Code Quality
+
+Repo-specific standards live in each repo's `## Project Instructions` section and add to these rules.
+
+## Core Principle
+
+A loud failure beats a silent wrong answer. Handle every error, check invariants, and never continue in a state the code does not understand.
+
+## Correctness
+
+- No workarounds or quick hacks. If the correct fix is larger than expected, say so.
+- **Never fail open.** A dependency failure (command, file, network, parse) must not leave the caller in a passing or default state: no validator degrading to "no findings", no probe failure read as "not applicable".
+- A gate, guard or scanner change adds no enumerated exemption list; a refusal is one rule at the point the code cannot judge.
+- A branch that "shouldn't happen" is never an empty or silently-ignored `else`: assert it, return an explicit internal error, or mark it unreachable, with a message naming the violated invariant. Use plain conditionals only when both branches are expected paths.
+- An error path must name the actual cause, not a neighbouring dependency.
+- Handle edge cases: empty input, boundary values, junk prefixes/suffixes, interrupted-then-retried flows.
+
+## Prove Your Guards
+
+A new or modified check, guard, assertion, or test ships with a must-fail control: plant the defect it catches (a red-first run or a temporary mutation) and see it go red before its green counts. A guard that pattern-matches source text also gets controls for shapes that satisfy the match without the property: comments, string and template-literal interiors, nested occurrences, alternate quoting, a braceless statement, a dead branch, a discarded result, and a textually earlier but unrelated conditional. The control that counts keeps the matched text and removes the behavior; one that deletes the code under test only proves the assertion runs. Reject assertions loose enough to match a skip note, fixtures that never reach the guarded bound, and harness code that keeps alive what the implementation should.
+
+- **A scripted text substitution asserts its match, or it is not an edit.** Assert the pattern's occurrence count and that the file changed, or use an edit tool that errors on no match. Neither assertion holds on a symlink, which `sed -i` replaces with a new file while its target stands: resolve the path first, or refuse a symlink.
+- **A floor alone is not a control.** Derive the expected set from the artifact under test (the flag's own regex, the function's own body), never from a second list in a test file. Floor it, with a message naming the extractor as broken rather than the subject as sparse. Under-inclusion needs the floor plus a required member; over-inclusion needs a forbidden member. State which direction stays open.
+
+### Instruments you did not write
+
+- **A check narrower than the claim can only confirm it, never establish it.** Match the instrument's reach to the assertion's reach before running it, and prefer one that fails visibly on a planted counterexample. A grep over one directory supports no claim about the tree.
+- **Behaviour measured at an interactive prompt is not what scripts get.** `type <cmd>` names the shadow, which differs per shell. Resolve the command in the script's own shell and PATH, and name the shell and implementation it resolves to.
+- **A guard's failure message is an instrument.** It is what an author acts on. Unescaped backticks inside a double-quoted diagnostic execute their contents, so the intended text is altered or gone while the surrounding command still succeeds.
+
+## Language Discipline
+
+- **Rust**: make illegal states unrepresentable; exhaustive matches (no `_ =>` over enums you own); enums over strings/sentinels/booleans-with-meaning. A test that hands a temporary path to code that may resolve symlinks binds its canonical root at creation and passes that binding, never the raw path; platform-only test APIs carry a `cfg` and, when the property is portable, a portable twin.
+- **Bash**: check the result of every effectful substitution, in test position too; `--` before path arguments sourced from configuration, argv, or the environment (not paths the script built itself, e.g. `mktemp -d`); no `[A-Za-z]`-class assumptions under arbitrary locales. The `set -euo pipefail` preamble, an unchecked or untrapped `mktemp` and a declaration masking a status are preflight's `fail-open`, `mktemp-trap` and `masked-returns` lanes.
+- In any `pipefail` script, never leave a pipeline unguarded when an early-closing `head` or `grep -q` can stop reading while its producer still writes: the 141 SIGPIPE status aborts the run where `errexit` fires, and in condition position, where it does not, reads as a plain false that drops the result with no error. A must-fail control for one writes its input from the shell, never `cat` reading a file, which pushes several hundred KB before it blocks and passes a buffer-sized fixture either way.
+- Measure a commit header with growth-guards' locale-stable `gg_chars`, never raw `awk length` or `wc -c`.
+- **TypeScript/JS**: distinguish missing from present-but-falsy (`""`, `0`) at every guard; no `any` at module boundaries. A store selector returns a stable reference: never mint an array, object or Set inside one (a fresh value re-renders forever and blanks the page).
+
+## Comments and Prose
+
+Do:
+
+- Document the constraint or invariant the code cannot show, not what the line does.
+- Document public functions, structs, enums, and variants.
+
+Don't:
+
+- Comments that repeat the code.
+- History: a temporal marker, a date, an issue id, a review round or a conversation. For an optional audit, see [growth-guards CHECKS.md § comments](../growth-guards/CHECKS.md#comments).
+- Claims broader than what the adjacent code or assertion actually enforces.
+- A numeral counting things outside the sentence. State the property and the command that enumerates it. A numeral bound to something adjacent stays: a list in the same paragraph, a constant a check compares against, one a ratchet owns.
+
+Markdown is [`../docs-writing/SKILL.md`](../docs-writing/SKILL.md): the writing standard, and what each file type holds and excludes.
+
+Commit bodies explain intent, never narrate the diff.
+
+## Over-Engineering
+
+Build only what was asked. No speculative abstractions, no error handling for impossible scenarios, no generalization before a third caller exists. Delete wrappers that only forward. A new dependency needs a one-line justification in its commit message.
+
+One judge per question: never re-implement a decision (classify, validate, parse, detect state) another component or language already owns. Delegate. A second spelling is a defect even when both copies agree. Package behavior lives in the package's shipped scripts; a host binary only locates, execs, and surfaces results.
+
+## Cleanup
+
+Remove unused code completely: no backwards-compatibility shims, no renamed `_vars`, no commented-out blocks, no `// removed` markers, no re-exports without callers. Breaking removals get a CHANGELOG note, not a compat layer.

@@ -1,0 +1,13 @@
+schema_version: 1
+slug: ai-for-everyone-skill
+name: AI for Everyone Skill
+summary: 从吴恩达 AI 入门课程中蒸馏的 AI 认知、项目评估与组织落地方法。
+source_type: github
+source_url: https://github.com/kangarooking/ai-for-everyone-skill
+skill_count: 25
+domains: [AI, 商业]
+language: [zh-CN, en]
+status: active
+quality: verified
+featured: false
+use_cases: [识别 AI 机会, 评估 AI 项目, 建立组织 AI 路线图]

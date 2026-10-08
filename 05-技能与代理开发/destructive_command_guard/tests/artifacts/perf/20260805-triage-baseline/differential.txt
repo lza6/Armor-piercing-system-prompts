@@ -1,0 +1,19 @@
+config                       p50(ms)   p95(ms)   dcg=p50-P0
+P0_bypass                     10.289    15.046
+P1_quick_core_hdOFF           11.622    17.973        1.333
+P2_quick_core_hdON            11.959    25.946        1.669
+P3_quick_12packs_hdOFF        11.482    14.038        1.193
+P4_destr_core_hdOFF           17.010    18.607        6.720
+P5_kube_12packs_hdOFF         17.279    20.219        6.990
+P6_heredoc_core_hdON          17.974    20.994        7.685
+P7_heredoc_12packs_hdON       18.011    20.125        7.722
+
+=== ATTRIBUTION (median deltas) ===
+process/dyld/stdin floor (P0)                :  10.289 ms
+base setup + 3 default packs, no match (P1-P0):   1.333 ms
+heredoc trigger-set init (P2-P1)             :   0.337 ms
+12-pack keyword index vs 3 packs (P3-P1)     :  -0.140 ms
+core.git match+compile vs no-match (P4-P1)   :   5.388 ms
+kube-pack match, 12 packs (P5-P3)            :   5.797 ms
+heredoc parse (tree-sitter) core (P6-P2)     :   6.015 ms
+heredoc parse, 12 packs (P7-P6)              :   0.037 ms

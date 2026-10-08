@@ -1,0 +1,1063 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "title": "JSVMP 字节码虚拟机 + XHR 拦截器 + 多层 SDK 联动",
+      "domains": [
+        "douyin.com",
+        "mssdk.bytedance.com"
+      ],
+      "signals": [
+        "webmssdk",
+        "byted_acrawler",
+        "_SdkGlueInit",
+        "a_bogus",
+        "XHR interceptor",
+        "JSVMP"
+      ],
+      "strategy": "D 环境伪装：在 jsdom 沙箱中运行原始 JSVMP，按真实 UA 分支补齐环境并通过 XHR 拦截器截出签名",
+      "file": "jsvmp-xhr-interceptor-env-emulation.md",
+      "verifiedAt": "2026-04-01"
+    },
+    {
+      "title": "JSVMP 双签名 + XHR/fetch 拦截器 + cacheOpts",
+      "domains": [
+        "tiktok.com"
+      ],
+      "signals": [
+        "webmssdk",
+        "byted_acrawler",
+        "_SdkGlueInit",
+        "cacheOpts",
+        "X-Bogus",
+        "X-Gnarly",
+        "msToken"
+      ],
+      "strategy": "D 环境伪装：使用 jsdom 构造 Firefox 环境，保留 XHR/fetch 双通道拦截并截出 X-Bogus 与 X-Gnarly",
+      "file": "jsvmp-dual-sign-xhr-intercept-cacheOpts-jsdom-firefox.md",
+      "verifiedAt": "2026-04-20"
+    },
+    {
+      "title": "RS6 412 挑战 Cookie + 业务层 MD5 签名",
+      "domains": [
+        "nmpa.gov.cn"
+      ],
+      "signals": [
+        "RS6",
+        "412",
+        "sdenv",
+        "FSSBBIl1UgzbN7N",
+        "NfBCSins2OywS",
+        "business sign"
+      ],
+      "strategy": "D+A 双层：使用 sdenv 生成 RS6 挑战 Cookie，再纯算业务 MD5 签名并按真实 GET 请求链调用接口",
+      "file": "jsvmp-ruishu6-cookie-412-sdenv.md",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "title": "通用 VMP 源码级插桩",
+      "domains": [],
+      "signals": [
+        "while-switch",
+        "dispatcher",
+        "case_count",
+        "hot_keys",
+        "hot_methods",
+        "JSVMP",
+        "VMP"
+      ],
+      "strategy": "源码级插桩：识别 dispatcher 循环并采集 hot_keys/hot_methods，以运行时证据定位签名路径",
+      "file": "universal-vmp-source-instrumentation.md",
+      "kind": "template",
+      "verifiedAt": "2026-04-17"
+    },
+    {
+      "title": "vm 沙箱执行自定义算法",
+      "domains": [],
+      "signals": [
+        "custom MD5",
+        "modified MD5",
+        "eval",
+        "obfuscation",
+        "non-standard digest",
+        "vm sandbox"
+      ],
+      "strategy": "B vm 沙箱执行：提取最小算法闭包，在 vm.createContext 中补齐必要依赖并直接调用原始算法",
+      "file": "vm-sandbox-custom-algo.md",
+      "kind": "template",
+      "verifiedAt": "2026-07-11"
+    },
+    {
+      "title": "chameleon.js 生成 hexin-v",
+      "domains": [
+        "iwencai.com",
+        "10jqka.com.cn"
+      ],
+      "signals": [
+        "chameleon",
+        "hexin-v",
+        "TOKEN_SERVER_TIME",
+        "try-catch",
+        "silent failure"
+      ],
+      "strategy": "B vm 沙箱执行：运行 chameleon.js，补齐 Element/Document/XHR 等中等规模环境并读取生成的 hexin-v",
+      "file": "vm-sandbox-chameleon-iwencai.md",
+      "verifiedAt": "2026-07-11"
+    },
+    {
+      "title": "SM2/SM4/SM3 国密三参数签名",
+      "domains": [
+        "jobonline.cn"
+      ],
+      "signals": [
+        "E-CONTENT-PATH",
+        "E-SIGN",
+        "businessData",
+        "SM2",
+        "SM4",
+        "SM3"
+      ],
+      "strategy": "A 纯算还原：使用成熟国密实现复现 SM2/SM4/SM3 请求链和随机密钥下发流程",
+      "file": "sm2-sm4-sm3-guomi-jobonline.md",
+      "verifiedAt": "2026-07-11"
+    },
+    {
+      "title": "bundle.js 常驻 + bdms.init 截获 a_bogus",
+      "domains": [
+        "douyin.com",
+        "mssdk.bytedance.com"
+      ],
+      "signals": [
+        "bundle.js",
+        "bdms.init",
+        "signUrl",
+        "a_bogus",
+        "mssdk.bytedance.com",
+        "uncaughtException"
+      ],
+      "strategy": "B+D：在 vm 中常驻加载 bundle.js，补齐环境并 patch XHR，仅放行 mssdk 请求以截获 a_bogus",
+      "file": "jsvmp-bundle-bdms-a_bogus-douyin.md",
+      "verifiedAt": "2026-07-08"
+    },
+    {
+      "title": "小红书 X-s / X-s-common 双轨签名",
+      "domains": [
+        "xiaohongshu.com",
+        "edith.xiaohongshu.com"
+      ],
+      "signals": [
+        "X-s",
+        "X-s-common",
+        "XYS_",
+        "as-v2-ds.js",
+        "modified CRC32",
+        "custom Base64"
+      ],
+      "strategy": "A+B 双轨：纯算 X-S-Common，自定义环境 vm 沙箱执行 JSVMP 生成 X-s",
+      "file": "jsvmp-dual-sign-purealgo-vm-xiaohongshu.md",
+      "verifiedAt": "2026-07-12"
+    },
+    {
+      "title": "修改版 MD5 + WAF Cookie 纯协议还原（猿人学第5题）",
+      "domains": [
+        "match.yuanrenxue.cn",
+        "yuanrenxue.com"
+      ],
+      "signals": [
+        "RM4hZBv0dDon443M",
+        "modified MD5",
+        "$_zw",
+        "charCode anti-hook",
+        "WAF cookie",
+        "obfuscator.io",
+        "XMLHttpRequest.DONE",
+        "AES-128-ECB",
+        "蜜月期"
+      ],
+      "strategy": "B vm 沙箱补环境跑 decoded5.js 纯协议生成 m/f/cookie m/RM4 全参数；XHR.DONE*4 分组步长缺失是 token failed 根因；curl_cffi 开蜜月期窗口逐页请求，末页 UA=yuanrenxue",
+      "file": "modified-md5-xhr-done-yuanrenxue.md",
+      "verifiedAt": "2026-08-24"
+    },
+    {
+      "title": "AAEncode + RSA 签名 + 蜜月期会话风控（猿人学第6题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "AAEncode",
+        "颜文字混淆",
+        "JSEncrypt",
+        "RSA-1024",
+        "question/6",
+        "风控不通过",
+        "别匆忙",
+        "蜜月期",
+        "window.o"
+      ],
+      "strategy": "B vm 沙箱跑 delect.js 生成 m（双层 URL 编码的 RSA-1024 明文 1|t）+ curl_cffi 请求；q 单段链即可（多段链反被拒）；jsbn am 初始化 try-catch 吞错需手动挂回；蜜月期开窗+末页 UA=yuanrenxue",
+      "file": "yuanrenxue-match6-aarcsa-honeymoon-risk.md",
+      "verifiedAt": "2026-08-24"
+    },
+    {
+      "title": "雪碧图/样式干扰——图片数字拼装还原（猿人学第4题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "sprite",
+        "雪碧图",
+        "j_key",
+        "img_number",
+        "left",
+        "base64 PNG",
+        "像素哈希",
+        "question/4",
+        "style interference"
+      ],
+      "strategy": "A 纯算还原 + DOM ground truth：j_key=md5(base64(key+value)) 过滤干扰图，按 index+left/8.5 还原数字顺序，像素哈希字典识别（像素层仅 0-9 十种模板，非 base64 层）",
+      "file": "yuanrenxue-match4-sprite-pixelsort.md",
+      "verifiedAt": "2026-08-23"
+    },
+    {
+      "title": "动态字体映射——glyf 字形指纹还原（猿人学第7题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "woff",
+        "fonteditor",
+        "动态字体",
+        "PUA",
+        "question/7",
+        "glyf flags",
+        "fontTools",
+        "cmap 轮换",
+        "pgx-num"
+      ],
+      "strategy": "A 纯算还原（内容还原型，Step 2 豁免）：每页解析响应内嵌 base64 TTF 的 glyf flags md5 指纹，查 0-9 静态指纹字典建码点映射后解码求和；requests 直连无 TLS 检测；末页 UA=yuanrenxue；无需开窗（开窗 GET HTML 会 Set-Cookie 重置登录态致提交 401）",
+      "file": "yuanrenxue-match7-dynamic-font.md",
+      "verifiedAt": "2026-08-24"
+    },
+    {
+      "title": "动态 Cookie m——RSA(ts) + 循环前缀（猿人学第9题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match9",
+        "dynamic cookie m",
+        "JSEncrypt",
+        "RSA",
+        "udc.js",
+        "jsjiami v5",
+        "decrypt(ts)",
+        "challenge eval",
+        "obfuscator",
+        "动态cookie",
+        "挑战cookie",
+        "RSA 加密 m"
+      ],
+      "strategy": "B vm 沙箱补环境：Node vm 原样执行 udc.js + 挑战代码（无缓存循环 RSA 加密）生成 m，curl_cffi 提交验证后拉取；udc.js 每次运行二进制抓取最新版",
+      "file": "yuanrenxue-match9-dynamic-cookie2.md",
+      "verifiedAt": "2026-08-25"
+    },
+    {
+      "title": "瑞数 v3 变种 boot+api2 配套解密 + XHR 劫持自动签名 vm 沙箱纯协议还原（猿人学第10题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match10",
+        "瑞数 v3",
+        "rs.js",
+        "api2/10",
+        "$_ts 字符串表",
+        "dfe1675",
+        "dfe1683",
+        "代码组装器",
+        "重放攻击对抗",
+        "obfuscator.io 控制流平坦化",
+        "jsjiami v6",
+        "meta challenge",
+        "offset 动态随机数",
+        "Function debugger 循环",
+        "eval.toString 检测",
+        "m 动态段零值",
+        "qqq 填充",
+        "k.k 动态回写",
+        "boot 会话绑定"
+      ],
+      "strategy": "B vm 沙箱执行 + D 环境伪装：黑盒复刻浏览器加载链（新鲜 GET HTML 提取同次渲染 boot → sandbox 顺序 eval rs.js/api2/boot → core 劫持 XHR.open 自动注 m → 每页回写 k.k 动态变量），Node 原生 https 直连（无 TLS 指纹校验）。关键：boot 与 api2 必须同次渲染配套；m 出现 qqq 零值填充段 = 补环境不完整信号，先修签名再归因通道层（本案例曾误判 TLS 封死，终局推翻）",
+      "file": "yuanrenxue-match10-ruishu3-replay-defense.md",
+      "verifiedAt": "2026-08-26"
+    },
+    {
+      "title": "猿人学 match 题号速查索引",
+      "domains": [
+        "match.yuanrenxue.cn",
+        "yuanrenxue.com"
+      ],
+      "signals": [
+        "题号速查",
+        "match",
+        "AAEncode",
+        "RSA",
+        "雪碧图",
+        "修改版 MD5",
+        "确定性 PRNG",
+        "蜜月期",
+        "动态字体"
+      ],
+      "strategy": "题号 → 技术特征 → 案例文件速查表：按题号刷题时先查本表定位已有案例与已实测特征，未记录题走完整流程后回填",
+      "file": "yuanrenxue-match-index.md",
+      "kind": "template",
+      "verifiedAt": "2026-08-24"
+    },
+    {
+      "title": "猿人学 match 平台共性知识库",
+      "domains": [
+        "match.yuanrenxue.cn",
+        "yuanrenxue.com"
+      ],
+      "signals": [
+        "平台共性",
+        "末页 UA=yuanrenxue",
+        "sessionid 数据绑定",
+        "POST /a/N 表单编码",
+        "蜜月期",
+        "限流",
+        "token failed 多义",
+        "api/getTime",
+        "诱饵参数 window.matchN",
+        "试炼步骤"
+      ],
+      "strategy": "平台级通用基线：请求/提交链路、末页 UA 校验、sessionid 数据绑定、getTime 时间源、诱饵参数惯例、蜜月期/限流风控底座、token failed 多义性、取证注意与通用/专属边界维护规则；match4~29 多题实证沉淀",
+      "file": "yuanrenxue-match-platform.md",
+      "kind": "template",
+      "verifiedAt": "2026-09-01"
+    },
+    {
+      "title": "页面内联明文 btoa 签名 + 末页 UA 校验（猿人学第12题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match12",
+        "btoa",
+        "base64(\"yuanrenxue\"",
+        "inline script",
+        "document.html 内联",
+        "question/12",
+        "入门级 js",
+        "末页 UA=yuanrenxue",
+        "sessionid 数据绑定"
+      ],
+      "strategy": "A 纯算还原：m=base64(\"yuanrenxue\"+page) 直接读 document.html 内联脚本（先读文档流再进 JS 文件级分析）；末页 UA=yuanrenxue；POST /a/12 表单编码提交；同 sessionid 数据恒定可复验",
+      "file": "yuanrenxue-match12-inline-btoa.md",
+      "verifiedAt": "2026-08-26"
+    },
+    {
+      "title": "快手 __NS_hxfalcon + kww 双轨签名",
+      "domains": [
+        "kuaishou.com"
+      ],
+      "signals": [
+        "__NS_hxfalcon",
+        "kww",
+        "Jose",
+        "kwpsec",
+        "Brook VM",
+        "Mihawk VM",
+        "caver"
+      ],
+      "strategy": "A+D 双轨：全局 eval Jose 纯算 __NS_hxfalcon，优先使用 AES-CBC 的 kww SSR fallback，必要时黑盒运行 kwpsec",
+      "file": "kuaishou-hxfalcon-kww-reverse.md",
+      "verifiedAt": "2026-07-12"
+    },
+    {
+      "title": "百度 WAF 三件套 nox_jst_v1 + tox_token",
+      "domains": [
+        "gitee.com",
+        "wafbotsr.baidu.com"
+      ],
+      "signals": [
+        "gangplank",
+        "nox",
+        "tox",
+        "nox_jst_v1",
+        "tox_token",
+        "window.Tox.getToken",
+        "mejd42mp"
+      ],
+      "strategy": "D 环境伪装：在 vm 中按对象原型和构造函数语义补环境，协调 gangplank/nox/tox 生成 Cookie 与 query token",
+      "file": "jsvmp-baidu-waf-nox-tox-gitee.md",
+      "verifiedAt": "2026-07-16"
+    },
+    {
+      "title": "QQ 音乐双 VM 与 location.host 白名单",
+      "domains": [
+        "y.qq.com",
+        "u6.y.qq.com"
+      ],
+      "signals": [
+        "_getSecuritySign",
+        "__cgiEncrypt",
+        "__cgiDecrypt",
+        "musics.fcg",
+        "zzc",
+        "encoding=ag-1",
+        "location.host"
+      ],
+      "strategy": "B+D：切出两段 JSVMP IIFE，在自引用 vm 沙箱中满足 qq.com 域名守卫并完成签名、请求加密和响应解密",
+      "file": "jsvmp-dual-vm-location-whitelist-qqmusic.md",
+      "verifiedAt": "2026-08-09"
+    },
+    {
+      "title": "网易易盾智能无感验证码 type=5",
+      "domains": [
+        "dun.163.com",
+        "c.dun.163.com",
+        "ir-sdk.dun.163.com"
+      ],
+      "signals": [
+        "NECaptcha",
+        "core-optimi",
+        "gdxidpyhxde",
+        "neguardian",
+        "vfnv46",
+        "type=5",
+        "INTELLISENSE"
+      ],
+      "strategy": "D 环境伪装：vm 运行 core-optimi SDK并通过模块访问器复用 uuid/AES/XOR，完成 get/check/neguardian 纯协议链",
+      "file": "yidun-intellisense-vm-env.md",
+      "verifiedAt": "2026-08-08"
+    },
+    {
+      "title": "网易易盾滑块 type=2 参数链",
+      "domains": [
+        "dun.163.com",
+        "c.dun.163.com"
+      ],
+      "signals": [
+        "NECaptcha",
+        "core-optimi",
+        "type=2",
+        "d/m/p/f/ext",
+        "m empty string",
+        "__JSONP_",
+        "SCAN_PX"
+      ],
+      "strategy": "A 纯算还原：从 core-optimi 提取 XOR/AES/sample/mod38，接入坐标与阶梯轨迹生成并使用像素扫描兜底",
+      "file": "yidun-jigsaw.md",
+      "verifiedAt": "2026-08-09"
+    },
+    {
+      "title": "智通财经 SHA1 参数排序签名",
+      "domains": [
+        "m.zhitongcaijing.com",
+        "zhitongcaijing.com"
+      ],
+      "signals": [
+        "token",
+        "hex_sha1",
+        "Object.keys().sort",
+        "SHA1",
+        "40 hex"
+      ],
+      "strategy": "A 纯算还原：参数按键名排序并按原序列化规则编码，再使用标准 SHA1 生成 token",
+      "file": "sha1-sort-params-zhitongcaijing.md",
+      "verifiedAt": "2026-07-08"
+    },
+    {
+      "title": "京东 h5st js_security_v3",
+      "domains": [
+        "www.jd.com",
+        "api.m.jd.com",
+        "cactus.jd.com",
+        "jra.jd.com"
+      ],
+      "signals": [
+        "js_security_v3",
+        "ParamsSign",
+        "h5st",
+        "request_algo",
+        "x-api-eid-token",
+        "jdd03",
+        "JA3",
+        "JA4"
+      ],
+      "strategy": "B+D：vm 执行原版 js_security_v3，维护 fp/eid 会话绑定与动态密钥预热，使用 Firefox 系 TLS 指纹请求业务接口",
+      "file": "jsvmp-h5st-js-security-v3-jd.md",
+      "verifiedAt": "2026-08-10"
+    },
+    {
+      "title": "阿里云盾 acw_sc__v2 新版挑战（黑盒）+ accept AES 签名 + 响应三重编码",
+      "domains": [
+        "leisu.com",
+        "api-gateway.leisu.com",
+        "m.leisu.com"
+      ],
+      "signals": [
+        "acw_sc__v2",
+        "punish-loc",
+        "keepper",
+        "xXRQBR",
+        "renderData.l1",
+        "alichlgref",
+        "1234cf0d46",
+        "accept",
+        ";;",
+        "code-100"
+      ],
+      "strategy": "A+B：纯算 accept AES-ECB 签名与响应凯撒位移+gzip+base64 解密，vm 黑盒执行 acw 挑战脚本生成挑战 Cookie",
+      "file": "acw-sc-v2-blackbox-leisu.md",
+      "verifiedAt": "2026-08-15"
+    },
+    {
+      "title": "sdk-glue + bdms 黑盒执行 + _SdkGlueInit 调度截获 a_bogus（头条 PC）",
+      "domains": [
+        "toutiao.com",
+        "www.toutiao.com",
+        "mssdk.bytedance.com"
+      ],
+      "signals": [
+        "sdk-glue",
+        "bdms",
+        "_SdkGlueInit",
+        "acrawler",
+        "byted_acrawler",
+        "a_bogus",
+        "_signature",
+        "URLSearchParams.append",
+        "XHR 闭包捕获"
+      ],
+      "strategy": "D 环境伪装：vm 沙箱构造 Firefox 151 环境，加载 acrawler+bdms+sdk-glue 三件套，_SdkGlueInit 完整调度后 XHR 触发截获 a_bogus",
+      "file": "jsvmp-bdms-sdk-glue-toutiao.md",
+      "verifiedAt": "2026-08-15"
+    },
+    {
+      "title": "知乎 x-zse-96 签名 + __zse_ck 挑战 Cookie（JSVMP 黑盒 + MD5 纯算 + Cookie 前缀伪造）",
+      "domains": [
+        "zhihu.com",
+        "static.zhihu.com"
+      ],
+      "signals": [
+        "x-zse-96",
+        "x-zse-93",
+        "__zse_ck",
+        "d_c0",
+        "zse-ck",
+        "root_comment",
+        "comment_v5",
+        "JSVMP",
+        "module 1514",
+        "88545"
+      ],
+      "strategy": "A+B：纯算 MD5 + source 拼接 + Cookie 静态拼接（__zse_ck 前缀 009_ 伪造），vm 黑盒执行模块 1514 JSVMP 生成 __g._encrypt",
+      "file": "zhihu-x-zse-96-jsvmp-blackbox.md",
+      "verifiedAt": "2026-08-15"
+    },
+    {
+      "title": "B 站番剧评论接口 WBI 签名（w_rid）",
+      "domains": [
+        "bilibili.com",
+        "api.bilibili.com"
+      ],
+      "signals": [
+        "w_rid",
+        "wts",
+        "mixin_key",
+        "wbi_img",
+        "WBI",
+        "web_location",
+        "UNIOS_WBI_ENCODE",
+        "pagination_reply",
+        "next_offset"
+      ],
+      "strategy": "A 纯算还原：md5(参数升序排序 + mixin_key)，密钥从 nav 接口 wbi_img 混排派生（按日轮换），零依赖 Node.js https+crypto",
+      "file": "bilibili-wbi-reply-main.md",
+      "verifiedAt": "2026-08-16"
+    },
+    {
+      "title": "SHA1 参数排序签名 + appSignKey 静态密钥（丁香园 BBS）",
+      "domains": [
+        "dxy.cn"
+      ],
+      "signals": [
+        "sign",
+        "appSignKey",
+        "noncestr",
+        "serverTimestamp",
+        "time-millis",
+        "crypto-js"
+      ],
+      "strategy": "A 纯算还原：webpack 模块链定位 sign(88086)+密钥(4070)，SHA1(过滤空值+appSignKey 后字典序 k=v&拼接)",
+      "file": "sha1-sort-params-appsignkey-dxy.md",
+      "verifiedAt": "2026-08-16"
+    },
+    {
+      "title": "拼多多 anti_content 黑盒 fbeZ + 环境检测 flag 逐位对齐",
+      "domains": [
+        "pinduoduo.com",
+        "apiv2.pinduoduo.com"
+      ],
+      "signals": [
+        "anti_content",
+        "fbeZ",
+        "messagePackSync",
+        "_nano_fp",
+        "/api/server/_stm",
+        "40002",
+        "XpmJnqTy",
+        "Wt()"
+      ],
+      "strategy": "D 环境伪装：webpack4 兼容运行时黑盒执行 fbeZ SDK；服务端校验签名内嵌 Wt() 19 位环境检测，浏览器采样+沙箱逐位 diff 修 4 个差异位（Buffer 泄露/plugins/webdriver 原型/native toString）后纯 Node H1 请求 8/8 通过",
+      "file": "pdd-anti-content-fbez-blackbox.md",
+      "verifiedAt": "2026-08-23"
+    },
+    {
+      "title": "eval 下发的字符串加法混淆 cookie（猿人学第13题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match13",
+        "api2/13",
+        "yuanrenxue_cookie",
+        "eval-direct",
+        "document.cookie",
+        "([] + ![])[i]",
+        "token failed",
+        "入门级cookie"
+      ],
+      "strategy": "A 纯算还原：每页前 GET /api2/13，用定向表达式求值器（四类混淆原子查表，不执行 eval）解出 yuanrenxue_cookie=<ts>|<随机串> 写入 cookie jar；请求侧无签名参数，末页 UA=yuanrenxue，POST /a/13 表单编码提交",
+      "file": "yuanrenxue-match13-eval-cookie.md",
+      "verifiedAt": "2026-08-26"
+    },
+    {
+      "title": "指纹数组 Cookie m/mz + 确定性哈希签名（猿人学第14题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match14",
+        "m/mz",
+        "fingerprint cookie",
+        "指纹 cookie",
+        "btoa 指纹数组",
+        "api2/14",
+        "m.js",
+        "jsencrypt",
+        "window.n 计数器",
+        "持久沙箱",
+        "动态 cookie",
+        "token failed",
+        "末页 UA=yuanrenxue",
+        "自洽性校验"
+      ],
+      "strategy": "B vm 沙箱补环境：静态混淆 m.js 只执行一次（持久沙箱），每页 GET /api2/14 eval 动态 JS 后调 sp() 递增 window.n，取 m/mz 双 cookie（mz=btoa(53字段指纹数组)，m=md5hex|ts|ts*8|n），Node 原生 fetch 直连；page5 UA=yuanrenxue 且指纹 UA 同步",
+      "file": "yuanrenxue-match14-fingerprint-cookie-m-mz.md",
+      "verifiedAt": "2026-08-28"
+    },
+    {
+      "title": "WASM 确定性签名 + 纯协议直跑（猿人学第15题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match15",
+        "main.wasm",
+        "wasm base64",
+        "WASM 直跑",
+        "确定性签名",
+        "encode(t1,t2)",
+        "api/question/15",
+        "yuanrenxue UA",
+        "token failed"
+      ],
+      "strategy": "C WASM 加载：main.wasm（3854B、无导入、md5 0c602212）纯确定性，Node 原生 WebAssembly.instantiate 直跑 encode；t1=floor(now/1000/2)、t2=t1-random(1..50) 拼 m 参数，末页 UA=yuanrenxue（否则返回中文提示数组），sessionid 外置 config.json；wasm 独立文件加载不内联 base64，真实 https.Agent keepAlive 会话",
+      "file": "yuanrenxue-match15-wasm-deterministic-signature.md",
+      "verifiedAt": "2026-08-28"
+    },
+    {
+      "title": "webpack 混淆包黑盒执行 + 分支漂移（猿人学第16题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match16",
+        "webpack 模块切片",
+        "__webpack_require__",
+        "n.g",
+        "try/catch 双分支",
+        "分支漂移",
+        "变形 base64",
+        "charAt 越界",
+        "api/question/16",
+        "m 参数 57 字符",
+        "yuanrenxue UA"
+      ],
+      "strategy": "B 最小 JS 沙箱：从 webpack 单行 bundle（310882B）切出模块 127（混淆 MD5→window.md5）与模块 732（126 字符变形 base64→window.btoa），new Function 隔离作用域执行并共享同一 window，传入 require 桩（n.g=globalThis）才能走对 case 1 的 try 分支；m=d(15)+md5(btoa(t))+d(10) 定长 57（中间 32 位才是签名本体），t=Date.parse(new Date).toString() 秒级；末页 UA=yuanrenxue 且须校验 data 元素类型（普通 UA 返回 HTTP 200 + 中文提示数组），sessionid 外置 config.json",
+      "file": "yuanrenxue-match16-webpack-blackbox-branch.md",
+      "verifiedAt": "2026-08-28"
+    },
+    {
+      "title": "HTTP/2 传输层约束 + 请求侧全明文（猿人学第17题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match17",
+        "http2",
+        "http2.connect",
+        "天杀的 Http2.0",
+        "请求侧全明文",
+        "无签名",
+        "诱饵参数",
+        "window.match17",
+        "undefined 参数被丢弃",
+        "api/question/17",
+        "yuanrenxue UA"
+      ],
+      "strategy": "A 纯算还原（无可还原算法）+ E 传输层对齐：GET /api/question/17?page=N&pageSize=10&kw= 全明文，m:window.match17 是诱饵（/api/match/17 从未被请求，值恒 undefined 被 jQuery $.param 丢弃）；约束在传输层=HTTP/2 + 末页 UA=yuanrenxue + sessionid；Node 原生 http2 单 Session 复用 5 页后 close，不发 accept-encoding；末页须校验 data 元素类型；提交 POST /a/17 表单编码（code=2 通关）",
+      "file": "yuanrenxue-match17-http2-transport-plaintext.md",
+      "verifiedAt": "2026-08-28"
+    },
+    {
+      "title": "内联 JSVMP 鼠标事件门控签名 + 末页双重校验（猿人学第18题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match18",
+        "jsvmpzl",
+        "洞察先机",
+        "JSVMP 静默退出",
+        "鼠标事件门控",
+        "DateOpen",
+        "api/getTime",
+        "XMLHttpRequest.open 包装",
+        "navigator.webdriver",
+        "hasOwnProperty webdriver",
+        "window.BigInt 自有属性",
+        "vm 沙箱内建",
+        "page=05",
+        "token failed",
+        "yuanrenxue UA",
+        "诱饵参数",
+        "window.match18"
+      ],
+      "strategy": "B vm 沙箱黑盒执行 + D 环境伪装：取证内联 JSVMP（jsvmpzl v1.1.3）一字不改跑 Node vm，语义级环境对齐（宿主内建注入为自有属性 / navigator.webdriver 挂原型 / readyState=complete + 合成鼠标事件序列）；t=服务器秒（Date.now 重写同步 getTime），v=VM 字节码非确定性密文靠服务端验收；VM 不签 page 字面值 1/5，末页用 page=05+UA=yuanrenxue 双重校验通过；数据绑定 sessionid（答案 32036118）；提交 POST /a/18 表单编码（code=2 通关）",
+      "file": "yuanrenxue-match18-jsvmp-mouse-gated-signature.md",
+      "verifiedAt": "2026-08-28"
+    },
+    {
+      "title": "请求/响应全明文 + Node TLS 指纹黑名单 + 末页 UA 分流（猿人学第19题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match19",
+        "乌拉乌拉乌拉",
+        "api/question/19",
+        "token failed",
+        "TLS 指纹黑名单",
+        "客户端栈对照",
+        "Node https 400",
+        "yuanrenxue UA",
+        "末页 UA",
+        "诱饵参数",
+        "window.match19",
+        "deep-extend 丢弃",
+        "k.extend undefined",
+        "window.request 未定义"
+      ],
+      "strategy": "A 纯算还原 + E 传输层对齐：请求侧全明文过无签名三判据后收手（m:window.match19 是诱饵——k.extend 深拷贝丢弃 undefined 键，真实请求无 m）；难点在传输层——Node https/http2 全部 400 token failed（服务端 TLS ClientHello 黑名单），跨客户端栈对照（curl/requests 200 vs Node 400）定位后切 Python requests.Session 交付；page5 必须 UA=yuanrenxue（普通 UA 返回提示数组非 4xx）；数据绑定 sessionid（答案 27219355）；提交 POST /a/19 表单编码（code=2 通关）",
+      "file": "yuanrenxue-match19-tls-fingerprint-blocklist.md",
+      "verifiedAt": "2026-08-29"
+    },
+    {
+      "title": "WASM wasm-bindgen 签名 + 服务器时间 + Node 沙箱 import 桩语义对齐（猿人学第20题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match20",
+        "api2/20",
+        "application/wasm",
+        "wasm-bindgen",
+        "index_bg.js",
+        "__wbindgen",
+        "passStringToWasm0",
+        "api/question/20",
+        "api/getTime",
+        "unreachable",
+        "instanceof_Window",
+        "wasm trap",
+        "WebAssembly.instantiate",
+        "sign"
+      ],
+      "strategy": "C WASM 加载 + B 最小沙箱：sign=wasmSign(page+|+t)（t=同步 GET /api/getTime 服务器毫秒文本），wasm 从 /api2/20 运行时二进制拉取（取证通道 streaming 无字节+旧抓包文本化损坏，反模式 25 第二形态）；glue 原样还原，Node 沙箱桩语义陷阱——wasm-bindgen get-global 链 instanceof_Window 须返回 true、document/body 须非空对象否则 wasm trap unreachable（反模式 28 形态四，桩调用日志定位）；全部 5 页求和（题面试炼步骤区块为唯一口径来源，勿按 3 页假设）+ 末页 UA=yuanrenxue；数据绑定 sessionid（答案 27713926）；提交 POST /a/20 表单编码 code=2 通关",
+      "file": "yuanrenxue-match20-wasm-bindgen-sign.md",
+      "verifiedAt": "2026-08-29",
+      "id": "yuanrenxue-match20-wasm-bindgen-sign"
+    },
+    {
+      "id": "yuanrenxue-match21-sm3-variant-decoy-branch",
+      "title": "猿人学 match21 守心：SM3 变体 + JSVMP 环境分支诱饵变体 + Firefox 内核毒化",
+      "domains": [
+        "match.yuanrenxue.cn",
+        "download.python-spider.com"
+      ],
+      "signals": [
+        "match21",
+        "match3.js",
+        "sm3Digest",
+        "window.SM3",
+        "SM3 变体",
+        "api/question/21",
+        "accept-time",
+        "api/getTime",
+        "诱饵分支",
+        "decoy variant",
+        "Function.toString 检测",
+        "nativize",
+        "strToBytes 偶数化",
+        "守心",
+        "简单的指令",
+        "yuanrenxue"
+      ],
+      "strategy": "A 纯算还原（SM3 变体常量真机提取）+ B 最小沙箱（过程对拍）：token=sm3Digest(str(服务器毫秒)+str(page))，Accept-Time 头同值（时间源必须同源）；变体常量 IV[1]=7634d2c9/IV[4]=a10c30bc、T=[79dd4519,7c179d8a]、SS1=(rotl(A,12)+rotl(Tj,j)+E)&0xFCFFFFFF 再 rotl 7、tt1&0xFFFFFFFA、tt2&0xFFAFFFFF、strToBytes 字节偶数化；Firefox 内核走诱饵分支（IV 重复值 + 标准 ASCII，格式全对但服务端拒，反模式 29）——match3.js 用 Function.toString 检测 Object/Document/Window/Location/FocusEvent/Node/HTMLDocument/print 与 DOM 方法，桩 nativize + 补原型链 + Window/print 构造器补齐；分支指纹 = new SM3().reg + strToBytes('abc') 与真机对比（reg 重复值即诱饵）；全部 5 页求和 + 末页 UA=yuanrenxue + 数据绑定 sessionid（答案 29083835）；提交 POST /a/21 表单编码 code=2 通关",
+      "file": "yuanrenxue-match21-sm3-variant-decoy-branch.md",
+      "verifiedAt": "2026-08-29"
+    },
+    {
+      "id": "yuanrenxue-match22-openssl-salted-alphabet-branch",
+      "title": "猿人学 match22 魔改标准算法：OpenSSL Salted + base64 字母表环境分支 + TLS 指纹白名单 + [Unforgeable] 沙箱探针",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match22",
+        "api/question/22",
+        "api/getTime",
+        "Salted__",
+        "EvpKDF",
+        "keySize",
+        "字母表",
+        "base64 环境分支",
+        "TLS 指纹白名单",
+        "curl_cffi",
+        "Unforgeable",
+        "delete window",
+        "逆练MD5",
+        "异化AES",
+        "魔改标准算法",
+        "match_num",
+        "yuanrenxue"
+      ],
+      "strategy": "A 纯算还原（EvpKDF-MD5 三块链 + AES-256-CBC 全可纯代码）+ B 最小沙箱（22.js 黑盒跑逆练MD5变体）+ 桥式交付：salt8=常量 bb76994f²（fe() fallback），材料=EvpKDF-MD5(密码666yuanrenxue66, salt, keySize=12字) 三块链，ct=AES-256-CBC(key=材料[0:32], iv=材料[32:48], PKCS7(now+page))，密文44字符=b64(\"Salted__\"‖salt‖ct)，token=22.js内逆练MD5变体(密文串)；双层风控：TLS指纹白名单（未消费token三客户端阶梯定位，curl_cffi chrome131 过）+ base64字母表环境分支（同Z.ct双侧密文串diff定位，22.js补丁暴露__hd/__hs桥内位置翻译后变体md5重算）；沙箱须[Unforgeable]对齐（window等不可配置accessor，delete window探针）；复盘：本题=第二届第一题同族重发，通行解法=原码执行+diff魔改点；识别crypto-js家族后应优先库复现路线（标准件EVP/AES-CBC/PKCS7不重逆），全文件沙箱重建额外踩[Unforgeable]+编码表两分支",
+      "file": "yuanrenxue-match22-openssl-salted-alphabet-branch.md",
+      "verifiedAt": "2026-08-29"
+    },
+    {
+      "id": "yuanrenxue-match23-selfref-decoder-env-dispatch",
+      "title": "猿人学 match23 js混淆源码乱码：toString 自引用解码 + 环境分派 IV/移位表/加法器的魔改 MD5 + 短名混淆",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match23",
+        "api/question/23",
+        "api/getTime",
+        "js混淆源码乱码",
+        "obfuscator",
+        "短名混淆",
+        "toString 自引用",
+        "charCodeAt",
+        "newState",
+        "MKZrLm",
+        "环境分派 IV",
+        "WindowProperties",
+        "successAlert",
+        "魔改MD5",
+        "掩码加法器",
+        "低雪崩",
+        "createAnchor",
+        "match_num",
+        "yuanrenxue"
+      ],
+      "strategy": "B 最小沙箱（原始 23.js 原码执行 + 一行导出桩 __md5direct + 4 处环境分支对齐）：token=md5变体('/api/question/23'+now+page)，now=GET /api/getTime 服务器毫秒文本；IV 环境分派：window instanceof EventTarget/Window → 0x188a7ae93/0x127794fb3，Firefox 不暴露 WindowProperties → _v=0x20d90fe7e fallback（trace 无第4次 instanceof 即证据，勿按 Chrome 注入），document instanceof Document → 0x4a5bc3c6；successAlert 存在（modallayer）→ 标准移位表；createElement instanceof Node → 掩码加法器分支；魔改 T 常量 11 处。AST 反混淆产物禁执行（自引用解码器 q=o+g 读自身源码，重写即解出垃圾 → 轮转死循环，反模式 31）；Node https 直连可用（本题无 TLS 白名单）；末页 UA=yuanrenxue；数据绑定 sessionid（答案 29674800）；提交 POST /a/23 表单编码 code=2 通关",
+      "file": "yuanrenxue-match23-selfref-decoder-env-dispatch.md",
+      "verifiedAt": "2026-08-29"
+    },
+    {
+      "title": "vmpzl 1.5.1 JSVMP 黑盒 + 状态数组常量偏移(XOR 30)就地修正（猿人学第24题）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "vmpzl",
+        "JSVMP",
+        "jsvmpzl:ver.1.5.1",
+        "token=part1|part2",
+        "time_list",
+        "XOR 30",
+        "状态偏移",
+        "逐位 diff"
+      ],
+      "strategy": "B vm 沙箱黑盒执行（Node vm + 24.js 原码 + 最小环境桩 + TL[11..] XOR 30 修正探针）+ E 桥式交付（Python requests），按页构建+即时请求",
+      "file": "yuanrenxue-match24-jsvmp-blackbox-tl-xor30.md",
+      "verifiedAt": "2026-08-31",
+      "id": "yuanrenxue-match24-jsvmp-blackbox-tl-xor30"
+    },
+    {
+      "id": "yuanrenxue-match26-sm3-blackbox-page-drive",
+      "title": "猿人学 match26 SM3 魔改 token：8 组环境分派 IV + 页面自驱动翻页（26.js 原码黑盒执行）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match26",
+        "api/question/26",
+        "api/getTime",
+        "SM3 魔改",
+        "环境分派 IV",
+        "reg[0..7]",
+        "strToBytes 偶数化",
+        "k & 0xfe",
+        "页面自驱动翻页",
+        "jq 桩",
+        "match_num",
+        "yuanrenxue",
+        "token failed"
+      ],
+      "strategy": "B vm 沙箱黑盒执行原 26.js（8 组环境分派 IV 逐项对齐 + strToBytes 偶数化）+ 页面自驱动翻页签名（jq 桩按 selector 缓存 + on() 记录 handler + 手动触发 click，复用页面页码计数器）；token=SM3 魔改('/api/question/26'+now+page)，now=GET /api/getTime 服务器毫秒文本；取证浏览器 token 必 403（Firefox 内核走诱饵分支）不改签名正确性结论；提交 POST /a/26 表单编码 code=2 通关（答案 29597657）",
+      "file": "yuanrenxue-match26-sm3-blackbox-page-drive.md",
+      "verifiedAt": "2026-08-31"
+    },
+    {
+      "id": "yuanrenxue-match25-cfa-vm-blackbox-env-realm",
+      "title": "猿人学 match25 控制流扁平化 VM 混淆 token：x 黑盒执行 + 环境桩必须在沙箱内运行（403 根因）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match25",
+        "api/question/25",
+        "api/getTime",
+        "控制流扁平化",
+        "VM 混淆",
+        "for(;;) if(_$XX==",
+        "Huffman 编码",
+        "char/frequency/left/right",
+        "+new Date 参与编码",
+        "window.window",
+        "function(){return this}()",
+        "self-reference 自检",
+        "_$VM=111",
+        "pgxList",
+        "typeof global",
+        "环境桩沙箱内运行",
+        "T 偏移矩阵",
+        "token failed",
+        "match_num",
+        "yuanrenxue"
+      ],
+      "strategy": "B vm 沙箱黑盒执行（25.js 截取 x 函数 + 环境桩在 vm.runInContext 内运行）+ D 环境对齐（冻结 Date=now、global 动态 getter、pgxList 桩）；token=x('/api/question/25'+now+page)，now=GET /api/getTime 服务器毫秒文本；**403 根因=环境桩在主 realm 定义时 win.window=主进程 globalThis，x 的 window.window==function(){return this}() 自检失败误走 _$VM=111 分支**；服务端不校验时间窗口（T 偏移矩阵 now±100s 全过）；Node 原生 https 直连；提交 POST /a/25 表单编码 code=2 通关（答案 26878107）",
+      "file": "yuanrenxue-match25-cfa-vm-blackbox-env-realm.md",
+      "verifiedAt": "2026-08-31"
+    },
+    {
+      "id": "yuanrenxue-match28-jsvmp-rsa-purecompute",
+      "title": "猿人学 match28 JSVMP 内嵌确定性 RSA-1024：字节码 limbs 直读纯算（无需跑 VM）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match28",
+        "api/question/28",
+        "api/getTime",
+        "确定性 RSA",
+        "RSA-1024",
+        "JSBN",
+        "28-bit limbs",
+        "hex2b64",
+        "字节码数字字面量",
+        "m324665p2098959",
+        "PKCS#1 固定 0x01",
+        "token failed",
+        "限流",
+        "数据绑定 sessionid",
+        "match_num",
+        "yuanrenxue"
+      ],
+      "strategy": "A 纯算还原（Node BigInt 模幂 + JSBN hex2b64）：token=RSA-1024 确定性密文，明文='/api/question/28'+now+'28$'+page，PKCS#1 填充 00 02||01×k||00（固定 0x01 无随机），N 由 36 个 28-bit limbs 重建（**从 JSVMP 字节码尾部数字字面量直读**，出现序≠数组序需对拍修正），编码=JSBN hex2b64（每 3 hex→2 b64 非标准 base64）；对拍 capture 样本逐字节一致后纯协议直连；**数据绑定 sessionid**（换会话数据不同需重算，答案 25808383→27673886）；站点限流：短窗口连续请求第 3 页起 403 token failed（单请求正常，非签名错），页间 3s+冷却+提交用 --answer 单请求解耦；提交 POST /a/28 表单编码 code=2 通关（答案 27673886）",
+      "file": "yuanrenxue-match28-jsvmp-rsa-purecompute.md",
+      "verifiedAt": "2026-08-31"
+    },
+    {
+      "id": "yuanrenxue-match27-jsencrypt-random-rsa-purecompute",
+      "title": "猿人学 match27 js混淆源码乱码：336KB 短名混淆内嵌 JSEncrypt 随机填充 RSA-1024（X.509 SPKI 公钥直读纯算）",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match27",
+        "api/question/27",
+        "api/getTime",
+        "JSEncrypt",
+        "RSA-1024",
+        "X.509",
+        "SPKI",
+        "30819f300d06092a864886f70d01",
+        "getRandomValues",
+        "PKCS#1 随机填充",
+        "publicEncrypt",
+        "X 值扫描",
+        "token failed",
+        "429 限流",
+        "数据绑定 sessionid",
+        "m undefined 诱饵",
+        "match_num",
+        "yuanrenxue"
+      ],
+      "strategy": "A 纯算还原（Node crypto.publicEncrypt + 内嵌 X.509 SPKI 公钥）：token=RSA-1024 PKCS#1 v1.5 随机填充密文（128B/172 字符标准 base64），明文=\"/api/question/27\"+now+\"27\"+page（X=N+window._$v=27 由候选 X×公钥扫描实证：pubkey1+X=27→200、pubkey2 全 403）；公钥=27.js 内嵌 SPKI hex（pubkey1，E=65537，indexOf 0x02818100 定位 N）；沙箱跑通+结构像≠服务端接受（_$v 依赖 document.all 分支致常量算错），可纯算时转纯算不死磕沙箱；m=window[\"matchnumber\"]=undefined 诱饵；429 限流页间 3s+冷却；末页 UA=yuanrenxue；数据绑定 sessionid；提交 POST /a/27 表单编码 code=2 通关（答案 26217857）",
+      "file": "yuanrenxue-match27-jsencrypt-random-rsa-purecompute.md",
+      "verifiedAt": "2026-09-01"
+    },
+    {
+      "id": "yuanrenxue-match29-vmpzl-eval-log-source",
+      "title": "猿人学 match29 js混淆源码乱码：vmpzl 三脚本全 VM 化 + RuyiTrace eval 日志直读业务源码 + 魔改 MD5 黑盒",
+      "domains": [
+        "match.yuanrenxue.cn"
+      ],
+      "signals": [
+        "match29",
+        "api/question/29",
+        "api/getTime",
+        "vmpzl",
+        "jsvmp",
+        "eval 日志",
+        "eval_xxx_eval-direct.js",
+        "trace_eval_process",
+        "LZ.",
+        "fast_unpack",
+        "WAFJ",
+        "魔改 MD5",
+        "46 项环境探测",
+        "counter 28",
+        "pgxDebug",
+        "页面自驱动翻页",
+        "token failed",
+        "数据绑定 sessionid",
+        "m undefined 诱饵",
+        "match_num",
+        "yuanrenxue"
+      ],
+      "strategy": "B 最小 JS 沙箱（黑盒执行 RuyiTrace eval 落盘源码）：token=魔改MD5(/api/question/29+now+(counter+_)+\"()\"+page)，counter 初值 28 随翻页递增、_=pgxDebug 检测恒 0；标准 MD5 K 表缺失 + 46 项环境探测分派不可纯算；RuyiTrace eval 分类日志落盘 VM 反序列化业务源码（eval_<pid>_<seq>_eval-direct.js，29.js 对应 60KB），绕开 LZ 压缩/字节码/VM 指令三层直读逻辑；页面自驱动翻页（触发 #pgxNext click + 每次翻页前注入新 getTime now）；jQuery 桩 .add() 必须有；m=undefined 诱饵；末页 UA=yuanrenxue；数据绑定 sessionid；提交 POST /a/29 表单编码 code=2 通关（答案 27105688）",
+      "file": "yuanrenxue-match29-vmpzl-eval-log-source.md",
+      "verifiedAt": "2026-09-01"
+    }
+  ]
+}

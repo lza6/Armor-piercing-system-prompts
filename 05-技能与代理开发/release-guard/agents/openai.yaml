@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release Guard"
+  short_description: "Audit release readiness across code, docs, and safety controls."
+  default_prompt: "Use release-guard to audit this branch for release readiness and report concrete findings."

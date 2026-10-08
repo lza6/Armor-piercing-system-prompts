@@ -1,0 +1,6 @@
+Extract: https://example.com/pricing (mode: tables)
+
+  | Plan | Price | Features |
+  | ---- | ----- | -------- |
+  | Free | $0 | 1000/mo|
+  | Pro | $29 | Unlimited|

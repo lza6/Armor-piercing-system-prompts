@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cangjie-skill.org/schemas/dependency-graph.schema.json",
+  "title": "Cangjie Dependency Graph",
+  "description": "带类型和证据的依赖图（方案 §4.5）。块变更时沿图向下找受影响候选/能力/入口/测试。",
+  "type": "object",
+  "required": ["schema_version", "content_pack", "nodes", "edges"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "content_pack": { "type": "string" },
+    "generated_by": { "type": "string" },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node_id", "node_type"],
+        "properties": {
+          "node_id": { "type": "string" },
+          "node_type": { "enum": ["source_version", "element", "chunk", "candidate", "capability", "entrypoint", "eval_case"] },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "edge_type"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "edge_type": { "enum": ["contains", "grouped_into", "supports", "contradicts", "examples", "validates_into", "compiled_as", "served_by", "compared_with", "depends_on", "composes_with", "covers"] },
+          "evidence": { "type": "string" }
+        }
+      }
+    }
+  }
+}

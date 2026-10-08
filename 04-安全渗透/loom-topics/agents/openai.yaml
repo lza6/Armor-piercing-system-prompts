@@ -1,0 +1,4 @@
+interface:
+  display_name: "Loom Topics"
+  short_description: "Coordinate bounded work across Agents and time"
+  default_prompt: "Use $loom-topics to establish or continue a bounded cross-Agent workstream with one Responsible Agent and a concise shared brief."

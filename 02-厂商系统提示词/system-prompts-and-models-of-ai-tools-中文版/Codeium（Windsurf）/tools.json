@@ -1,0 +1,59 @@
+{
+    "browser_preview": {
+      "description": "为Web服务器启动浏览器预览。允许用户正常与服务器交互，同时将控制台日志等信息传递给Cascade。注意此工具调用不会自动打开预览，用户需点击按钮启动浏览器。"
+    },
+    "check_deploy_status": {
+      "description": "通过windsurf_deployment_id检查Web应用的部署状态，确认构建是否成功及是否已被认领。需用户明确要求后使用，且必须在deploy_web_app工具调用之后执行。"
+    },
+    "codebase_search": {
+      "description": "在代码库中查找与搜索查询最相关的代码片段。当查询针对具体功能或代码用途时效果最佳，泛泛查询大型组件/系统的'框架'或'实现'时结果较差。仅显示顶部项目的完整代码（可能被截断），其余项目仅显示文档字符串和签名。如需查看完整代码，请对相同路径和节点使用view_code_item工具。注意：搜索超过500个文件时结果质量显著下降，非必要不进行大规模文件搜索。"
+    },
+    "command_status": {
+      "description": "通过ID获取已执行终端命令的状态。返回当前状态（运行中/完成）、按优先级指定的输出行及可能的错误。仅可查询后台命令ID的状态。"
+    },
+    "create_memory": {
+      "description": "将用户任务相关的重要上下文保存至记忆数据库。\n需保存的上下文包括：\n- 用户偏好\n- 用户明确要求记忆的事项\n- 重要代码片段\n- 技术栈\n- 项目结构\n- 重大里程碑或功能\n- 新设计模式和架构决策\n- 其他重要信息\n创建新记忆前需检查是否存在语义相似的现有记忆，存在则更新而非新建。必要时可用此工具删除错误记忆。"
+    },
+    "deploy_web_app": {
+      "description": "将JavaScript Web应用部署至Netlify等平台。只需源代码文件，无需预先构建。部署前必须先运行read_deployment_config工具并确保补全缺失文件。部署现有站点时使用project_id标识，新建站点时project_id留空。"
+    },
+    "edit_file": {
+      "description": "禁止对同一文件进行并行编辑。\n使用此工具编辑现有文件时需遵循：\n1. 仅指定需修改的精确代码行\n2. 未修改部分必须用{{ ... }}占位符表示\n3. 同一文件的多处非连续修改应合并为单次工具调用\n示例（同时编辑三处非连续行）：\nCodeContent:\n{{ ... }}\n修改行1\n{{ ... }}\n修改行2\n{{ ... }}\n修改行3\n{{ ... }}\n\n5. 不可编辑.ipynb文件扩展名\n必须将TargetFile参数作为首个参数指定。"
+    },
+    "find_by_name": {
+      "description": "使用fd在指定目录搜索文件和子目录。默认智能匹配大小写并忽略gitignore文件。Pattern和Excludes参数均支持glob格式，若使用Extensions参数则无需同时指定Pattern。结果上限50条，包含类型、大小、修改时间和相对路径信息。"
+    },
+    "grep_search": {
+      "description": "使用ripgrep在文件/目录中精确搜索模式匹配。返回JSON格式结果，每条匹配包含：\n- 文件名\n- 行号\n- 行内容\n结果上限50条，可通过Includes参数按文件类型/路径过滤。"
+    },
+    "list_dir": {
+      "description": "列出现有目录内容（需绝对路径）。每个子项信息包含：相对路径、类型（文件/目录）、文件字节大小、目录递归子项数。"
+    },
+    "read_deployment_config": {
+      "description": "读取Web应用的部署配置，确认是否具备部署条件。仅应在准备执行deploy_web_app前使用。"
+    },
+    "read_url_content": {
+      "description": "读取URL内容。必须是可通过浏览器访问的有效HTTP/HTTPS网址。"
+    },
+    "run_command": {
+      "description": "提议代表用户执行终端命令（Windows系统/PowerShell环境）。\n重要规范：\n• 绝对禁止提议cd命令\n• 需精确指定待执行的命令行字符串\n• 命令需经用户批准后执行\n• 若标记SafeToAutoRun=true可自动运行（仅限绝对安全命令）\n• 阻塞型命令将中断交互直至完成\n• 建议对长输出命令（如git log）添加行数限制"
+    },
+    "search_web": {
+      "description": "执行网络搜索，获取与查询相关的网页文档列表（可指定优先域名）。"
+    },
+    "suggested_responses": {
+      "description": "当需要向用户提问且无需调用其他工具时，提供少量建议答案（如是/否等简单选项）。需谨慎使用，仅适用于预期用户会简短回应的情况。若后续可能需追问详细信息，则不应使用此工具。"
+    },
+    "view_code_item": {
+      "description": "查看代码节点（如类/函数）内容。必须使用完全限定名（如Foo.bar）。若codebase_search已显示过该符号内容则不应重复请求。未找到符号时返回空字符串。"
+    },
+    "view_file": {
+      "description": "查看文件内容（需绝对路径）。输出包含起止行内容（0-based，最多200行）及其余行摘要。\n使用须知：\n1. 每次调用后需自主评估内容是否充分\n2. 内容不足时主动再次调用查看其他行\n3. 警惕部分视图可能遗漏关键依赖/导入/功能"
+    },
+    "view_web_document_content_chunk": {
+      "description": "查看网页文档的特定内容块（需URL和块位置）。必须先通过read_url_content工具读取该URL后才可使用。"
+    },
+    "write_to_file": {
+      "description": "创建新文件（自动创建不存在的父目录）。\n铁律：\n1. 严禁修改/覆盖现有文件（必须先确认目标文件不存在）\n2. TargetFile必须作为首个参数指定"
+    }
+  }

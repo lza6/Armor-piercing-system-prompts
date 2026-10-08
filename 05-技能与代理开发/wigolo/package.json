@@ -1,0 +1,153 @@
+{
+  "name": "wigolo",
+  "version": "0.2.1",
+  "mcpName": "io.github.KnockOutEZ/wigolo",
+  "description": "Local-first web intelligence MCP server for AI coding agents",
+  "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    }
+  },
+  "types": "dist/types.d.ts",
+  "bin": {
+    "wigolo": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "assets/blocks",
+    "assets/legacy-skill-hashes.json",
+    "skills",
+    "README.md",
+    "LICENSE",
+    "SKILL.md"
+  ],
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "web-search",
+    "web-scraping",
+    "ai-agent",
+    "local-first",
+    "content-extraction",
+    "search",
+    "scraping",
+    "crawler",
+    "claude",
+    "agent-tools"
+  ],
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "build:binary": "npm run build && node packaging/binary/bundle.mjs && bash packaging/binary/pack.sh",
+    "build:watch": "tsup --watch",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "vitest run tests/e2e",
+    "test:perf": "vitest run --config vitest.perf.config.ts",
+    "test:sdk:ts": "npm --prefix sdks/typescript test",
+    "test:sdk:py": "node scripts/run-sdk-py-tests.mjs",
+    "lint": "tsc --noEmit",
+    "bench:extraction": "tsx benchmarks/extraction/runner.ts",
+    "bench:search": "tsx benchmarks/search/runner.ts",
+    "bench:agent": "tsx benchmarks/agent/runner.ts",
+    "bench:embedding": "tsx benchmarks/embedding/runner.ts",
+    "bench:embedding:quality": "RUN_FASTEMBED=1 tsx benchmarks/embedding/runner.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "license": "AGPL-3.0-only",
+  "author": "Towhid Khan",
+  "homepage": "https://github.com/KnockOutEZ/wigolo#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KnockOutEZ/wigolo"
+  },
+  "bugs": {
+    "url": "https://github.com/KnockOutEZ/wigolo/issues"
+  },
+  "mcp": {
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "wigolo"
+    ],
+    "tools": [
+      "search",
+      "fetch",
+      "crawl",
+      "cache",
+      "extract",
+      "find_similar",
+      "research",
+      "agent"
+    ]
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.91.1",
+    "@google/genai": "^1.51.0",
+    "@huggingface/transformers": "3.5.0",
+    "@iarna/toml": "^2.2.5",
+    "@inkjs/ui": "^2.0.0",
+    "@inquirer/prompts": "^7.10.1",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@mozilla/readability": "^0.6.0",
+    "ajv": "8.17.1",
+    "better-sqlite3": "~12.9.0",
+    "chalk": "^5.6.2",
+    "cli-progress": "^3.12.0",
+    "defuddle": "^0.16.0",
+    "fastembed": "^2.1.0",
+    "gpt-tokenizer": "^3.4.0",
+    "groq-sdk": "^1.1.2",
+    "ink": "^5.2.1",
+    "ink-big-text": "^2.0.0",
+    "ink-gradient": "^3.0.0",
+    "linkedom": "^0.18.12",
+    "openai": "^6.35.0",
+    "ora": "^9.3.0",
+    "pdf-parse": "^2.4.5",
+    "playwright": "1.60.0",
+    "react": "^18.3.1",
+    "sqlite-vec": "^0.1.9",
+    "tinyld": "^1.3.4",
+    "turndown": "^7.2.4"
+  },
+  "devDependencies": {
+    "@seriousme/openapi-schema-validator": "2.9.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cli-progress": "^3.11.6",
+    "@types/node": "^25.6.0",
+    "@types/react": "^18.3.28",
+    "@types/turndown": "^5.0.6",
+    "@yao-pkg/pkg": "6.21.0",
+    "esbuild": "0.28.0",
+    "ink-testing-library": "^4.0.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.4"
+  },
+  "optionalDependencies": {
+    "@napi-rs/keyring": "^1.3.0",
+    "chrome-remote-interface": "^0.33.3",
+    "patchright": "1.60.2",
+    "wreq-js": "^2.3.1"
+  },
+  "overrides": {
+    "hono": "^4.12.25"
+  }
+}

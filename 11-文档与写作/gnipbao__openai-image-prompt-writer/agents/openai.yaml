@@ -1,0 +1,4 @@
+interface:
+  display_name: "GPT Image 2.5 提示词写作"
+  short_description: "依据 OpenAI 官方指南，编写和优化生图、编辑、多图融合提示词"
+  default_prompt: "使用 $openai-image-prompt-writer，把我的图像需求写成可直接使用的 GPT Image 2.5 提示词。保留文案和参考图约束，默认只给提示词；需要 API 参数时另列。"

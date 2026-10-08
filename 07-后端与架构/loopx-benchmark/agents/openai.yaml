@@ -1,0 +1,4 @@
+interface:
+  display_name: "LoopX Benchmark"
+  short_description: "Operate LoopX-managed benchmark experiments"
+  default_prompt: "Use benchmark-toolkit for this LoopX-managed experiment: choose the correct operator lane, read the experiment board before run selection, preserve solver/analyst boundaries, preview writes, and compare only countable matched arms."

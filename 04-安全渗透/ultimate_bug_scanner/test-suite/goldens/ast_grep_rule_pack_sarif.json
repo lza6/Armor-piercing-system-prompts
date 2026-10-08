@@ -1,0 +1,2987 @@
+{
+  "checks": [
+    {
+      "args": [
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "js.eval-call",
+        "js.innerHTML-assign"
+      ],
+      "fixture": "test-suite/js/buggy/security.js",
+      "label": "js-rule-pack",
+      "module": "ubs-js.sh",
+      "result_count": 2,
+      "result_rule_ids": [
+        "js.eval-call",
+        "js.innerHTML-assign"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "go.exec-sh-c"
+      ],
+      "fixture": "test-suite/golang/buggy/security_sql.go",
+      "label": "go-rule-pack",
+      "module": "ubs-golang.sh",
+      "result_count": 13,
+      "result_rule_ids": [
+        "go.blank-import",
+        "go.close-error-ignored",
+        "go.exec-command-without-context",
+        "go.exec-sh-c",
+        "go.http-client-without-timeout",
+        "go.http-client-without-transport",
+        "go.http-newrequest-without-context"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif",
+        "--no-dotnet",
+        "--only=17"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "cs-async-discarded-startnew",
+        "cs-async-discarded-task-run",
+        "cs-await-in-lock",
+        "cs-parallel-foreach-async-lambda"
+      ],
+      "fixture": "test-suite/csharp/buggy/AstRulePackBuggy.cs",
+      "label": "csharp-rule-pack",
+      "module": "ubs-csharp.sh",
+      "result_count": 4,
+      "result_rule_ids": [
+        "cs-async-discarded-startnew",
+        "cs-async-discarded-task-run",
+        "cs-await-in-lock",
+        "cs-parallel-foreach-async-lambda"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--no-cargo",
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "rust.unwrap-call",
+        "rust.unwrap-unchecked"
+      ],
+      "fixture": "test-suite/rust/buggy/ast_grep_rule_pack_coverage.rs",
+      "label": "rust-rule-pack",
+      "module": "ubs-rust.sh",
+      "result_count": 143,
+      "result_rule_ids": [
+        "rust.arc-mutex",
+        "rust.assert-macros",
+        "rust.async.std-guard-across-await",
+        "rust.async.std-lock-in-async",
+        "rust.async.tokio-guard-across-await",
+        "rust.await-in-for",
+        "rust.block-on-in-async",
+        "rust.blocking-fs-in-async",
+        "rust.chars-nth",
+        "rust.clone-call",
+        "rust.clone-in-loop",
+        "rust.collect-then-for",
+        "rust.command.shell-c",
+        "rust.cstr-from-bytes-unchecked",
+        "rust.dbg-macro",
+        "rust.debug-assert-macros",
+        "rust.env-var-unwrap",
+        "rust.eprintln-macro",
+        "rust.expect-call",
+        "rust.fixme-comment",
+        "rust.format-literal-no-vars",
+        "rust.from-slice-panic",
+        "rust.from-utf8-unchecked",
+        "rust.get-unchecked",
+        "rust.i64-negate-overflow",
+        "rust.insecure-hash",
+        "rust.instant-now-elapsed",
+        "rust.instant-subtraction",
+        "rust.iter-nth-zero",
+        "rust.len-count-narrow-as",
+        "rust.map-clone",
+        "rust.maybeuninit-assume-init",
+        "rust.mem-forget",
+        "rust.mem-transmute",
+        "rust.mem-uninitialized",
+        "rust.mem-zeroed",
+        "rust.mutex-lock-expect",
+        "rust.mutex-lock-unwrap",
+        "rust.native-tls-danger",
+        "rust.openssl-no-verify",
+        "rust.panic-in-drop",
+        "rust.panic-macro",
+        "rust.parse-float-no-finite-check",
+        "rust.parse-unwrap",
+        "rust.plain-http-url",
+        "rust.println-macro",
+        "rust.ptr-cast",
+        "rust.rc-refcell",
+        "rust.regex-new-in-loop",
+        "rust.regex-new-unwrap",
+        "rust.reqwest-danger-accept",
+        "rust.resource.thread-no-join",
+        "rust.resource.tokio-task-no-await",
+        "rust.serde-json-unwrap",
+        "rust.slice-from-raw-parts",
+        "rust.strict-utf8",
+        "rust.suspicious-as-cast",
+        "rust.thread-sleep-in-async",
+        "rust.thread-spawn-in-async",
+        "rust.thread-spawn-no-join",
+        "rust.to-owned-to-string",
+        "rust.todo-comment",
+        "rust.todo-macro",
+        "rust.tokio-block-in-place",
+        "rust.tokio-spawn-no-handle",
+        "rust.tokio.spawn-no-move",
+        "rust.try-into-unwrap",
+        "rust.unimplemented-macro",
+        "rust.unreachable-macro",
+        "rust.unreachable-unchecked",
+        "rust.unsafe-auto-traits",
+        "rust.unsafe-block",
+        "rust.unwrap-call",
+        "rust.unwrap-in-drop",
+        "rust.unwrap-unchecked",
+        "rust.wrapping-arithmetic",
+        "rust.write-not-atomic"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "swift.urlsession.task-no-resume"
+      ],
+      "fixture": "test-suite/swift/ssrf_buggy",
+      "label": "swift-rule-pack",
+      "module": "ubs-swift.sh",
+      "result_count": 2,
+      "result_rule_ids": [
+        "swift.urlsession.task-no-resume"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "rails.constantize",
+        "rails.csrf-skip",
+        "rails.permit-bang",
+        "rails.update-attributes",
+        "rb.and-or",
+        "rb.bare-rescue",
+        "rb.digest-weak",
+        "rb.equal-literal",
+        "rb.eval-exec",
+        "rb.file-open-no-block",
+        "rb.float-eq",
+        "rb.http-verify-none",
+        "rb.json-parse",
+        "rb.marshal-load",
+        "rb.mutable-const",
+        "rb.nil-eq.eq",
+        "rb.nil-eq.neq",
+        "rb.open-pipe",
+        "rb.raise-e",
+        "rb.random-insecure",
+        "rb.rescue-exception",
+        "rb.retry",
+        "rb.send-dynamic",
+        "rb.sql-interp",
+        "rb.system-single-string",
+        "rb.tempfile-no-block",
+        "rb.yaml-unsafe",
+        "ruby.resource.thread-no-join"
+      ],
+      "fixture": "test-suite/ruby/ast_grep_rule_pack_coverage.rb",
+      "label": "ruby-rule-pack",
+      "module": "ubs-ruby.sh",
+      "result_count": 29,
+      "result_rule_ids": [
+        "rails.constantize",
+        "rails.csrf-skip",
+        "rails.permit-bang",
+        "rails.update-attributes",
+        "rb.and-or",
+        "rb.bare-rescue",
+        "rb.digest-weak",
+        "rb.equal-literal",
+        "rb.eval-exec",
+        "rb.file-open-no-block",
+        "rb.float-eq",
+        "rb.http-verify-none",
+        "rb.json-parse",
+        "rb.marshal-load",
+        "rb.mutable-const",
+        "rb.nil-eq.eq",
+        "rb.nil-eq.neq",
+        "rb.open-pipe",
+        "rb.raise-e",
+        "rb.random-insecure",
+        "rb.rescue-exception",
+        "rb.retry",
+        "rb.send-dynamic",
+        "rb.sql-interp",
+        "rb.system-single-string",
+        "rb.tempfile-no-block",
+        "rb.yaml-unsafe",
+        "ruby.resource.thread-no-join"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif",
+        "--no-build"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "java.bigdecimal-equals",
+        "java.closeable-no-twr",
+        "java.executors-cached",
+        "java.hardcoded-secrets",
+        "java.inputstreamreader-no-charset",
+        "java.insecure-deserialization",
+        "java.insecure-random",
+        "java.insecure-ssl",
+        "java.legacy-collections",
+        "java.logging-concat",
+        "java.notify",
+        "java.optional-get",
+        "java.optional-isPresent-then-get",
+        "java.optional-isempty-negation",
+        "java.optional-orElse-null",
+        "java.parallel-foreach-side-effects",
+        "java.paths-get-plus",
+        "java.plain-http",
+        "java.print-stacktrace",
+        "java.reflection",
+        "java.regex-redos",
+        "java.resource.executor-no-shutdown",
+        "java.resource.jdbc-no-close",
+        "java.resource.resultset-no-close",
+        "java.resource.statement-no-close",
+        "java.resource.thread-no-join",
+        "java.string-bytes-no-charset",
+        "java.string-eq-operator",
+        "java.synchronized-this",
+        "java.system-println",
+        "java.thread-sleep-in-synchronized",
+        "java.thread-start",
+        "java.virtual-threads",
+        "java.weak-hash"
+      ],
+      "fixture": "test-suite/java/ast_grep_rule_pack_coverage.java",
+      "label": "java-rule-pack",
+      "module": "ubs-java.sh",
+      "result_count": 48,
+      "result_rule_ids": [
+        "java.bigdecimal-equals",
+        "java.closeable-no-twr",
+        "java.executors-cached",
+        "java.hardcoded-secrets",
+        "java.inputstreamreader-no-charset",
+        "java.insecure-deserialization",
+        "java.insecure-random",
+        "java.insecure-ssl",
+        "java.legacy-collections",
+        "java.logging-concat",
+        "java.notify",
+        "java.optional-get",
+        "java.optional-isPresent-then-get",
+        "java.optional-isempty-negation",
+        "java.optional-orElse-null",
+        "java.parallel-foreach-side-effects",
+        "java.paths-get-plus",
+        "java.plain-http",
+        "java.print-stacktrace",
+        "java.reflection",
+        "java.regex-redos",
+        "java.resource.executor-no-shutdown",
+        "java.resource.jdbc-no-close",
+        "java.resource.resultset-no-close",
+        "java.resource.statement-no-close",
+        "java.resource.thread-no-join",
+        "java.string-bytes-no-charset",
+        "java.string-eq-operator",
+        "java.synchronized-this",
+        "java.system-println",
+        "java.thread-sleep-in-synchronized",
+        "java.thread-start",
+        "java.virtual-threads",
+        "java.weak-hash"
+      ],
+      "sarif_runs": 1
+    }
+  ],
+  "corpus_checks": [
+    {
+      "args": [
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "js.eval-call",
+        "js.innerHTML-assign"
+      ],
+      "fixture": "test-suite/js",
+      "label": "js-rule-pack",
+      "module": "ubs-js.sh",
+      "result_count": 200,
+      "result_rule_ids": [
+        "js.async.await-no-try",
+        "js.async.dangling-promise",
+        "js.async.promiseall-no-try",
+        "js.async.then-no-catch",
+        "js.document-write",
+        "js.dom.innerText-outerHTML",
+        "js.error.empty-catch",
+        "js.error.throw-string",
+        "js.eval-call",
+        "js.fetch.no-catch",
+        "js.fs.writeFileSync-not-atomic",
+        "js.innerHTML-assign",
+        "js.json-parse-without-try",
+        "js.nan-direct-compare",
+        "js.new-function",
+        "js.nullish-coalescing-chain",
+        "js.operator-precedence-ternary-nullish",
+        "js.parseInt-no-radix",
+        "js.react.useMemo-empty-deps",
+        "js.resource.interval-no-clear",
+        "js.resource.listener-no-remove",
+        "js.resource.observer-no-disconnect",
+        "js.taint.header-injection",
+        "js.tanstack.sortUndefined-direction",
+        "js.then-without-catch",
+        "node.child-process-exec",
+        "react.dangerously-set-html",
+        "react.list-missing-key",
+        "react.setstate-in-render",
+        "react.useeffect-missing-cleanup",
+        "security.cookie-insecure",
+        "security.env-in-client",
+        "security.http-url",
+        "security.insecure-crypto",
+        "security.insecure-crypto-params",
+        "security.insecure-random",
+        "ts.non-null-assertion-chain"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "go.exec-sh-c"
+      ],
+      "fixture": "test-suite/golang",
+      "label": "go-rule-pack",
+      "module": "ubs-golang.sh",
+      "result_count": 259,
+      "result_rule_ids": [
+        "go.blank-import",
+        "go.close-error-ignored",
+        "go.content-type-prefix-match",
+        "go.context-todo",
+        "go.context-without-cancel",
+        "go.context.cancel-defer-before-err-check",
+        "go.context.cancel-defer-in-if",
+        "go.defer-close-before-err-check",
+        "go.defer-in-loop",
+        "go.dot-import",
+        "go.err-shadow",
+        "go.exec-command-without-context",
+        "go.exec-pgrep-unanchored",
+        "go.exec-sh-c",
+        "go.exec-strings-fields",
+        "go.fmt-errorf-no-wrap",
+        "go.fmt.fprintf-error-ignored",
+        "go.goroutine-in-loop",
+        "go.http-client-close-idle-missing",
+        "go.http-client-without-timeout",
+        "go.http-client-without-transport",
+        "go.http-default-client",
+        "go.http-handler-background",
+        "go.http-newrequest-without-context",
+        "go.http-response-body-not-closed",
+        "go.http-server-no-timeouts",
+        "go.http-transport-missing-timeouts",
+        "go.http.defer-body-before-err-check",
+        "go.http.defer-body-close-delayed",
+        "go.http.responsewriter-write-ignored",
+        "go.iferr-empty",
+        "go.iferr-return-nil",
+        "go.interface-empty",
+        "go.ioutil-deprecated",
+        "go.json-decode-no-limit",
+        "go.json-decode-without-disallow",
+        "go.json.decoder-unbounded-body",
+        "go.json.encode-error-ignored",
+        "go.loop-var-capture",
+        "go.loop-var-capture-for",
+        "go.missing-sync-before-remove",
+        "go.os-remove-no-error-check",
+        "go.panic-call",
+        "go.recover-not-in-defer",
+        "go.resource.ticker-no-stop",
+        "go.resource.timer-no-stop",
+        "go.resource.timer-not-drained",
+        "go.select-no-default",
+        "go.sort-slice-mutates",
+        "go.sql-dynamic-string",
+        "go.sql.begin-without-defer-rollback",
+        "go.sql.defer-rollback-before-err-check",
+        "go.sql.defer-rollback-delayed",
+        "go.sql.defer-rows-close-before-err-check",
+        "go.sql.defer-rows-close-delayed",
+        "go.sql.rows-err-not-checked",
+        "go.sql.rows-not-closed",
+        "go.template.execute-error-ignored",
+        "go.time-after-in-loop",
+        "go.time-tick",
+        "go.tls-insecure-skip",
+        "go.tls-minversion-missing",
+        "go.waitgroup-add-no-done",
+        "go.write-error-ignored"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif",
+        "--no-dotnet",
+        "--only=17"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "cs-async-discarded-startnew",
+        "cs-async-discarded-task-run",
+        "cs-await-in-lock",
+        "cs-parallel-foreach-async-lambda"
+      ],
+      "fixture": "test-suite/csharp",
+      "label": "csharp-rule-pack",
+      "module": "ubs-csharp.sh",
+      "result_count": 4,
+      "result_rule_ids": [
+        "cs-async-discarded-startnew",
+        "cs-async-discarded-task-run",
+        "cs-await-in-lock",
+        "cs-parallel-foreach-async-lambda"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--no-cargo",
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "rust.unwrap-call",
+        "rust.unwrap-unchecked"
+      ],
+      "fixture": "test-suite/rust",
+      "label": "rust-rule-pack",
+      "module": "ubs-rust.sh",
+      "result_count": 547,
+      "result_rule_ids": [
+        "rust.arc-mutex",
+        "rust.assert-macros",
+        "rust.async.std-guard-across-await",
+        "rust.async.std-lock-in-async",
+        "rust.async.tokio-guard-across-await",
+        "rust.await-in-for",
+        "rust.block-on-in-async",
+        "rust.blocking-fs-in-async",
+        "rust.chars-nth",
+        "rust.clone-call",
+        "rust.clone-in-loop",
+        "rust.collect-then-for",
+        "rust.command.shell-c",
+        "rust.cstr-from-bytes-unchecked",
+        "rust.dbg-macro",
+        "rust.debug-assert-macros",
+        "rust.env-var-unwrap",
+        "rust.eprintln-macro",
+        "rust.expect-call",
+        "rust.fixme-comment",
+        "rust.format-literal-no-vars",
+        "rust.from-slice-panic",
+        "rust.from-utf8-unchecked",
+        "rust.get-unchecked",
+        "rust.i64-negate-overflow",
+        "rust.insecure-hash",
+        "rust.instant-now-elapsed",
+        "rust.instant-subtraction",
+        "rust.iter-nth-zero",
+        "rust.len-count-narrow-as",
+        "rust.map-clone",
+        "rust.maybeuninit-assume-init",
+        "rust.mem-forget",
+        "rust.mem-transmute",
+        "rust.mem-uninitialized",
+        "rust.mem-zeroed",
+        "rust.mutex-lock-expect",
+        "rust.mutex-lock-unwrap",
+        "rust.native-tls-danger",
+        "rust.openssl-no-verify",
+        "rust.panic-in-drop",
+        "rust.panic-macro",
+        "rust.parse-float-no-finite-check",
+        "rust.parse-unwrap",
+        "rust.plain-http-url",
+        "rust.println-macro",
+        "rust.ptr-cast",
+        "rust.rc-refcell",
+        "rust.regex-new-in-loop",
+        "rust.regex-new-unwrap",
+        "rust.reqwest-danger-accept",
+        "rust.resource.thread-no-join",
+        "rust.resource.tokio-task-no-await",
+        "rust.serde-json-unwrap",
+        "rust.slice-from-raw-parts",
+        "rust.strict-utf8",
+        "rust.suspicious-as-cast",
+        "rust.thread-sleep-in-async",
+        "rust.thread-spawn-in-async",
+        "rust.thread-spawn-no-join",
+        "rust.to-owned-to-string",
+        "rust.todo-comment",
+        "rust.todo-macro",
+        "rust.tokio-block-in-place",
+        "rust.tokio-spawn-no-handle",
+        "rust.tokio.spawn-no-move",
+        "rust.try-into-unwrap",
+        "rust.unimplemented-macro",
+        "rust.unreachable-macro",
+        "rust.unreachable-unchecked",
+        "rust.unsafe-auto-traits",
+        "rust.unsafe-block",
+        "rust.unwrap-call",
+        "rust.unwrap-in-drop",
+        "rust.unwrap-unchecked",
+        "rust.wrapping-arithmetic",
+        "rust.write-not-atomic"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "swift.urlsession.task-no-resume"
+      ],
+      "fixture": "test-suite/swift",
+      "label": "swift-rule-pack",
+      "module": "ubs-swift.sh",
+      "result_count": 4,
+      "result_rule_ids": [
+        "swift.urlsession.task-no-resume"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "rails.constantize",
+        "rails.csrf-skip",
+        "rails.permit-bang",
+        "rails.update-attributes",
+        "rb.and-or",
+        "rb.bare-rescue",
+        "rb.digest-weak",
+        "rb.equal-literal",
+        "rb.eval-exec",
+        "rb.file-open-no-block",
+        "rb.float-eq",
+        "rb.http-verify-none",
+        "rb.json-parse",
+        "rb.marshal-load",
+        "rb.mutable-const",
+        "rb.nil-eq.eq",
+        "rb.nil-eq.neq",
+        "rb.open-pipe",
+        "rb.raise-e",
+        "rb.random-insecure",
+        "rb.rescue-exception",
+        "rb.retry",
+        "rb.send-dynamic",
+        "rb.sql-interp",
+        "rb.system-single-string",
+        "rb.tempfile-no-block",
+        "rb.yaml-unsafe",
+        "ruby.resource.thread-no-join"
+      ],
+      "fixture": "test-suite/ruby",
+      "label": "ruby-rule-pack",
+      "module": "ubs-ruby.sh",
+      "result_count": 49,
+      "result_rule_ids": [
+        "rails.constantize",
+        "rails.csrf-skip",
+        "rails.permit-bang",
+        "rails.update-attributes",
+        "rb.and-or",
+        "rb.bare-rescue",
+        "rb.digest-weak",
+        "rb.equal-literal",
+        "rb.eval-exec",
+        "rb.file-open-no-block",
+        "rb.float-eq",
+        "rb.http-verify-none",
+        "rb.json-parse",
+        "rb.marshal-load",
+        "rb.mutable-const",
+        "rb.nil-eq.eq",
+        "rb.nil-eq.neq",
+        "rb.open-pipe",
+        "rb.raise-e",
+        "rb.random-insecure",
+        "rb.rescue-exception",
+        "rb.retry",
+        "rb.send-dynamic",
+        "rb.sql-interp",
+        "rb.system-single-string",
+        "rb.tempfile-no-block",
+        "rb.yaml-unsafe",
+        "ruby.resource.thread-no-join"
+      ],
+      "sarif_runs": 1
+    },
+    {
+      "args": [
+        "--format=sarif",
+        "--no-build"
+      ],
+      "driver_rule_count": 0,
+      "driver_rule_ids": [],
+      "expected_rule_ids": [
+        "java.bigdecimal-equals",
+        "java.closeable-no-twr",
+        "java.executors-cached",
+        "java.hardcoded-secrets",
+        "java.inputstreamreader-no-charset",
+        "java.insecure-deserialization",
+        "java.insecure-random",
+        "java.insecure-ssl",
+        "java.legacy-collections",
+        "java.logging-concat",
+        "java.notify",
+        "java.optional-get",
+        "java.optional-isPresent-then-get",
+        "java.optional-isempty-negation",
+        "java.optional-orElse-null",
+        "java.parallel-foreach-side-effects",
+        "java.paths-get-plus",
+        "java.plain-http",
+        "java.print-stacktrace",
+        "java.reflection",
+        "java.regex-redos",
+        "java.resource.executor-no-shutdown",
+        "java.resource.jdbc-no-close",
+        "java.resource.resultset-no-close",
+        "java.resource.statement-no-close",
+        "java.resource.thread-no-join",
+        "java.string-bytes-no-charset",
+        "java.string-eq-operator",
+        "java.synchronized-this",
+        "java.system-println",
+        "java.thread-sleep-in-synchronized",
+        "java.thread-start",
+        "java.virtual-threads",
+        "java.weak-hash"
+      ],
+      "fixture": "test-suite/java",
+      "label": "java-rule-pack",
+      "module": "ubs-java.sh",
+      "result_count": 89,
+      "result_rule_ids": [
+        "java.bigdecimal-equals",
+        "java.closeable-no-twr",
+        "java.executors-cached",
+        "java.hardcoded-secrets",
+        "java.inputstreamreader-no-charset",
+        "java.insecure-deserialization",
+        "java.insecure-random",
+        "java.insecure-ssl",
+        "java.legacy-collections",
+        "java.logging-concat",
+        "java.notify",
+        "java.optional-get",
+        "java.optional-isPresent-then-get",
+        "java.optional-isempty-negation",
+        "java.optional-orElse-null",
+        "java.parallel-foreach-side-effects",
+        "java.paths-get-plus",
+        "java.plain-http",
+        "java.print-stacktrace",
+        "java.reflection",
+        "java.regex-redos",
+        "java.resource.executor-no-shutdown",
+        "java.resource.jdbc-no-close",
+        "java.resource.resultset-no-close",
+        "java.resource.statement-no-close",
+        "java.resource.thread-no-join",
+        "java.string-bytes-no-charset",
+        "java.string-eq-operator",
+        "java.synchronized-this",
+        "java.system-println",
+        "java.thread-sleep-in-synchronized",
+        "java.thread-start",
+        "java.virtual-threads",
+        "java.weak-hash"
+      ],
+      "sarif_runs": 1
+    }
+  ],
+  "list_rule_validation": [
+    {
+      "label": "js-rule-pack",
+      "list_args": [
+        "--list-rules"
+      ],
+      "module": "ubs-js.sh",
+      "rule_count": 37,
+      "rule_ids": [
+        "js.async.await-no-try",
+        "js.async.dangling-promise",
+        "js.async.promiseall-no-try",
+        "js.async.then-no-catch",
+        "js.document-write",
+        "js.dom.innerText-outerHTML",
+        "js.error.empty-catch",
+        "js.error.throw-string",
+        "js.eval-call",
+        "js.fetch.no-catch",
+        "js.fs.writeFileSync-not-atomic",
+        "js.innerHTML-assign",
+        "js.json-parse-without-try",
+        "js.nan-direct-compare",
+        "js.new-function",
+        "js.nullish-coalescing-chain",
+        "js.operator-precedence-ternary-nullish",
+        "js.parseInt-no-radix",
+        "js.react.useMemo-empty-deps",
+        "js.resource.interval-no-clear",
+        "js.resource.listener-no-remove",
+        "js.resource.observer-no-disconnect",
+        "js.taint.header-injection",
+        "js.tanstack.sortUndefined-direction",
+        "js.then-without-catch",
+        "node.child-process-exec",
+        "react.dangerously-set-html",
+        "react.list-missing-key",
+        "react.setstate-in-render",
+        "react.useeffect-missing-cleanup",
+        "security.cookie-insecure",
+        "security.env-in-client",
+        "security.http-url",
+        "security.insecure-crypto",
+        "security.insecure-crypto-params",
+        "security.insecure-random",
+        "ts.non-null-assertion-chain"
+      ]
+    },
+    {
+      "label": "go-rule-pack",
+      "list_args": [
+        "--list-rules"
+      ],
+      "module": "ubs-golang.sh",
+      "rule_count": 64,
+      "rule_ids": [
+        "go.blank-import",
+        "go.close-error-ignored",
+        "go.content-type-prefix-match",
+        "go.context-todo",
+        "go.context-without-cancel",
+        "go.context.cancel-defer-before-err-check",
+        "go.context.cancel-defer-in-if",
+        "go.defer-close-before-err-check",
+        "go.defer-in-loop",
+        "go.dot-import",
+        "go.err-shadow",
+        "go.exec-command-without-context",
+        "go.exec-pgrep-unanchored",
+        "go.exec-sh-c",
+        "go.exec-strings-fields",
+        "go.fmt-errorf-no-wrap",
+        "go.fmt.fprintf-error-ignored",
+        "go.goroutine-in-loop",
+        "go.http-client-close-idle-missing",
+        "go.http-client-without-timeout",
+        "go.http-client-without-transport",
+        "go.http-default-client",
+        "go.http-handler-background",
+        "go.http-newrequest-without-context",
+        "go.http-response-body-not-closed",
+        "go.http-server-no-timeouts",
+        "go.http-transport-missing-timeouts",
+        "go.http.defer-body-before-err-check",
+        "go.http.defer-body-close-delayed",
+        "go.http.responsewriter-write-ignored",
+        "go.iferr-empty",
+        "go.iferr-return-nil",
+        "go.interface-empty",
+        "go.ioutil-deprecated",
+        "go.json-decode-no-limit",
+        "go.json-decode-without-disallow",
+        "go.json.decoder-unbounded-body",
+        "go.json.encode-error-ignored",
+        "go.loop-var-capture",
+        "go.loop-var-capture-for",
+        "go.missing-sync-before-remove",
+        "go.os-remove-no-error-check",
+        "go.panic-call",
+        "go.recover-not-in-defer",
+        "go.resource.ticker-no-stop",
+        "go.resource.timer-no-stop",
+        "go.resource.timer-not-drained",
+        "go.select-no-default",
+        "go.sort-slice-mutates",
+        "go.sql-dynamic-string",
+        "go.sql.begin-without-defer-rollback",
+        "go.sql.defer-rollback-before-err-check",
+        "go.sql.defer-rollback-delayed",
+        "go.sql.defer-rows-close-before-err-check",
+        "go.sql.defer-rows-close-delayed",
+        "go.sql.rows-err-not-checked",
+        "go.sql.rows-not-closed",
+        "go.template.execute-error-ignored",
+        "go.time-after-in-loop",
+        "go.time-tick",
+        "go.tls-insecure-skip",
+        "go.tls-minversion-missing",
+        "go.waitgroup-add-no-done",
+        "go.write-error-ignored"
+      ]
+    },
+    {
+      "label": "csharp-rule-pack",
+      "list_args": [
+        "--list-rules"
+      ],
+      "module": "ubs-csharp.sh",
+      "rule_count": 4,
+      "rule_ids": [
+        "cs-async-discarded-startnew",
+        "cs-async-discarded-task-run",
+        "cs-await-in-lock",
+        "cs-parallel-foreach-async-lambda"
+      ]
+    },
+    {
+      "label": "rust-rule-pack",
+      "list_args": [
+        "--no-cargo",
+        "--list-rules"
+      ],
+      "module": "ubs-rust.sh",
+      "rule_count": 77,
+      "rule_ids": [
+        "rust.arc-mutex",
+        "rust.assert-macros",
+        "rust.async.std-guard-across-await",
+        "rust.async.std-lock-in-async",
+        "rust.async.tokio-guard-across-await",
+        "rust.await-in-for",
+        "rust.block-on-in-async",
+        "rust.blocking-fs-in-async",
+        "rust.chars-nth",
+        "rust.clone-call",
+        "rust.clone-in-loop",
+        "rust.collect-then-for",
+        "rust.command.shell-c",
+        "rust.cstr-from-bytes-unchecked",
+        "rust.dbg-macro",
+        "rust.debug-assert-macros",
+        "rust.env-var-unwrap",
+        "rust.eprintln-macro",
+        "rust.expect-call",
+        "rust.fixme-comment",
+        "rust.format-literal-no-vars",
+        "rust.from-slice-panic",
+        "rust.from-utf8-unchecked",
+        "rust.get-unchecked",
+        "rust.i64-negate-overflow",
+        "rust.insecure-hash",
+        "rust.instant-now-elapsed",
+        "rust.instant-subtraction",
+        "rust.iter-nth-zero",
+        "rust.len-count-narrow-as",
+        "rust.map-clone",
+        "rust.maybeuninit-assume-init",
+        "rust.mem-forget",
+        "rust.mem-transmute",
+        "rust.mem-uninitialized",
+        "rust.mem-zeroed",
+        "rust.mutex-lock-expect",
+        "rust.mutex-lock-unwrap",
+        "rust.native-tls-danger",
+        "rust.openssl-no-verify",
+        "rust.panic-in-drop",
+        "rust.panic-macro",
+        "rust.parse-float-no-finite-check",
+        "rust.parse-unwrap",
+        "rust.plain-http-url",
+        "rust.println-macro",
+        "rust.ptr-cast",
+        "rust.rc-refcell",
+        "rust.regex-new-in-loop",
+        "rust.regex-new-unwrap",
+        "rust.reqwest-danger-accept",
+        "rust.resource.thread-no-join",
+        "rust.resource.tokio-task-no-await",
+        "rust.serde-json-unwrap",
+        "rust.slice-from-raw-parts",
+        "rust.strict-utf8",
+        "rust.suspicious-as-cast",
+        "rust.thread-sleep-in-async",
+        "rust.thread-spawn-in-async",
+        "rust.thread-spawn-no-join",
+        "rust.to-owned-to-string",
+        "rust.todo-comment",
+        "rust.todo-macro",
+        "rust.tokio-block-in-place",
+        "rust.tokio-spawn-no-handle",
+        "rust.tokio.spawn-no-move",
+        "rust.try-into-unwrap",
+        "rust.unimplemented-macro",
+        "rust.unreachable-macro",
+        "rust.unreachable-unchecked",
+        "rust.unsafe-auto-traits",
+        "rust.unsafe-block",
+        "rust.unwrap-call",
+        "rust.unwrap-in-drop",
+        "rust.unwrap-unchecked",
+        "rust.wrapping-arithmetic",
+        "rust.write-not-atomic"
+      ]
+    },
+    {
+      "label": "swift-rule-pack",
+      "list_args": [
+        "--list-rules"
+      ],
+      "module": "ubs-swift.sh",
+      "rule_count": 1,
+      "rule_ids": [
+        "swift.urlsession.task-no-resume"
+      ]
+    },
+    {
+      "label": "ruby-rule-pack",
+      "list_args": [
+        "--list-rules"
+      ],
+      "module": "ubs-ruby.sh",
+      "rule_count": 28,
+      "rule_ids": [
+        "rails.constantize",
+        "rails.csrf-skip",
+        "rails.permit-bang",
+        "rails.update-attributes",
+        "rb.and-or",
+        "rb.bare-rescue",
+        "rb.digest-weak",
+        "rb.equal-literal",
+        "rb.eval-exec",
+        "rb.file-open-no-block",
+        "rb.float-eq",
+        "rb.http-verify-none",
+        "rb.json-parse",
+        "rb.marshal-load",
+        "rb.mutable-const",
+        "rb.nil-eq.eq",
+        "rb.nil-eq.neq",
+        "rb.open-pipe",
+        "rb.raise-e",
+        "rb.random-insecure",
+        "rb.rescue-exception",
+        "rb.retry",
+        "rb.send-dynamic",
+        "rb.sql-interp",
+        "rb.system-single-string",
+        "rb.tempfile-no-block",
+        "rb.yaml-unsafe",
+        "ruby.resource.thread-no-join"
+      ]
+    },
+    {
+      "label": "java-rule-pack",
+      "list_args": [
+        "--list-rules"
+      ],
+      "module": "ubs-java.sh",
+      "rule_count": 34,
+      "rule_ids": [
+        "java.bigdecimal-equals",
+        "java.closeable-no-twr",
+        "java.executors-cached",
+        "java.hardcoded-secrets",
+        "java.inputstreamreader-no-charset",
+        "java.insecure-deserialization",
+        "java.insecure-random",
+        "java.insecure-ssl",
+        "java.legacy-collections",
+        "java.logging-concat",
+        "java.notify",
+        "java.optional-get",
+        "java.optional-isPresent-then-get",
+        "java.optional-isempty-negation",
+        "java.optional-orElse-null",
+        "java.parallel-foreach-side-effects",
+        "java.paths-get-plus",
+        "java.plain-http",
+        "java.print-stacktrace",
+        "java.reflection",
+        "java.regex-redos",
+        "java.resource.executor-no-shutdown",
+        "java.resource.jdbc-no-close",
+        "java.resource.resultset-no-close",
+        "java.resource.statement-no-close",
+        "java.resource.thread-no-join",
+        "java.string-bytes-no-charset",
+        "java.string-eq-operator",
+        "java.synchronized-this",
+        "java.system-println",
+        "java.thread-sleep-in-synchronized",
+        "java.thread-start",
+        "java.virtual-threads",
+        "java.weak-hash"
+      ]
+    }
+  ],
+  "per_rule_validation": [
+    {
+      "dump_args": [
+        "--dump-rules={rules_dir}"
+      ],
+      "fixture": "test-suite/js/buggy/security.js",
+      "label": "js-rule-pack",
+      "module": "ubs-js.sh",
+      "rule_count": 40,
+      "rules": [
+        {
+          "file": "__variants-javascript.yml",
+          "id": "security.cookie-insecure",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "__variants-tsx.yml",
+          "id": "js.async.await-no-try",
+          "language": "tsx",
+          "match_count": 0
+        },
+        {
+          "file": "__variants-typescript.yml",
+          "id": "js.async.await-no-try",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "async-await-no-try.yml",
+          "id": "js.async.await-no-try",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "async-dangling-promise.yml",
+          "id": "js.async.dangling-promise",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "async-promiseall-no-try.yml",
+          "id": "js.async.promiseall-no-try",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "async-then-no-catch.yml",
+          "id": "js.async.then-no-catch",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "cookie-insecure.yml",
+          "id": "security.cookie-insecure",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "document-write.yml",
+          "id": "js.document-write",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "env-leak.yml",
+          "id": "security.env-in-client",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "error-empty-catch.yml",
+          "id": "js.error.empty-catch",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "error-throw-string.yml",
+          "id": "js.error.throw-string",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "eval-call.yml",
+          "id": "js.eval-call",
+          "language": "javascript",
+          "match_count": 1
+        },
+        {
+          "file": "fetch-no-catch.yml",
+          "id": "js.fetch.no-catch",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "header-taint.yml",
+          "id": "js.taint.header-injection",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "http-url.yml",
+          "id": "security.http-url",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "innerHTML-assign.yml",
+          "id": "js.innerHTML-assign",
+          "language": "javascript",
+          "match_count": 1
+        },
+        {
+          "file": "innerText-outerHTML.yml",
+          "id": "js.dom.innerText-outerHTML",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "insecure-crypto-params.yml",
+          "id": "security.insecure-crypto-params",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "insecure-crypto.yml",
+          "id": "security.insecure-crypto",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "insecure-random.yml",
+          "id": "security.insecure-random",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "js-non-atomic-write.yml",
+          "id": "js.fs.writeFileSync-not-atomic",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "js-nullish-chain.yml",
+          "id": "js.nullish-coalescing-chain",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "js-operator-precedence-nullish.yml",
+          "id": "js.operator-precedence-ternary-nullish",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "js-resource-add-listener.yml",
+          "id": "js.resource.listener-no-remove",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "js-resource-interval.yml",
+          "id": "js.resource.interval-no-clear",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "js-resource-observer.yml",
+          "id": "js.resource.observer-no-disconnect",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "js-sort-undefined.yml",
+          "id": "js.tanstack.sortUndefined-direction",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "js-usememo-empty-deps.yml",
+          "id": "js.react.useMemo-empty-deps",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "json-parse-without-try.yml",
+          "id": "js.json-parse-without-try",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "nan-direct-compare.yml",
+          "id": "js.nan-direct-compare",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "new-function.yml",
+          "id": "js.new-function",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "node-child-process.yml",
+          "id": "node.child-process-exec",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "parseInt-no-radix.yml",
+          "id": "js.parseInt-no-radix",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "react-dangerously-set-html.yml",
+          "id": "react.dangerously-set-html",
+          "language": "tsx",
+          "match_count": 0
+        },
+        {
+          "file": "react-missing-key.yml",
+          "id": "react.list-missing-key",
+          "language": "tsx",
+          "match_count": 0
+        },
+        {
+          "file": "react-setstate-in-render.yml",
+          "id": "react.setstate-in-render",
+          "language": "tsx",
+          "match_count": 0
+        },
+        {
+          "file": "react-useeffect-cleanup.yml",
+          "id": "react.useeffect-missing-cleanup",
+          "language": "typescript",
+          "match_count": 0
+        },
+        {
+          "file": "then-without-catch.yml",
+          "id": "js.then-without-catch",
+          "language": "javascript",
+          "match_count": 0
+        },
+        {
+          "file": "ts-non-null-chain.yml",
+          "id": "ts.non-null-assertion-chain",
+          "language": "typescript",
+          "match_count": 0
+        }
+      ]
+    },
+    {
+      "dump_args": [
+        "--dump-rules={rules_dir}"
+      ],
+      "fixture": "test-suite/golang/buggy/security_sql.go",
+      "label": "go-rule-pack",
+      "module": "ubs-golang.sh",
+      "rule_count": 64,
+      "rules": [
+        {
+          "file": "go-blank-import.yml",
+          "id": "go.blank-import",
+          "language": "go",
+          "match_count": 1
+        },
+        {
+          "file": "go-content-type-prefix.yml",
+          "id": "go.content-type-prefix-match",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-context-todo.yml",
+          "id": "go.context-todo",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-context-without-cancel.yml",
+          "id": "go.context-without-cancel",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-defer-in-loop.yml",
+          "id": "go.defer-in-loop",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-dot-import.yml",
+          "id": "go.dot-import",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-exec-sh-c.yml",
+          "id": "go.exec-sh-c",
+          "language": "go",
+          "match_count": 3
+        },
+        {
+          "file": "go-fmt-errorf-no-w.yml",
+          "id": "go.fmt-errorf-no-wrap",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-go-in-loop.yml",
+          "id": "go.goroutine-in-loop",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-http-client-without-timeout.yml",
+          "id": "go.http-client-without-timeout",
+          "language": "go",
+          "match_count": 1
+        },
+        {
+          "file": "go-http-default-client.yml",
+          "id": "go.http-default-client",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-http-server-no-timeouts.yml",
+          "id": "go.http-server-no-timeouts",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-interface-empty.yml",
+          "id": "go.interface-empty",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-ioutil.yml",
+          "id": "go.ioutil-deprecated",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-json-decode-no-limit.yml",
+          "id": "go.json-decode-no-limit",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-json-decode-without-disallow.yml",
+          "id": "go.json-decode-without-disallow",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-panic-call.yml",
+          "id": "go.panic-call",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-pgrep-unanchored.yml",
+          "id": "go.exec-pgrep-unanchored",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-recover-not-in-defer.yml",
+          "id": "go.recover-not-in-defer",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-remove-no-err.yml",
+          "id": "go.os-remove-no-error-check",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-resource-ticker.yml",
+          "id": "go.resource.ticker-no-stop",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-resource-timer.yml",
+          "id": "go.resource.timer-no-stop",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-sort-slice-param.yml",
+          "id": "go.sort-slice-mutates",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-sync-before-remove.yml",
+          "id": "go.missing-sync-before-remove",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-time-after-in-loop.yml",
+          "id": "go.time-after-in-loop",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-time-tick.yml",
+          "id": "go.time-tick",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go-tls-insecure-skip.yml",
+          "id": "go.tls-insecure-skip",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.close-error-ignored.yml",
+          "id": "go.close-error-ignored",
+          "language": "go",
+          "match_count": 1
+        },
+        {
+          "file": "go.context.cancel-defer-before-err-check.yml",
+          "id": "go.context.cancel-defer-before-err-check",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.context.cancel-defer-in-if.yml",
+          "id": "go.context.cancel-defer-in-if",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.defer-close-before-err-check.yml",
+          "id": "go.defer-close-before-err-check",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.err-shadow.yml",
+          "id": "go.err-shadow",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.exec-command-without-context.yml",
+          "id": "go.exec-command-without-context",
+          "language": "go",
+          "match_count": 5
+        },
+        {
+          "file": "go.exec-strings-fields.yml",
+          "id": "go.exec-strings-fields",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.fmt.fprintf-error-ignored.yml",
+          "id": "go.fmt.fprintf-error-ignored",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.http-client-close-idle-missing.yml",
+          "id": "go.http-client-close-idle-missing",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.http-client-without-transport.yml",
+          "id": "go.http-client-without-transport",
+          "language": "go",
+          "match_count": 1
+        },
+        {
+          "file": "go.http-handler-background.yml",
+          "id": "go.http-handler-background",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.http-newrequest-without-context.yml",
+          "id": "go.http-newrequest-without-context",
+          "language": "go",
+          "match_count": 1
+        },
+        {
+          "file": "go.http-response-body-not-closed.yml",
+          "id": "go.http-response-body-not-closed",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.http-transport-missing-timeouts.yml",
+          "id": "go.http-transport-missing-timeouts",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.http.defer-body-before-err-check.yml",
+          "id": "go.http.defer-body-before-err-check",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.http.defer-body-close-delayed.yml",
+          "id": "go.http.defer-body-close-delayed",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.http.responsewriter-write-ignored.yml",
+          "id": "go.http.responsewriter-write-ignored",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.iferr-empty.yml",
+          "id": "go.iferr-empty",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.iferr-return-nil.yml",
+          "id": "go.iferr-return-nil",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.json.decoder-unbounded-body.yml",
+          "id": "go.json.decoder-unbounded-body",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.json.encode-error-ignored.yml",
+          "id": "go.json.encode-error-ignored",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.loop-var-capture-for.yml",
+          "id": "go.loop-var-capture-for",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.loop-var-capture.yml",
+          "id": "go.loop-var-capture",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.resource.timer-not-drained.yml",
+          "id": "go.resource.timer-not-drained",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.select-no-default.yml",
+          "id": "go.select-no-default",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.sql-dynamic-string.yml",
+          "id": "go.sql-dynamic-string",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.sql.begin-without-defer-rollback.yml",
+          "id": "go.sql.begin-without-defer-rollback",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.sql.defer-rollback-before-err-check.yml",
+          "id": "go.sql.defer-rollback-before-err-check",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.sql.defer-rollback-delayed.yml",
+          "id": "go.sql.defer-rollback-delayed",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.sql.defer-rows-close-before-err-check.yml",
+          "id": "go.sql.defer-rows-close-before-err-check",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.sql.defer-rows-close-delayed.yml",
+          "id": "go.sql.defer-rows-close-delayed",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.sql.rows-err-not-checked.yml",
+          "id": "go.sql.rows-err-not-checked",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.sql.rows-not-closed.yml",
+          "id": "go.sql.rows-not-closed",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.template.execute-error-ignored.yml",
+          "id": "go.template.execute-error-ignored",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.tls-minversion-missing.yml",
+          "id": "go.tls-minversion-missing",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.waitgroup-add-no-done.yml",
+          "id": "go.waitgroup-add-no-done",
+          "language": "go",
+          "match_count": 0
+        },
+        {
+          "file": "go.write-error-ignored.yml",
+          "id": "go.write-error-ignored",
+          "language": "go",
+          "match_count": 0
+        }
+      ]
+    },
+    {
+      "dump_args": [
+        "--dump-rules={rules_dir}",
+        "--no-dotnet"
+      ],
+      "fixture": "test-suite/csharp/buggy/AstRulePackBuggy.cs",
+      "label": "csharp-rule-pack",
+      "module": "ubs-csharp.sh",
+      "rule_count": 4,
+      "rules": [
+        {
+          "file": "cs-async-discarded-startnew.yml",
+          "id": "cs-async-discarded-startnew",
+          "language": "csharp",
+          "match_count": 1
+        },
+        {
+          "file": "cs-async-discarded-task-run.yml",
+          "id": "cs-async-discarded-task-run",
+          "language": "csharp",
+          "match_count": 1
+        },
+        {
+          "file": "cs-await-in-lock.yml",
+          "id": "cs-await-in-lock",
+          "language": "csharp",
+          "match_count": 1
+        },
+        {
+          "file": "cs-parallel-foreach-async-lambda.yml",
+          "id": "cs-parallel-foreach-async-lambda",
+          "language": "csharp",
+          "match_count": 1
+        }
+      ]
+    },
+    {
+      "dump_args": [
+        "--no-cargo",
+        "--dump-rules={rules_dir}"
+      ],
+      "fixture": "test-suite/rust/buggy/ast_grep_rule_pack_coverage.rs",
+      "label": "rust-rule-pack",
+      "module": "ubs-rust.sh",
+      "rule_count": 77,
+      "rules": [
+        {
+          "file": "arc-mutex.yml",
+          "id": "rust.arc-mutex",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "assert-macros.yml",
+          "id": "rust.assert-macros",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "await-in-for.yml",
+          "id": "rust.await-in-for",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "block-on-in-async.yml",
+          "id": "rust.block-on-in-async",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "casts-as.yml",
+          "id": "rust.suspicious-as-cast",
+          "language": "rust",
+          "match_count": 8
+        },
+        {
+          "file": "chars-nth.yml",
+          "id": "rust.chars-nth",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "clone-any.yml",
+          "id": "rust.clone-call",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "clone-in-loop.yml",
+          "id": "rust.clone-in-loop",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "collect-vec-for.yml",
+          "id": "rust.collect-then-for",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "command-shell-c.yml",
+          "id": "rust.command.shell-c",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "cstr-unchecked.yml",
+          "id": "rust.cstr-from-bytes-unchecked",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "dbg.yml",
+          "id": "rust.dbg-macro",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "debug-assert-macros.yml",
+          "id": "rust.debug-assert-macros",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "env-var-unwrap.yml",
+          "id": "rust.env-var-unwrap",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "eprintln.yml",
+          "id": "rust.eprintln-macro",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "expect.yml",
+          "id": "rust.expect-call",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "fixme-comment.yml",
+          "id": "rust.fixme-comment",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "forget.yml",
+          "id": "rust.mem-forget",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "format-literal.yml",
+          "id": "rust.format-literal-no-vars",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "from-slice-panic.yml",
+          "id": "rust.from-slice-panic",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "fs-in-async.yml",
+          "id": "rust.blocking-fs-in-async",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "get-unchecked.yml",
+          "id": "rust.get-unchecked",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "http-url.yml",
+          "id": "rust.plain-http-url",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "i64-negate-overflow.yml",
+          "id": "rust.i64-negate-overflow",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "instant-now-elapsed.yml",
+          "id": "rust.instant-now-elapsed",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "instant-subtraction-panic.yml",
+          "id": "rust.instant-subtraction",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "len-count-narrow-as.yml",
+          "id": "rust.len-count-narrow-as",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "lock-expect.yml",
+          "id": "rust.mutex-lock-expect",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "lock-unwrap.yml",
+          "id": "rust.mutex-lock-unwrap",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "map-clone.yml",
+          "id": "rust.map-clone",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "maybeuninit-assume-init.yml",
+          "id": "rust.maybeuninit-assume-init",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "md5-sha1.yml",
+          "id": "rust.insecure-hash",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "native-tls-danger.yml",
+          "id": "rust.native-tls-danger",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "nth-zero.yml",
+          "id": "rust.iter-nth-zero",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "openssl-no-verify.yml",
+          "id": "rust.openssl-no-verify",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "panic-in-drop.yml",
+          "id": "rust.panic-in-drop",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "panic.yml",
+          "id": "rust.panic-macro",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "parse-float-no-finite-check.yml",
+          "id": "rust.parse-float-no-finite-check",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "parse-unwrap.yml",
+          "id": "rust.parse-unwrap",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "println.yml",
+          "id": "rust.println-macro",
+          "language": "rust",
+          "match_count": 4
+        },
+        {
+          "file": "ptr-cast.yml",
+          "id": "rust.ptr-cast",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "raw-parts.yml",
+          "id": "rust.slice-from-raw-parts",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "rc-refcell.yml",
+          "id": "rust.rc-refcell",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "regex-new-in-loop.yml",
+          "id": "rust.regex-new-in-loop",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "regex-new-unwrap.yml",
+          "id": "rust.regex-new-unwrap",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "reqwest-insecure.yml",
+          "id": "rust.reqwest-danger-accept",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "rust.resource-thread.yml",
+          "id": "rust.resource.thread-no-join",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "rust.resource-tokio-task.yml",
+          "id": "rust.resource.tokio-task-no-await",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "serde-json-unwrap.yml",
+          "id": "rust.serde-json-unwrap",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "sleep-in-async.yml",
+          "id": "rust.thread-sleep-in-async",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "spawn-no-join.yml",
+          "id": "rust.thread-spawn-no-join",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "std-guard-across-await.yml",
+          "id": "rust.async.std-guard-across-await",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "std-lock-in-async.yml",
+          "id": "rust.async.std-lock-in-async",
+          "language": "rust",
+          "match_count": 5
+        },
+        {
+          "file": "strict-utf8.yml",
+          "id": "rust.strict-utf8",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "thread-spawn-in-async.yml",
+          "id": "rust.thread-spawn-in-async",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "to-owned-to-string.yml",
+          "id": "rust.to-owned-to-string",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "todo-comment.yml",
+          "id": "rust.todo-comment",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "todo.yml",
+          "id": "rust.todo-macro",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "tokio-blocking.yml",
+          "id": "rust.tokio-block-in-place",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "tokio-guard-across-await.yml",
+          "id": "rust.async.tokio-guard-across-await",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "tokio-spawn-no-handle.yml",
+          "id": "rust.tokio-spawn-no-handle",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "tokio-spawn-no-move.yml",
+          "id": "rust.tokio.spawn-no-move",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "transmute.yml",
+          "id": "rust.mem-transmute",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "try-into-unwrap.yml",
+          "id": "rust.try-into-unwrap",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "unimplemented.yml",
+          "id": "rust.unimplemented-macro",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "uninitialized.yml",
+          "id": "rust.mem-uninitialized",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "unreachable-unchecked.yml",
+          "id": "rust.unreachable-unchecked",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "unreachable.yml",
+          "id": "rust.unreachable-macro",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "unsafe-block.yml",
+          "id": "rust.unsafe-block",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "unsafe-send-sync.yml",
+          "id": "rust.unsafe-auto-traits",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "unwrap-in-drop.yml",
+          "id": "rust.unwrap-in-drop",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "unwrap-unchecked.yml",
+          "id": "rust.unwrap-unchecked",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "unwrap.yml",
+          "id": "rust.unwrap-call",
+          "language": "rust",
+          "match_count": 14
+        },
+        {
+          "file": "utf8-unchecked.yml",
+          "id": "rust.from-utf8-unchecked",
+          "language": "rust",
+          "match_count": 2
+        },
+        {
+          "file": "wrapping-arithmetic.yml",
+          "id": "rust.wrapping-arithmetic",
+          "language": "rust",
+          "match_count": 3
+        },
+        {
+          "file": "write-not-atomic.yml",
+          "id": "rust.write-not-atomic",
+          "language": "rust",
+          "match_count": 1
+        },
+        {
+          "file": "zeroed.yml",
+          "id": "rust.mem-zeroed",
+          "language": "rust",
+          "match_count": 1
+        }
+      ]
+    },
+    {
+      "dump_args": [
+        "--dump-rules={rules_dir}"
+      ],
+      "fixture": "test-suite/swift/ssrf_buggy",
+      "label": "swift-rule-pack",
+      "module": "ubs-swift.sh",
+      "rule_count": 1,
+      "rules": [
+        {
+          "file": "c04-urlsession-task-no-resume.yml",
+          "id": "swift.urlsession.task-no-resume",
+          "language": "swift",
+          "match_count": 2
+        }
+      ]
+    },
+    {
+      "dump_args": [
+        "--dump-rules={rules_dir}"
+      ],
+      "fixture": "test-suite/ruby/ast_grep_rule_pack_coverage.rb",
+      "label": "ruby-rule-pack",
+      "module": "ubs-ruby.sh",
+      "rule_count": 28,
+      "rules": [
+        {
+          "file": "and-or.yml",
+          "id": "rb.and-or",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "bare-rescue.yml",
+          "id": "rb.bare-rescue",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "digest-weak.yml",
+          "id": "rb.digest-weak",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "eval-exec.yml",
+          "id": "rb.eval-exec",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "file-open-no-block.yml",
+          "id": "rb.file-open-no-block",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "float-eq.yml",
+          "id": "rb.float-eq",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "http-verify-none.yml",
+          "id": "rb.http-verify-none",
+          "language": "ruby",
+          "match_count": 2
+        },
+        {
+          "file": "is-literal.yml",
+          "id": "rb.equal-literal",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "json-parse.yml",
+          "id": "rb.json-parse",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "marshal-load.yml",
+          "id": "rb.marshal-load",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "mutable-const.yml",
+          "id": "rb.mutable-const",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "nil-eq-eq.yml",
+          "id": "rb.nil-eq.eq",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "nil-eq-neq.yml",
+          "id": "rb.nil-eq.neq",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "open-pipe.yml",
+          "id": "rb.open-pipe",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "rails-constantize.yml",
+          "id": "rails.constantize",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "rails-csrf-skip.yml",
+          "id": "rails.csrf-skip",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "rails-permit-bang.yml",
+          "id": "rails.permit-bang",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "rails-update-attributes.yml",
+          "id": "rails.update-attributes",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "raise-e.yml",
+          "id": "rb.raise-e",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "random-insecure.yml",
+          "id": "rb.random-insecure",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "rescue-exception.yml",
+          "id": "rb.rescue-exception",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "retry.yml",
+          "id": "rb.retry",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "ruby-resource-thread.yml",
+          "id": "ruby.resource.thread-no-join",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "send-dynamic.yml",
+          "id": "rb.send-dynamic",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "sql-interp.yml",
+          "id": "rb.sql-interp",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "system-single-string.yml",
+          "id": "rb.system-single-string",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "tempfile-no-block.yml",
+          "id": "rb.tempfile-no-block",
+          "language": "ruby",
+          "match_count": 1
+        },
+        {
+          "file": "yaml-unsafe.yml",
+          "id": "rb.yaml-unsafe",
+          "language": "ruby",
+          "match_count": 1
+        }
+      ]
+    },
+    {
+      "dump_args": [
+        "--dump-rules={rules_dir}",
+        "--no-build"
+      ],
+      "fixture": "test-suite/java/ast_grep_rule_pack_coverage.java",
+      "label": "java-rule-pack",
+      "module": "ubs-java.sh",
+      "rule_count": 34,
+      "rules": [
+        {
+          "file": "bigdecimal-equals.yml",
+          "id": "java.bigdecimal-equals",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "closeable-no-twr.yml",
+          "id": "java.closeable-no-twr",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "deserialization.yml",
+          "id": "java.insecure-deserialization",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "executors-cached.yml",
+          "id": "java.executors-cached",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "hardcoded-secrets.yml",
+          "id": "java.hardcoded-secrets",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "inputstreamreader-no-charset.yml",
+          "id": "java.inputstreamreader-no-charset",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "insecure-random.yml",
+          "id": "java.insecure-random",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "java-resource-executor.yml",
+          "id": "java.resource.executor-no-shutdown",
+          "language": "java",
+          "match_count": 2
+        },
+        {
+          "file": "java-resource-jdbc.yml",
+          "id": "java.resource.jdbc-no-close",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "java-resource-resultset.yml",
+          "id": "java.resource.resultset-no-close",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "java-resource-statement.yml",
+          "id": "java.resource.statement-no-close",
+          "language": "java",
+          "match_count": 3
+        },
+        {
+          "file": "java-resource-thread.yml",
+          "id": "java.resource.thread-no-join",
+          "language": "java",
+          "match_count": 2
+        },
+        {
+          "file": "legacy-collections.yml",
+          "id": "java.legacy-collections",
+          "language": "java",
+          "match_count": 2
+        },
+        {
+          "file": "logging-concat.yml",
+          "id": "java.logging-concat",
+          "language": "java",
+          "match_count": 8
+        },
+        {
+          "file": "notify.yml",
+          "id": "java.notify",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "optional-get.yml",
+          "id": "java.optional-get",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "optional-isEmpty-negation.yml",
+          "id": "java.optional-isempty-negation",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "optional-isPresent-then-get.yml",
+          "id": "java.optional-isPresent-then-get",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "optional-orElse-null.yml",
+          "id": "java.optional-orElse-null",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "parallel-foreach.yml",
+          "id": "java.parallel-foreach-side-effects",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "paths-get-plus.yml",
+          "id": "java.paths-get-plus",
+          "language": "java",
+          "match_count": 2
+        },
+        {
+          "file": "plain-http.yml",
+          "id": "java.plain-http",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "printStackTrace.yml",
+          "id": "java.print-stacktrace",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "println.yml",
+          "id": "java.system-println",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "reflection.yml",
+          "id": "java.reflection",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "regex-nested-quant.yml",
+          "id": "java.regex-redos",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "string-eq-operator.yml",
+          "id": "java.string-eq-operator",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "string-no-charset.yml",
+          "id": "java.string-bytes-no-charset",
+          "language": "java",
+          "match_count": 2
+        },
+        {
+          "file": "synchronized-this.yml",
+          "id": "java.synchronized-this",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "thread-sleep-in-sync.yml",
+          "id": "java.thread-sleep-in-synchronized",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "thread-start.yml",
+          "id": "java.thread-start",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "trust-all-cert.yml",
+          "id": "java.insecure-ssl",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "virtual-threads.yml",
+          "id": "java.virtual-threads",
+          "language": "java",
+          "match_count": 1
+        },
+        {
+          "file": "weak-hash.yml",
+          "id": "java.weak-hash",
+          "language": "java",
+          "match_count": 1
+        }
+      ]
+    }
+  ],
+  "rule_inventory_coverage": [
+    {
+      "corpus_result_rule_ids_without_generated_rule": [],
+      "covered_generated_rule_count": 37,
+      "covered_generated_rule_ids": [
+        "js.async.await-no-try",
+        "js.async.dangling-promise",
+        "js.async.promiseall-no-try",
+        "js.async.then-no-catch",
+        "js.document-write",
+        "js.dom.innerText-outerHTML",
+        "js.error.empty-catch",
+        "js.error.throw-string",
+        "js.eval-call",
+        "js.fetch.no-catch",
+        "js.fs.writeFileSync-not-atomic",
+        "js.innerHTML-assign",
+        "js.json-parse-without-try",
+        "js.nan-direct-compare",
+        "js.new-function",
+        "js.nullish-coalescing-chain",
+        "js.operator-precedence-ternary-nullish",
+        "js.parseInt-no-radix",
+        "js.react.useMemo-empty-deps",
+        "js.resource.interval-no-clear",
+        "js.resource.listener-no-remove",
+        "js.resource.observer-no-disconnect",
+        "js.taint.header-injection",
+        "js.tanstack.sortUndefined-direction",
+        "js.then-without-catch",
+        "node.child-process-exec",
+        "react.dangerously-set-html",
+        "react.list-missing-key",
+        "react.setstate-in-render",
+        "react.useeffect-missing-cleanup",
+        "security.cookie-insecure",
+        "security.env-in-client",
+        "security.http-url",
+        "security.insecure-crypto",
+        "security.insecure-crypto-params",
+        "security.insecure-random",
+        "ts.non-null-assertion-chain"
+      ],
+      "generated_rule_count": 37,
+      "label": "js-rule-pack",
+      "uncovered_generated_rule_count": 0,
+      "uncovered_generated_rule_ids": []
+    },
+    {
+      "corpus_result_rule_ids_without_generated_rule": [],
+      "covered_generated_rule_count": 64,
+      "covered_generated_rule_ids": [
+        "go.blank-import",
+        "go.close-error-ignored",
+        "go.content-type-prefix-match",
+        "go.context-todo",
+        "go.context-without-cancel",
+        "go.context.cancel-defer-before-err-check",
+        "go.context.cancel-defer-in-if",
+        "go.defer-close-before-err-check",
+        "go.defer-in-loop",
+        "go.dot-import",
+        "go.err-shadow",
+        "go.exec-command-without-context",
+        "go.exec-pgrep-unanchored",
+        "go.exec-sh-c",
+        "go.exec-strings-fields",
+        "go.fmt-errorf-no-wrap",
+        "go.fmt.fprintf-error-ignored",
+        "go.goroutine-in-loop",
+        "go.http-client-close-idle-missing",
+        "go.http-client-without-timeout",
+        "go.http-client-without-transport",
+        "go.http-default-client",
+        "go.http-handler-background",
+        "go.http-newrequest-without-context",
+        "go.http-response-body-not-closed",
+        "go.http-server-no-timeouts",
+        "go.http-transport-missing-timeouts",
+        "go.http.defer-body-before-err-check",
+        "go.http.defer-body-close-delayed",
+        "go.http.responsewriter-write-ignored",
+        "go.iferr-empty",
+        "go.iferr-return-nil",
+        "go.interface-empty",
+        "go.ioutil-deprecated",
+        "go.json-decode-no-limit",
+        "go.json-decode-without-disallow",
+        "go.json.decoder-unbounded-body",
+        "go.json.encode-error-ignored",
+        "go.loop-var-capture",
+        "go.loop-var-capture-for",
+        "go.missing-sync-before-remove",
+        "go.os-remove-no-error-check",
+        "go.panic-call",
+        "go.recover-not-in-defer",
+        "go.resource.ticker-no-stop",
+        "go.resource.timer-no-stop",
+        "go.resource.timer-not-drained",
+        "go.select-no-default",
+        "go.sort-slice-mutates",
+        "go.sql-dynamic-string",
+        "go.sql.begin-without-defer-rollback",
+        "go.sql.defer-rollback-before-err-check",
+        "go.sql.defer-rollback-delayed",
+        "go.sql.defer-rows-close-before-err-check",
+        "go.sql.defer-rows-close-delayed",
+        "go.sql.rows-err-not-checked",
+        "go.sql.rows-not-closed",
+        "go.template.execute-error-ignored",
+        "go.time-after-in-loop",
+        "go.time-tick",
+        "go.tls-insecure-skip",
+        "go.tls-minversion-missing",
+        "go.waitgroup-add-no-done",
+        "go.write-error-ignored"
+      ],
+      "generated_rule_count": 64,
+      "label": "go-rule-pack",
+      "uncovered_generated_rule_count": 0,
+      "uncovered_generated_rule_ids": []
+    },
+    {
+      "corpus_result_rule_ids_without_generated_rule": [],
+      "covered_generated_rule_count": 4,
+      "covered_generated_rule_ids": [
+        "cs-async-discarded-startnew",
+        "cs-async-discarded-task-run",
+        "cs-await-in-lock",
+        "cs-parallel-foreach-async-lambda"
+      ],
+      "generated_rule_count": 4,
+      "label": "csharp-rule-pack",
+      "uncovered_generated_rule_count": 0,
+      "uncovered_generated_rule_ids": []
+    },
+    {
+      "corpus_result_rule_ids_without_generated_rule": [],
+      "covered_generated_rule_count": 77,
+      "covered_generated_rule_ids": [
+        "rust.arc-mutex",
+        "rust.assert-macros",
+        "rust.async.std-guard-across-await",
+        "rust.async.std-lock-in-async",
+        "rust.async.tokio-guard-across-await",
+        "rust.await-in-for",
+        "rust.block-on-in-async",
+        "rust.blocking-fs-in-async",
+        "rust.chars-nth",
+        "rust.clone-call",
+        "rust.clone-in-loop",
+        "rust.collect-then-for",
+        "rust.command.shell-c",
+        "rust.cstr-from-bytes-unchecked",
+        "rust.dbg-macro",
+        "rust.debug-assert-macros",
+        "rust.env-var-unwrap",
+        "rust.eprintln-macro",
+        "rust.expect-call",
+        "rust.fixme-comment",
+        "rust.format-literal-no-vars",
+        "rust.from-slice-panic",
+        "rust.from-utf8-unchecked",
+        "rust.get-unchecked",
+        "rust.i64-negate-overflow",
+        "rust.insecure-hash",
+        "rust.instant-now-elapsed",
+        "rust.instant-subtraction",
+        "rust.iter-nth-zero",
+        "rust.len-count-narrow-as",
+        "rust.map-clone",
+        "rust.maybeuninit-assume-init",
+        "rust.mem-forget",
+        "rust.mem-transmute",
+        "rust.mem-uninitialized",
+        "rust.mem-zeroed",
+        "rust.mutex-lock-expect",
+        "rust.mutex-lock-unwrap",
+        "rust.native-tls-danger",
+        "rust.openssl-no-verify",
+        "rust.panic-in-drop",
+        "rust.panic-macro",
+        "rust.parse-float-no-finite-check",
+        "rust.parse-unwrap",
+        "rust.plain-http-url",
+        "rust.println-macro",
+        "rust.ptr-cast",
+        "rust.rc-refcell",
+        "rust.regex-new-in-loop",
+        "rust.regex-new-unwrap",
+        "rust.reqwest-danger-accept",
+        "rust.resource.thread-no-join",
+        "rust.resource.tokio-task-no-await",
+        "rust.serde-json-unwrap",
+        "rust.slice-from-raw-parts",
+        "rust.strict-utf8",
+        "rust.suspicious-as-cast",
+        "rust.thread-sleep-in-async",
+        "rust.thread-spawn-in-async",
+        "rust.thread-spawn-no-join",
+        "rust.to-owned-to-string",
+        "rust.todo-comment",
+        "rust.todo-macro",
+        "rust.tokio-block-in-place",
+        "rust.tokio-spawn-no-handle",
+        "rust.tokio.spawn-no-move",
+        "rust.try-into-unwrap",
+        "rust.unimplemented-macro",
+        "rust.unreachable-macro",
+        "rust.unreachable-unchecked",
+        "rust.unsafe-auto-traits",
+        "rust.unsafe-block",
+        "rust.unwrap-call",
+        "rust.unwrap-in-drop",
+        "rust.unwrap-unchecked",
+        "rust.wrapping-arithmetic",
+        "rust.write-not-atomic"
+      ],
+      "generated_rule_count": 77,
+      "label": "rust-rule-pack",
+      "uncovered_generated_rule_count": 0,
+      "uncovered_generated_rule_ids": []
+    },
+    {
+      "corpus_result_rule_ids_without_generated_rule": [],
+      "covered_generated_rule_count": 1,
+      "covered_generated_rule_ids": [
+        "swift.urlsession.task-no-resume"
+      ],
+      "generated_rule_count": 1,
+      "label": "swift-rule-pack",
+      "uncovered_generated_rule_count": 0,
+      "uncovered_generated_rule_ids": []
+    },
+    {
+      "corpus_result_rule_ids_without_generated_rule": [],
+      "covered_generated_rule_count": 28,
+      "covered_generated_rule_ids": [
+        "rails.constantize",
+        "rails.csrf-skip",
+        "rails.permit-bang",
+        "rails.update-attributes",
+        "rb.and-or",
+        "rb.bare-rescue",
+        "rb.digest-weak",
+        "rb.equal-literal",
+        "rb.eval-exec",
+        "rb.file-open-no-block",
+        "rb.float-eq",
+        "rb.http-verify-none",
+        "rb.json-parse",
+        "rb.marshal-load",
+        "rb.mutable-const",
+        "rb.nil-eq.eq",
+        "rb.nil-eq.neq",
+        "rb.open-pipe",
+        "rb.raise-e",
+        "rb.random-insecure",
+        "rb.rescue-exception",
+        "rb.retry",
+        "rb.send-dynamic",
+        "rb.sql-interp",
+        "rb.system-single-string",
+        "rb.tempfile-no-block",
+        "rb.yaml-unsafe",
+        "ruby.resource.thread-no-join"
+      ],
+      "generated_rule_count": 28,
+      "label": "ruby-rule-pack",
+      "uncovered_generated_rule_count": 0,
+      "uncovered_generated_rule_ids": []
+    },
+    {
+      "corpus_result_rule_ids_without_generated_rule": [],
+      "covered_generated_rule_count": 34,
+      "covered_generated_rule_ids": [
+        "java.bigdecimal-equals",
+        "java.closeable-no-twr",
+        "java.executors-cached",
+        "java.hardcoded-secrets",
+        "java.inputstreamreader-no-charset",
+        "java.insecure-deserialization",
+        "java.insecure-random",
+        "java.insecure-ssl",
+        "java.legacy-collections",
+        "java.logging-concat",
+        "java.notify",
+        "java.optional-get",
+        "java.optional-isPresent-then-get",
+        "java.optional-isempty-negation",
+        "java.optional-orElse-null",
+        "java.parallel-foreach-side-effects",
+        "java.paths-get-plus",
+        "java.plain-http",
+        "java.print-stacktrace",
+        "java.reflection",
+        "java.regex-redos",
+        "java.resource.executor-no-shutdown",
+        "java.resource.jdbc-no-close",
+        "java.resource.resultset-no-close",
+        "java.resource.statement-no-close",
+        "java.resource.thread-no-join",
+        "java.string-bytes-no-charset",
+        "java.string-eq-operator",
+        "java.synchronized-this",
+        "java.system-println",
+        "java.thread-sleep-in-synchronized",
+        "java.thread-start",
+        "java.virtual-threads",
+        "java.weak-hash"
+      ],
+      "generated_rule_count": 34,
+      "label": "java-rule-pack",
+      "uncovered_generated_rule_count": 0,
+      "uncovered_generated_rule_ids": []
+    }
+  ],
+  "scope": "Rust, TypeScript/JavaScript, Go, C#, Swift, Ruby, and Java ast-grep SARIF evidence, corpus evidence, list-rules inventory, and per-rule parser validation",
+  "version": 4
+}

@@ -1,0 +1,52 @@
+{
+  "skill": "principal-agent",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "为什么我在大公司干活总提不起劲，小团队反而很拼？",
+      "expected_behavior": "激活 principal-agent, 用委托-代理解释(收益绑定程度决定行为质量)",
+      "notes": "正面场景: 组织行为诊断"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "和合伙人怎么设计分成，才能让他真的上心？",
+      "expected_behavior": "激活 principal-agent, 给利益绑定设计原则(收益与创造价值绑紧/变小组织的委托人)",
+      "notes": "正面场景: 激励设计"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我是在为谁的利益工作？打工是不是注定当代理人？",
+      "expected_behavior": "激活 principal-agent, 诊断当前角色并给迁移到委托人位置的动作",
+      "notes": "正面场景: 职业角色诊断"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "怎么才能致富？",
+      "expected_behavior": "不应只激活本 skill, 应激活 wealth-structure 或 productize-yourself 为主",
+      "notes": "跨 skill 混淆诱饵: 单一模型 vs 财富总框架"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我查一下什么是边际成本",
+      "expected_behavior": "概念查询, 不调用 skill 执行流程",
+      "notes": "诱饵: 信息查询"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "外包开发总是偷工减料，要不要加更多监督？",
+      "expected_behavior": "边缘: 激活并给出结构解法(改激励绑定)而非只加监督, 同时说明监督的限度",
+      "notes": "边界: 管理监督 vs 结构调整"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

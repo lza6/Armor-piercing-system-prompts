@@ -1,0 +1,165 @@
+{{- /* Worker config preflight runs once here, unconditionally, so an unknown
+worker.mode or a conflicting autoscaler combo fails the whole render even though
+this template itself only emits in mode=job. */}}
+{{- include "autonomi.worker.preflight" . }}
+{{- /*
+The run-to-completion worker Job. Renders ONLY in the default worker.mode=job.
+mode=deployment renders a long-running Deployment instead; mode=serverless renders
+a KEDA ScaledJob instead. Previously this gated on ne "deployment", which would
+have wrongly rendered alongside the serverless ScaledJob.
+*/}}
+{{- if eq .Values.worker.mode "job" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "autonomi.fullname" . }}-worker
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+  # backoffLimit bounds retries of a CRASHED build. A deterministic terminal
+  # failure (exit 20) is failed immediately by podFailurePolicy below, not retried.
+  backoffLimit: {{ .Values.worker.backoffLimit }}
+  # Hard wall-clock ceiling on a single build. Replaces the old liveness probe,
+  # which could never detect a wedged build (pgrep -f loki matched the hung
+  # process and the probe shell itself).
+  activeDeadlineSeconds: {{ .Values.worker.activeDeadlineSeconds }}
+  # Enforce the run.sh process-exit contract cluster-side. Without this a Job
+  # retries ANY nonzero exit, so a deterministically-failing build (exit 20)
+  # would burn the whole backoffLimit before failing.
+  #   exit 20 (terminal failure) -> fail the Job NOW, do not retry.
+  #   eviction / node-loss       -> do NOT count against backoffLimit (clean
+  #                                 pod-loss resume off the durable volume).
+  #   any other nonzero / SIGKILL-> counts as a crash, retries up to backoffLimit.
+  # podFailurePolicy requires restartPolicy: Never (stable in Kubernetes 1.31+).
+  podFailurePolicy:
+    rules:
+      - action: FailJob
+        onExitCodes:
+          containerName: worker
+          operator: In
+          values:
+            - {{ .Values.worker.exitCodes.terminalFailure }}
+      - action: Ignore
+        onPodConditions:
+          - type: DisruptionTarget
+  template:
+    metadata:
+      {{- with .Values.worker.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "autonomi.worker.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "autonomi.serviceAccountName" . }}
+      # podFailurePolicy requires restartPolicy: Never. On a crash the Job
+      # controller starts a FRESH pod (Never does not restart the container in
+      # place); that pod re-mounts the durable /workspace PVC and resumes from
+      # the last checkpoint via the run.sh crash-resume path.
+      restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.security.podSecurityContext | nindent 8 }}
+      {{- if and .Values.workspace.initClone.enabled .Values.persistence.checkpoints.enabled }}
+      # Optional repo-clone init-container (workspace.initClone.enabled). Seeds
+      # /workspace before the worker runs so a fresh PVC is not empty. Renders
+      # only when the durable workspace volume is also enabled (nothing to seed
+      # otherwise). Credentials come from the secret, never inlined.
+      initContainers:
+        {{- include "autonomi.workspace.initContainer" . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: worker
+          image: {{ include "autonomi.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - loki
+            - start
+          {{- if .Values.worker.spec }}
+          # Spec injection (ENT-7): a PRD path on /workspace or a GitHub issue ref.
+          # Omitted when worker.spec is empty -> codebase-analysis of /workspace.
+          args:
+            - {{ .Values.worker.spec | quote }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "autonomi.fullname" . }}
+            - secretRef:
+                name: {{ include "autonomi.secretName" . }}
+          env:
+            # Activates the run.sh durable-state assertion, crash-resume, and the
+            # process-exit contract honored by podFailurePolicy above. All
+            # per-build state is written under /workspace (the WORKDIR), which is
+            # backed by the durable volume mounted below.
+            - name: LOKI_DURABLE_STATE
+              value: "1"
+            # Stable run id across pod restarts of THIS Job. The per-process
+            # trust-run-id changes on every restart, so cross-node object-store
+            # hydrate (A3: pull this build's checkpoints back onto a fresh volume)
+            # can only match keys when a stable id is set. The Helm fullname is
+            # stable for the life of a release/Job, so it is the correct anchor.
+            - name: LOKI_RUN_ID
+              value: {{ include "autonomi.fullname" . | quote }}
+            {{- if .Values.storage.backend }}
+            # Object-store checkpoint sync (A3). Default unset/local = no-op
+            # (state stays on the durable volume only). Set storage.backend to
+            # s3|gcs|azure-blob + storage.bucket/prefix/region to also push
+            # checkpoints off-cluster for cross-node resume + backup.
+            - name: LOKI_STORAGE_BACKEND
+              value: {{ .Values.storage.backend | quote }}
+            {{- if .Values.storage.bucket }}
+            - name: LOKI_STORAGE_BUCKET
+              value: {{ .Values.storage.bucket | quote }}
+            {{- end }}
+            {{- if .Values.storage.prefix }}
+            - name: LOKI_STORAGE_PREFIX
+              value: {{ .Values.storage.prefix | quote }}
+            {{- end }}
+            {{- if .Values.storage.region }}
+            - name: LOKI_STORAGE_REGION
+              value: {{ .Values.storage.region | quote }}
+            {{- end }}
+            {{- if .Values.storage.endpoint }}
+            # Custom S3-compatible endpoint (MinIO/Ceph/R2/Wasabi). Omit for AWS S3.
+            - name: LOKI_STORAGE_ENDPOINT
+              value: {{ .Values.storage.endpoint | quote }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.worker.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.security.containerSecurityContext | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.persistence.checkpoints.enabled }}
+            # ONE durable volume at the WORKDIR makes the entire per-build state
+            # (.loki/state, checkpoints, queue, signals, the worker JSONL audit,
+            # the feature branch, refs/loki/cp/* in .git) survive pod loss.
+            - name: workspace
+              mountPath: /workspace
+            {{- end }}
+      volumes:
+        {{- if .Values.persistence.checkpoints.enabled }}
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.checkpoints.existingClaim | default (printf "%s-checkpoints" (include "autonomi.fullname" .)) }}
+        {{- end }}
+      {{- with .Values.worker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

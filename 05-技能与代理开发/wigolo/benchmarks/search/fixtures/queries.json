@@ -1,0 +1,142 @@
+{
+  "version": "1.0.0",
+  "queries": [
+    {
+      "id": "docs-001",
+      "query": "typescript Record utility type",
+      "category": "docs",
+      "expectedDomains": ["typescriptlang.org"],
+      "tags": ["typescript", "utility-types"]
+    },
+    {
+      "id": "docs-002",
+      "query": "playwright page.goto options",
+      "category": "docs",
+      "expectedDomains": ["playwright.dev"],
+      "tags": ["playwright", "api"]
+    },
+    {
+      "id": "error-001",
+      "query": "TypeError: Cannot read properties of undefined",
+      "category": "error",
+      "tags": ["javascript", "runtime-error"]
+    },
+    {
+      "id": "error-002",
+      "query": "ECONNREFUSED 127.0.0.1:3000 node",
+      "category": "error",
+      "tags": ["node", "network"]
+    },
+    {
+      "id": "concept-001",
+      "query": "how does javascript event loop work",
+      "category": "conceptual",
+      "tags": ["javascript", "fundamentals"]
+    },
+    {
+      "id": "code-001",
+      "query": "express middleware error handling pattern",
+      "category": "code",
+      "tags": ["express", "patterns"]
+    },
+    {
+      "id": "multi-001",
+      "query": "[\"vitest mock\", \"vitest vi.fn\"]",
+      "category": "multi-query",
+      "tags": ["vitest", "testing"]
+    },
+    {
+      "id": "tutorial-001",
+      "query": "react useEffect cleanup function",
+      "category": "tutorial",
+      "expectedDomains": ["react.dev", "reactjs.org"],
+      "tags": ["react", "hooks"]
+    },
+    {
+      "id": "tutorial-002",
+      "query": "python asyncio gather vs wait",
+      "category": "tutorial",
+      "expectedDomains": ["docs.python.org"],
+      "tags": ["python", "async"]
+    },
+    {
+      "id": "api-001",
+      "query": "github rest api create pull request",
+      "category": "api",
+      "expectedDomains": ["docs.github.com"],
+      "tags": ["github", "rest-api"]
+    },
+    {
+      "id": "api-002",
+      "query": "stripe api create payment intent",
+      "category": "api",
+      "expectedDomains": ["stripe.com"],
+      "tags": ["stripe", "payments"]
+    },
+    {
+      "id": "comparison-001",
+      "query": "bun vs node.js performance benchmarks",
+      "category": "comparison",
+      "tags": ["bun", "nodejs", "performance"]
+    },
+    {
+      "id": "comparison-002",
+      "query": "postgresql vs mysql json support",
+      "category": "comparison",
+      "tags": ["postgresql", "mysql", "json"]
+    },
+    {
+      "id": "recent-001",
+      "query": "deno 2.0 breaking changes",
+      "category": "recent",
+      "expectedDomains": ["deno.com", "deno.land"],
+      "tags": ["deno", "migration"]
+    },
+    {
+      "id": "recent-002",
+      "query": "typescript 5.5 new features",
+      "category": "recent",
+      "expectedDomains": ["devblogs.microsoft.com", "typescriptlang.org"],
+      "tags": ["typescript", "release"]
+    },
+    {
+      "id": "debug-001",
+      "query": "segfault in node native addon",
+      "category": "debug",
+      "tags": ["node", "native-addon", "crash"]
+    },
+    {
+      "id": "debug-002",
+      "query": "cors preflight request blocked",
+      "category": "debug",
+      "tags": ["cors", "http", "browser"]
+    },
+    {
+      "id": "config-001",
+      "query": "nginx reverse proxy websocket configuration",
+      "category": "config",
+      "expectedDomains": ["nginx.org"],
+      "tags": ["nginx", "websocket", "proxy"]
+    },
+    {
+      "id": "config-002",
+      "query": "docker compose health check",
+      "category": "config",
+      "expectedDomains": ["docs.docker.com"],
+      "tags": ["docker", "compose", "healthcheck"]
+    },
+    {
+      "id": "security-001",
+      "query": "jwt token refresh rotation strategy",
+      "category": "security",
+      "tags": ["jwt", "auth", "security"]
+    },
+    {
+      "id": "multi-002",
+      "query": "[\"react server components\", \"RSC streaming\", \"next.js app router\"]",
+      "category": "multi-query",
+      "expectedDomains": ["react.dev", "nextjs.org"],
+      "tags": ["react", "nextjs", "rsc"]
+    }
+  ]
+}

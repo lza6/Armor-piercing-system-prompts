@@ -1,0 +1,13 @@
+schema_version: 1
+slug: buffett-letters-skill
+name: 巴菲特致股东信 Skill
+summary: 从 1957—2023 年巴菲特致股东信中蒸馏出的投资判断与资本配置方法。
+source_type: github
+source_url: https://github.com/kangarooking/buffett-letters-skill
+skill_count: 20
+domains: [投资, 决策]
+language: [zh-CN]
+status: active
+quality: verified
+featured: true
+use_cases: [分析企业长期价值, 检查投资决策的关键假设, 理解资本配置原则]

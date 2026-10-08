@@ -1,0 +1,52 @@
+{
+  "skill": "rational-buddhism",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "网上很火的『能量疗愈』，我该信吗？",
+      "expected_behavior": "激活 rational-buddhism, 跑可证伪测试+亲测计划, 保留有用的舍弃没用的",
+      "notes": "正面场景: 玄学主张评估"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "科学和冥想冲突吗？我想冥想但怕被说迷信。",
+      "expected_behavior": "激活 rational-buddhism, 解释理性佛教立场(可验证部分保留/不可证伪拒绝)",
+      "notes": "正面场景: 科学与精神的结合"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我怎么建立自己的『该信什么』的标准？",
+      "expected_behavior": "激活 rational-buddhism, 给可证伪+亲测+按结果取舍的三步验证流程",
+      "notes": "正面场景: 个人认识论"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "怎么判断一个专家的话可不可信？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 judgment-training (从基础重建/可推导性)",
+      "notes": "跨 skill 混淆诱饵: 验证标准 vs 思考能力"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我查一下最近的寺庙开放时间",
+      "expected_behavior": "信息查询, 不调用认识论流程",
+      "notes": "诱饵: 查询场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "奶奶临终前坚信有来世，我要纠正她吗？",
+      "expected_behavior": "边缘: 不激活完整验证流程; 尊重临终信仰, 本 skill 用于自己的认识论而非审判他人",
+      "notes": "边界: 理性 vs 尊重"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

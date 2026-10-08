@@ -1,0 +1,33 @@
+{
+  "tool": "cangjie compile_single v0.1 (phase0 prototype)",
+  "variant": "single",
+  "map": "benchmarks/naval/capability-map.yaml",
+  "map_sha256": "c6163d5287e306d00205d4fd7b0fc0890b28d42e5866b48157f5f6e3d52050fe",
+  "published_hashes": {
+    "SKILL.md": "a4f98db712586288d659e924ca8ea2aa8627c617393f73f1b05474a6c684c102",
+    "references/capabilities/wealth-structure.md": "d2a48d0dbb563797c62205c228e1e0a8c9ba5a75415c0aff3a94188073b30445",
+    "references/capabilities/productize-yourself.md": "89961a42023320d301b02d5d30a6bb5c4078a2e1fca43c5ba01f3e58dbe9991c",
+    "references/capabilities/decision-heuristics.md": "87bb2bdb6ed3b15138a42260cea278b1d9100fa2a2f1917552f68f8ed4213948",
+    "references/capabilities/hourly-rate-time.md": "2ce4295225a893a8dc8041274e35c316dd41d6474a7b03f9d33ddd1948b7f44c",
+    "references/capabilities/reading-metaskill.md": "c3ea458aa5c68852183e67f6f88430f5ffcc88c7e496e71cdc60e9e835a88ad6",
+    "references/capabilities/screen-detox.md": "18d2f8a825f0a8587fca62d2cef6b2b9328dced8aa74960321fcfc76e5d45038",
+    "references/capabilities/judgment-training.md": "68b1e092c2094d6b812b3c932660334090093faee37c192d7ae245895c4bf188",
+    "references/capabilities/long-term-compounding.md": "d322c852c444f3f37c4d8a15475881290c1a54ea209318825d5d17455bc97d52",
+    "references/capabilities/principal-agent.md": "c0f98c9199a0ee97d251cf6afc37f4347cbc0a918ccf5cabb20a7e58b45cd998",
+    "references/capabilities/happiness-skill.md": "a940fc9f5be2653aad225a6b5f8e42924876bb0024c278e1c51bd4d17287b959",
+    "references/capabilities/game-selection.md": "9031e8dda59e8e23d6ebb18f2c65750ba2a24d8c0f23f0b5aa47015529bc953d",
+    "references/capabilities/acceptance.md": "7d7ed8817bd3bdbf92d0785964837dc2a2c127f6875c59e4f77345051b69e8c8",
+    "references/capabilities/self-liberation.md": "b7d6b61bfe7415f08d5a299ced1a0af710ffbc2ce8794be0938c720e64fee1d0",
+    "references/capabilities/monkey-mind-meditation.md": "86d1ef13ee0ec5290b32908d84df75087fa6b12223d5b34214c84bd617e87cca",
+    "references/capabilities/peer-selection.md": "fcfda7c04ba0fcb897d84c10d046d62e5e3d49eecff50a31e8667cadf85a528d",
+    "references/capabilities/identity-work.md": "922139c750b549b652414b1091f25363e730728cc42e09c9164244c7ef0bfe7a",
+    "references/capabilities/honesty-communication.md": "1fa68e5920c4c7136d07e84430280ccafa5952b04b59a55e244e2c25a586c108",
+    "references/capabilities/rational-buddhism.md": "807f1ceb41d4573bb850781814dc3053db817af854558aa18a4fee8ae4dffa67",
+    "references/capabilities/life-meaning.md": "42c44e65a96f8b63c8361bcf6fc8b4a7dab61836dfc8e9e204fa0cf7d500457d",
+    "references/capability-index.md": "20a3f59308ea7c0d3e07fc14df1b892bc396efee7dea976622fc38a004f42b8a",
+    "references/cheatsheet.md": "6af490d99d3f589def916f4cf79f8b3d9109c966f94621b2da9332acdbe8dec1",
+    "references/overview.md": "5d78538b4a071f8c7c4002220eada80ad4c981dddc71ccff3020655fab18b43a",
+    "references/glossary.md": "94d128aa788f8b537210e11e46bd151b1f58b9a96b98f653de6b46ea749a433e"
+  },
+  "note": "update/重编译前须比对 published_hashes，检测到本地手改不得静默覆盖"
+}

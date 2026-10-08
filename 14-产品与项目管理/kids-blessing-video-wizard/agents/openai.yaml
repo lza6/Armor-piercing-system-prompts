@@ -1,0 +1,7 @@
+interface:
+  display_name: "儿童专属动画视频向导"
+  short_description: "用一张儿童照片分阶段完成文案、图像、视频和音频制作"
+  brand_color: "#7CB9E8"
+    default_prompt: "使用 $kids-blessing-video-wizard，带我一步一步用一张孩子照片制作专属动画视频。"
+policy:
+  allow_implicit_invocation: true

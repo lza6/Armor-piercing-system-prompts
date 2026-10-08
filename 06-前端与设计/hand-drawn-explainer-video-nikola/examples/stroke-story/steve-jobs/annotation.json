@@ -1,0 +1,30 @@
+{
+  "sceneId": "scene-04",
+  "canvas": {"width": 1672, "height": 941},
+  "storyBasis": "离开苹果后，乔布斯先做 NeXT，再把计算机动画团队发展成皮克斯。",
+  "sceneDurationMs": 8900,
+  "elements": [
+    {
+      "id": "next-restart",
+      "label": "离开后创办新电脑公司",
+      "sequence": 1,
+      "narrativeRole": "承接离开苹果后的第一次重新开始",
+      "subtitle": "没有苹果的十二年，他创办NeXT，",
+      "type": "story_island",
+      "region": {"x": 145, "y": 80, "width": 590, "height": 710},
+      "reveal": {"direction": "top_to_bottom", "startMs": 0, "durationMs": 5100, "maskPaddingPx": 20, "protectedRegions": []},
+      "handPath": {"start": [380, 120], "end": [520, 740], "easing": "easeInOut"}
+    },
+    {
+      "id": "pixar-animation",
+      "label": "把动画团队发展成皮克斯",
+      "sequence": 2,
+      "narrativeRole": "展示第二条道路及其结果",
+      "subtitle": "又买下一个计算机动画团队，把它发展成皮克斯。",
+      "type": "story_island",
+      "region": {"x": 925, "y": 80, "width": 650, "height": 710},
+      "reveal": {"direction": "top_to_bottom", "startMs": 5240, "durationMs": 3060, "maskPaddingPx": 20, "protectedRegions": []},
+      "handPath": {"start": [1180, 120], "end": [1430, 720], "easing": "easeInOut"}
+    }
+  ]
+}

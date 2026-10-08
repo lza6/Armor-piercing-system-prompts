@@ -1,0 +1,44 @@
+{
+  "manifest_version": "0.3",
+  "name": "wigolo",
+  "display_name": "wigolo",
+  "version": "0.1.43-beta.2",
+  "description": "Local-first web intelligence over MCP: search, fetch, crawl, extract, cache, find-similar, and research. No API keys; everything stays on your machine.",
+  "author": {
+    "name": "Towhid Khan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KnockOutEZ/wigolo"
+  },
+  "homepage": "https://github.com/KnockOutEZ/wigolo",
+  "license": "AGPL-3.0-only",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.cjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.cjs"],
+      "env": {
+        "WIGOLO_SEARCH": "${user_config.search_backend}"
+      }
+    }
+  },
+  "user_config": {
+    "search_backend": {
+      "type": "string",
+      "title": "Search backend",
+      "description": "Search backend: core (direct engines + local reranking, default), hybrid (adds an automatic fallback aggregator), or searxng (legacy aggregator only).",
+      "default": "core",
+      "required": false
+    }
+  },
+  "keywords": [
+    "search",
+    "web",
+    "crawl",
+    "extraction",
+    "research",
+    "local-first"
+  ]
+}

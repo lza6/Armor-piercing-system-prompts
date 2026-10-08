@@ -1,0 +1,79 @@
+{
+  "schema": "v1-dependency-checks",
+  "date_utc": "2026-05-20",
+  "host": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "node": "v22.14.0"
+  },
+  "checks": {
+    "fastembed": {
+      "package": "fastembed",
+      "installed_version": "2.1.0",
+      "top_level_exports": [
+        "EmbeddingModel",
+        "ExecutionProvider",
+        "FlagEmbedding",
+        "SparseEmbeddingModel",
+        "SparseTextEmbedding"
+      ],
+      "reranker_named_exports": [],
+      "has_RerankerModel": false,
+      "source_grep_rerank_matches": 0,
+      "status": "FAIL",
+      "conclusion": "fastembed npm 2.1.0 ships embeddings only; no Reranker class, enum, or helper anywhere in lib/ or .d.ts files.",
+      "alternatives": [
+        {
+          "name": "@huggingface/transformers",
+          "rationale": "Mature ONNX-based TS/JS path with first-class cross-encoder reranker support (e.g. Xenova/ms-marco-MiniLM-L-6-v2, BAAI/bge-reranker-base). Recommended primary target for reranking.",
+          "priority": "primary"
+        },
+        {
+          "name": "onnxruntime-node",
+          "rationale": "Direct ONNX runtime; we'd ship BGE/MS-MARCO weights + tokenizer ourselves. Higher perf ceiling, higher implementation cost.",
+          "priority": "fallback"
+        }
+      ],
+      "v1_blocker": false,
+      "impact": "Reranker design needs amendment: switch from fastembed to @huggingface/transformers as primary, onnxruntime-node as fallback."
+    },
+    "sqlite_vec": {
+      "package": "sqlite-vec",
+      "installed_version": "0.1.9",
+      "top_level_exports": [
+        "getLoadablePath",
+        "load"
+      ],
+      "load_helper_name": "getLoadablePath",
+      "loadable_path_returned": "/Users/towhidkhan/Desktop/personal/wigolo/node_modules/sqlite-vec-darwin-arm64/vec0.dylib",
+      "dylib_exists": true,
+      "dylib_size_bytes": 161896,
+      "vec_version_runtime": "v0.1.9",
+      "end_to_end_load_probe": "PASS (better-sqlite3 + sv.load(db) + SELECT vec_version())",
+      "platform_coverage_from_optional_deps": {
+        "darwin-arm64": "available; tested PASS",
+        "darwin-x64": "available; not tested locally",
+        "linux-x64": "available; not tested locally",
+        "linux-arm64": "available; not tested locally",
+        "windows-x64": "available; not tested locally",
+        "linux-musl": "NOT PUBLISHED — Alpine/musl follow-up needed"
+      },
+      "status": "PASS",
+      "conclusion": "sqlite-vec 0.1.9 loads cleanly on darwin-arm64. API uses getLoadablePath() (not loadablePath() as the plan checklist guessed).",
+      "v1_blocker": false,
+      "impact": "Vector-store integration can proceed; call sites must use getLoadablePath, not loadablePath.",
+      "ci_followup": [
+        "Verify load on linux-x64",
+        "Verify load on linux-arm64",
+        "Verify load on windows-x64",
+        "Verify load on darwin-x64",
+        "Decide stance on linux-musl (Alpine): graceful degradation or self-build"
+      ]
+    }
+  },
+  "overall": {
+    "v1_blocker": false,
+    "notes": "Fastembed reranker absent — reranker plan needs a design tweak to use @huggingface/transformers. sqlite-vec works on tested platform; other platforms need CI verification before merge gate."
+  },
+  "narrative_writeup": "Dependency compatibility checks for the v1 native/runtime stack."
+}

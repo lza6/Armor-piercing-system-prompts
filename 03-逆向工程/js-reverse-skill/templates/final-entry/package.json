@@ -1,0 +1,13 @@
+{
+  "name": "js-reverse-result",
+  "version": "1.0.0",
+  "description": "JS 逆向交付物（唯一执行入口 final.js，纯协议无浏览器自动化）",
+  "main": "final.js",
+  "dependencies": {
+    "curl-cffi-node": "*"
+  },
+  "scripts": {
+    "verify": "node final.js",
+    "sign-only": "node final.js --sign-only"
+  }
+}

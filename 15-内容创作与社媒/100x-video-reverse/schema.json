@@ -1,0 +1,305 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "100X Video Reverse output contract v2.1",
+  "x-contract-version": "2.1.0",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "video_id",
+    "source_file",
+    "video",
+    "shots",
+    "assets",
+    "prompt_pack",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "minLength": 1 },
+    "candidate_id": { "type": "string", "minLength": 1 },
+    "video_id": { "type": "string", "minLength": 1 },
+    "source_file": { "type": "string", "minLength": 1 },
+    "video": {
+      "type": "object",
+      "required": [
+        "filename", "duration_seconds", "aspect_ratio", "resolution", "fps",
+        "audio_track", "language", "subtitle_type", "overall_style",
+        "narrative_structure", "hook", "product_bridge", "proof_process", "cta"
+      ],
+      "properties": {
+        "filename": { "type": "string", "minLength": 1 },
+        "duration_seconds": { "type": "number" },
+        "aspect_ratio": { "type": "string", "minLength": 1 },
+        "resolution": { "type": "string", "minLength": 1 },
+        "fps": { "type": "number" },
+        "audio_track": { "type": "string", "minLength": 1 },
+        "language": { "type": "string", "minLength": 1 },
+        "subtitle_type": { "type": "string", "minLength": 1 },
+        "overall_style": { "type": "string", "minLength": 1 },
+        "narrative_structure": { "type": "string", "minLength": 1 },
+        "hook": { "type": "string", "minLength": 1 },
+        "product_bridge": { "type": "string", "minLength": 1 },
+        "proof_process": { "type": "string", "minLength": 1 },
+        "cta": { "type": "string", "minLength": 1 }
+      }
+    },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "shot_id", "start_time_seconds", "end_time_seconds", "duration_seconds",
+          "transition", "frames", "people", "products", "scenes", "props",
+          "wardrobe", "expressions", "actions", "product_interactions", "shot_size",
+          "camera_position", "camera_motion", "lighting", "color", "dialogue",
+          "sound_effects", "music", "subtitles", "screen_text", "narrative_function",
+          "conversion_function", "evidence_timestamps", "confidence"
+        ],
+        "properties": {
+          "shot_id": { "type": "string", "minLength": 1 },
+          "start_time_seconds": { "type": "number" },
+          "end_time_seconds": { "type": "number" },
+          "duration_seconds": { "type": "number" },
+          "transition": { "type": "string", "minLength": 1 },
+          "frames": {
+            "type": "object",
+            "required": ["start", "representative", "highlight", "end"],
+            "properties": {
+              "start": { "$ref": "#/definitions/frame" },
+              "representative": { "$ref": "#/definitions/frame" },
+              "highlight": { "$ref": "#/definitions/frame" },
+              "end": { "$ref": "#/definitions/frame" }
+            }
+          },
+          "people": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "products": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "scenes": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "props": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "wardrobe": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "expressions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "actions": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "product_interactions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "shot_size": { "type": "string", "minLength": 1 },
+          "camera_position": { "type": "string", "minLength": 1 },
+          "camera_motion": { "type": "string", "minLength": 1 },
+          "lighting": { "type": "string", "minLength": 1 },
+          "color": { "type": "string", "minLength": 1 },
+          "dialogue": { "type": "array", "items": { "$ref": "#/definitions/timedText" } },
+          "sound_effects": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "music": { "type": "string", "minLength": 1 },
+          "subtitles": { "type": "array", "items": { "$ref": "#/definitions/timedText" } },
+          "screen_text": { "type": "array", "items": { "$ref": "#/definitions/timedText" } },
+          "narrative_function": { "type": "string", "minLength": 1 },
+          "conversion_function": { "type": "string", "minLength": 1 },
+          "evidence_timestamps": { "type": "array", "minItems": 1, "items": { "type": "number" } },
+          "confidence": { "type": "number" }
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "required": ["people", "products", "scenes", "props", "wardrobe", "audio", "text"],
+      "properties": {
+        "people": { "type": "array", "items": { "$ref": "#/definitions/asset" } },
+        "products": { "type": "array", "items": { "$ref": "#/definitions/asset" } },
+        "scenes": { "type": "array", "items": { "$ref": "#/definitions/asset" } },
+        "props": { "type": "array", "items": { "$ref": "#/definitions/asset" } },
+        "wardrobe": { "type": "array", "items": { "$ref": "#/definitions/asset" } },
+        "audio": { "type": "array", "items": { "$ref": "#/definitions/asset" } },
+        "text": { "type": "array", "items": { "$ref": "#/definitions/asset" } }
+      }
+    },
+    "prompt_pack": {
+      "type": "object",
+      "required": [
+        "global_video_prompt", "shot_prompts", "asset_prompts", "omni_version",
+        "seedance_version", "negative_constraints", "segmented_generation_plan",
+        "stitching_post_notes", "reference_asset_map", "must_not_change"
+      ],
+      "properties": {
+        "global_video_prompt": { "type": "string", "minLength": 1 },
+        "shot_prompts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["shot_id", "common", "omni", "seedance"],
+            "properties": {
+              "shot_id": { "type": "string", "minLength": 1 },
+              "common": { "type": "string", "minLength": 1 },
+              "omni": { "type": "string", "minLength": 1 },
+              "seedance": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "asset_prompts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["asset_id", "common", "omni", "seedance"],
+            "properties": {
+              "asset_id": { "type": "string", "minLength": 1 },
+              "common": { "type": "string", "minLength": 1 },
+              "omni": { "type": "string", "minLength": 1 },
+              "seedance": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "omni_version": { "type": "string", "minLength": 1 },
+        "seedance_version": { "type": "string", "minLength": 1 },
+        "negative_constraints": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "segmented_generation_plan": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "segment_id", "start_time_seconds", "end_time_seconds", "shot_ids",
+              "start_state", "key_action", "end_state", "continuity_anchors",
+              "omni_prompt", "seedance_prompt"
+            ],
+            "properties": {
+              "segment_id": { "type": "string", "minLength": 1 },
+              "start_time_seconds": { "type": "number" },
+              "end_time_seconds": { "type": "number" },
+              "shot_ids": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+              "start_state": { "type": "string", "minLength": 1 },
+              "key_action": { "type": "string", "minLength": 1 },
+              "end_state": { "type": "string", "minLength": 1 },
+              "continuity_anchors": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+              "omni_prompt": { "type": "string", "minLength": 1 },
+              "seedance_prompt": { "type": "string", "minLength": 1 },
+              "execution_plan": { "$ref": "#/definitions/executionPlan" }
+            }
+          }
+        },
+        "stitching_post_notes": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "reference_asset_map": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "must_not_change": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["input_mode", "sampling_density", "transcript_source", "limitations", "uncertainties"],
+      "properties": {
+        "input_mode": { "type": "string", "minLength": 1 },
+        "sampling_density": { "type": "string", "minLength": 1 },
+        "transcript_source": { "type": "string", "minLength": 1 },
+        "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "uncertainties": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    }
+  },
+  "definitions": {
+    "frame": {
+      "type": "object",
+      "required": ["timestamp_seconds", "reason", "relative_path"],
+      "properties": {
+        "timestamp_seconds": { "type": "number" },
+        "reason": { "type": "string", "minLength": 1 },
+        "relative_path": { "type": "string", "minLength": 1 }
+      }
+    },
+    "timedText": {
+      "type": "object",
+      "required": ["start_time_seconds", "end_time_seconds", "speaker", "text", "language", "confidence"],
+      "properties": {
+        "start_time_seconds": { "type": "number" },
+        "end_time_seconds": { "type": "number" },
+        "speaker": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1 },
+        "language": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "number" }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "required": [
+        "asset_id", "asset_type", "name", "first_appearance_seconds", "shot_ids",
+        "observable_facts", "consistency_anchors", "screenshot_timestamp_seconds",
+        "screenshot_relative_path", "crop_instruction", "generic_prompt", "omni_prompt",
+        "seedance_prompt", "invariants", "confidence"
+      ],
+      "properties": {
+        "asset_id": { "type": "string", "minLength": 1 },
+        "asset_type": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "first_appearance_seconds": { "type": "number" },
+        "shot_ids": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "observable_facts": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "consistency_anchors": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "screenshot_timestamp_seconds": { "type": "number" },
+        "screenshot_relative_path": { "type": "string", "minLength": 1 },
+        "crop_instruction": { "type": "string", "minLength": 1 },
+        "generic_prompt": { "type": "string", "minLength": 1 },
+        "omni_prompt": { "type": "string", "minLength": 1 },
+        "seedance_prompt": { "type": "string", "minLength": 1 },
+        "invariants": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "confidence": { "type": "number" }
+      }
+    },
+    "executionPlan": {
+      "type": "object",
+      "required": [
+        "status", "target_duration_seconds", "generation_method",
+        "input_references", "selection_basis"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["ready", "needs_model_selection", "blocked"]
+        },
+        "target_duration_seconds": { "type": "number", "exclusiveMinimum": 0 },
+        "provider": { "type": ["string", "null"] },
+        "model_id": { "type": ["string", "null"] },
+        "model_adapter": {
+          "type": ["string", "null"],
+          "enum": ["omni", "seedance", "common", null]
+        },
+        "generation_method": {
+          "type": "string",
+          "enum": [
+            "text_to_video", "first_frame_to_video", "first_last_frame_to_video",
+            "reference_images_to_video", "video_to_video", "undecided"
+          ]
+        },
+        "input_references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "label"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["first_frame", "highlight_frame", "end_frame", "asset", "source_video", "source_clip"]
+              },
+              "label": { "type": "string", "minLength": 1 },
+              "relative_path": { "type": "string", "minLength": 1 },
+              "asset_id": { "type": "string", "minLength": 1 },
+              "shot_id": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "selection_basis": { "type": "string", "minLength": 1 },
+        "capability_checked_at_utc": { "type": ["string", "null"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "ready" } } },
+          "then": {
+            "required": ["provider", "model_id", "model_adapter", "capability_checked_at_utc"],
+            "properties": {
+              "provider": { "type": "string", "minLength": 1 },
+              "model_id": { "type": "string", "minLength": 1 },
+              "model_adapter": { "enum": ["omni", "seedance"] },
+              "generation_method": { "not": { "const": "undecided" } },
+              "input_references": { "minItems": 1 },
+              "capability_checked_at_utc": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

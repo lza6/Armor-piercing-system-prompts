@@ -1,0 +1,11 @@
+{
+  "name": "wigolo-sdk-research-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node research.mjs"
+  },
+  "dependencies": {
+    "wigolo-sdk": "^0.2.0"
+  }
+}

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autonomi.fullname" . }}-controlplane
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controlplane
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "autonomi.controlplane.selectorLabels" . | nindent 4 }}

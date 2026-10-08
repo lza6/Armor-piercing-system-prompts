@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cangjie-skill.org/schemas/eval-suite.schema.json",
+  "title": "Cangjie Eval Suite",
+  "description": "触发评测与输出评测的用例集。train/validation 由固定种子切分，validation 在选版前保持隐藏（方案 §7.4/§10.3）。",
+  "type": "object",
+  "required": ["schema_version", "suite_id", "target", "trigger_cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "suite_id": { "type": "string" },
+    "target": { "type": "string", "description": "被评测的 skill/entrypoint 或 capability_id" },
+    "split_seed": { "type": "integer", "default": 42 },
+    "train_ratio": { "type": "number", "default": 0.6 },
+    "trigger_cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["case_id", "prompt", "expected"],
+        "properties": {
+          "case_id": { "type": "string" },
+          "prompt": { "type": "string" },
+          "expected": { "enum": ["should_trigger", "should_not_trigger", "sibling", "edge_case"] },
+          "sibling_target": { "type": "string", "description": "expected=sibling 时应触发的兄弟入口" },
+          "runs": { "type": "integer", "default": 3, "description": "Phase 0 粗筛可为 1" }
+        }
+      }
+    },
+    "output_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["case_id", "prompt", "assertions"],
+        "properties": {
+          "case_id": { "type": "string" },
+          "prompt": { "type": "string" },
+          "input_files": { "type": "array", "items": { "type": "string" } },
+          "assertions": {
+            "type": "array",
+            "minItems": 1,
+            "description": "机械断言优先于 LLM judge",
+            "items": {
+              "type": "object",
+              "required": ["kind", "value"],
+              "properties": {
+                "kind": { "enum": ["contains", "not_contains", "regex", "file_exists", "json_path"] },
+                "value": { "type": "string" },
+                "note": { "type": "string" }
+              }
+            }
+          },
+          "compare_against": { "type": "array", "items": { "enum": ["old_skill", "without_skill"] } }
+        }
+      }
+    }
+  }
+}

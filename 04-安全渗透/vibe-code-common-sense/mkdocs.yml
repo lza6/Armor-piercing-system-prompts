@@ -1,0 +1,45 @@
+site_name: Vibe Code Common Sense
+site_description: Project rails for responsible AI coding with Codex, Claude Code, and other agents
+site_url: https://njengah.github.io/vibe-code-common-sense/
+repo_url: https://github.com/Njengah/vibe-code-common-sense
+repo_name: Njengah/vibe-code-common-sense
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: teal
+    accent: amber
+  features:
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Start Here:
+      - What It Does: start/what-it-does.md
+      - Install: start/install.md
+      - Your First Project: start/your-first-project.md
+      - Daily Workflow: start/daily-workflow.md
+      - Command Cheat Sheet: start/command-cheat-sheet.md
+      - Troubleshooting: start/troubleshooting.md
+  - System:
+      - Project Rails: system/project-rails.md
+      - Product Timeline: system/product-timeline.md
+      - Agent Rules: system/agent-rules.md
+      - PR Workflow: system/pr-workflow.md
+      - Philosophy: system/philosophy.md
+  - Reference:
+      - Codex Skill: reference/codex-skill.md
+      - Claude Code Plugin: reference/claude-code-plugin.md
+      - Manual Agent Prompt: reference/manual-agent-prompt.md
+      - Templates: reference/templates.md
+      - Releases: reference/releases.md

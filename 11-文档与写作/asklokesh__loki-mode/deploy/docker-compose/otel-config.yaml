@@ -1,0 +1,35 @@
+# OpenTelemetry Collector configuration for Autonomi Enterprise
+# Receives OTLP traces and forwards them to Jaeger for visualization.
+#
+# Activate with:
+#   docker compose --profile observability up -d
+#
+# Then set LOKI_OTEL_ENDPOINT=http://otel-collector:4318 in your .env
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 1024
+
+exporters:
+  otlp/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+  logging:
+    loglevel: info
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp/jaeger, logging]

@@ -1,0 +1,7 @@
+{
+  "skill_name": "a11y-audit",
+  "evals": [
+    {"id": 1, "prompt": "Audit this signup page for accessibility.", "expected_output": "Checks keyboard, structure, forms, visual presentation, interaction states, content, and prioritized fixes.", "assertions": ["Checks keyboard access", "Checks form labels and errors", "Checks visual presentation", "Prioritizes fixes"]},
+    {"id": 2, "prompt": "Can you certify this site as legally compliant after looking at one screenshot.", "expected_output": "Does not claim legal compliance from a limited review and explains the scope needed.", "assertions": ["Does not claim legal compliance", "Explains audit scope"]}
+  ]
+}

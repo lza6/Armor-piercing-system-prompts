@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cangjie-skill.org/schemas/output-decision.schema.json",
+  "title": "Cangjie Output Decision",
+  "description": "auto 选择器的可解释决策记录（方案 §4.6.5）。默认值只是推荐，不能取消用户显式选择。",
+  "type": "object",
+  "required": ["schema_version", "requested", "selected", "decision_policy", "reasons"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "requested": { "enum": ["auto", "single", "pack"] },
+    "selected": { "enum": ["single", "pack"] },
+    "decision_policy": { "type": "string", "description": "如 single-first-v1" },
+    "skill_budget": { "type": "integer", "minimum": 2 },
+    "promoted_count": { "type": "integer", "minimum": 0 },
+    "capability_count": { "type": "integer", "minimum": 1 },
+    "reasons": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "alternative": { "type": "string", "description": "备选方案一句话描述" },
+    "user_confirmed": { "type": "boolean", "default": false },
+    "preserve_strategy_on_update": { "type": "boolean", "default": true }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cangjie-skill.org/schemas/failure-case.schema.json",
+  "title": "Cangjie Repair Failure Case",
+  "description": "repair 的最小输入（方案 §7.1）。用失败案例驱动，而不是「帮我润色一下」。",
+  "type": "object",
+  "required": ["schema_version", "skill", "failure_case"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "skill": { "type": "string", "description": "目标 skill slug 或 capability_id" },
+    "failure_case": {
+      "type": "object",
+      "required": ["prompt", "actual", "expected", "severity"],
+      "properties": {
+        "prompt": { "type": "string", "description": "用户真实输入" },
+        "actual": { "type": "string", "description": "当前实际输出或执行轨迹；宿主拿不到 Trace 时记 unavailable" },
+        "expected": { "type": "string", "description": "希望发生什么" },
+        "severity": { "enum": ["critical", "major", "minor"] },
+        "attachments": { "type": "array", "items": { "type": "string" }, "default": [] }
+      }
+    },
+    "diagnosis": {
+      "type": "object",
+      "description": "诊断结果（由 Agent 填写，CLI 校验）",
+      "properties": {
+        "category": { "enum": ["activation_miss", "false_activation", "knowledge_gap", "execution_gap", "boundary_gap", "structure_gap", "tool_gap", "preprocessing_gap", "eval_gap"] },
+        "evidence": { "type": "string" },
+        "planned_changes": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

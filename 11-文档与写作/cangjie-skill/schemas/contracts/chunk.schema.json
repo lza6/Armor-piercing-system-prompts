@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cangjie-skill.org/schemas/contracts/chunk.schema.json",
+  "title": "Chunk Contract v1",
+  "description": "结构感知块（chunks.jsonl 每行一条）。块必须尊重章节边界并可回溯到 elements。",
+  "type": "object",
+  "required": ["chunk_id", "source_id", "version_id", "heading_path", "element_ids", "text", "content_hash"],
+  "properties": {
+    "chunk_id": { "type": "string", "pattern": "^ck-[0-9a-f]{12}$" },
+    "source_id": { "type": "string" },
+    "version_id": { "type": "string" },
+    "heading_path": { "type": "array", "items": { "type": "string" } },
+    "element_ids": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "text": { "type": "string" },
+    "char_count": { "type": "integer" },
+    "keywords": { "type": "array", "items": { "type": "string" }, "description": "确定性预筛关键词（供 FTS5 检索）" },
+    "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]+$" }
+  }
+}

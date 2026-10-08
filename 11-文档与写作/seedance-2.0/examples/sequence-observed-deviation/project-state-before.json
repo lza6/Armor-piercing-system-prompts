@@ -1,0 +1,327 @@
+{
+  "schema_version": "6.6.0",
+  "state_revision": 1,
+  "project_id": "seq_observed_deviation",
+  "project_mode": "sequence_project",
+  "surface": {
+    "name": "unknown",
+    "profile": "conservative_generic",
+    "verified_at": null
+  },
+  "clip_budget_sec": null,
+  "prompt_budget": null,
+  "story": {
+    "logline": "A courier unlocks a rooftop case before a signal flare.",
+    "story_promise": "A guarded delivery reveals a signal device.",
+    "objective": "Get the courier to the case and reveal the device.",
+    "initial_condition": "Courier reaches a rooftop door.",
+    "final_outcome": "The signal device lights safely inside the open case.",
+    "target_duration_sec": 30,
+    "tone": "precise suspense",
+    "medium": "live_action"
+  },
+  "world_bible": {
+    "location": "wet rooftop service area",
+    "character_specific_object": "short red thread tied around the courier's left glove",
+    "character_specific_object_provenance": "authored_choice"
+  },
+  "reference_registry": [
+    {
+      "tag": "@Image1",
+      "role": "courier identity",
+      "preserve_exact_tag": true
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "scene_01",
+      "scene_index": 1,
+      "narrative_function": "Cross the wet rooftop and reach the service door.",
+      "arc_position": "climax",
+      "location": "wet rooftop service area",
+      "time_of_day": "night",
+      "anchor_source": [
+        "@Image1"
+      ],
+      "max_chain_depth": 2,
+      "audio_plan": "Clips carry rain ambience and footstep SFX; score is unified in post.",
+      "assigned_clip_ids": [
+        "clip_01",
+        "clip_02",
+        "clip_03"
+      ],
+      "transition_out": "cut",
+      "status": "current"
+    }
+  ],
+  "beats": [
+    {
+      "beat_id": "beat_unlock_case",
+      "description": "Courier unlocks the case.",
+      "narrative_function": "access",
+      "status": "current",
+      "assigned_clip_id": "clip_01",
+      "dependencies": []
+    },
+    {
+      "beat_id": "beat_open_case",
+      "description": "Courier opens the case.",
+      "narrative_function": "reveal setup",
+      "status": "planned",
+      "assigned_clip_id": "clip_02",
+      "dependencies": [
+        "beat_unlock_case"
+      ]
+    },
+    {
+      "beat_id": "beat_signal_lights",
+      "description": "Signal device lights inside the case.",
+      "narrative_function": "payoff",
+      "status": "planned",
+      "assigned_clip_id": "clip_03",
+      "dependencies": [
+        "beat_open_case"
+      ]
+    }
+  ],
+  "clips": [
+    {
+      "clip_id": "clip_01",
+      "parent_clip_id": null,
+      "scene_id": "scene_01",
+      "sequence_index": 1,
+      "prompt_version": "6.6.0",
+      "generation_mode": "I2V",
+      "source_clip_tag": null,
+      "status": "ready",
+      "narrative_job": "Unlock the rooftop case.",
+      "felt_intent": "The viewer feels focused urgency - practiced hands working against the rain.",
+      "directors_read_lane": "narrative",
+      "authoring_state": {
+        "dramatic_function": "Grant access to the case without spending the reveal reserved for the next clip.",
+        "turn": "The sealed case resists the courier, then becomes accessible while its contents remain hidden.",
+        "pov": "The courier through practiced handwork; the lid edge stays outside the useful sightline.",
+        "power_shift": "The rain-swollen latch controls both hands at the start; the courier controls the unlocked case after the second breath.",
+        "hidden_want_objective": "Complete the coded handoff without seeing what the case contains.",
+        "obstacle_tactic": "A rain-swollen latch requires both hands and leaves one thumb under the lid; count two breaths, release it, and withdraw both hands before the lid moves.",
+        "subtext_contradiction": "The courier makes access possible while treating the answer now within reach as operational contamination.",
+        "visible_suppressed_behavior": "The courier's thumb starts under the lid, then withdraws as the latch clicks.",
+        "non_transferable_detail": "A short red thread tied around the courier's left glove catches briefly on the case latch.",
+        "non_transferable_detail_provenance": "authored_choice",
+        "non_transferable_detail_source": null,
+        "stock_solution_refused": "No suspicious glance, lid tease, or reaction insert; replace them with the two-breath count and the thumb withdrawing before the lid moves.",
+        "value_before": "professional control before forbidden access",
+        "value_after": "the case is accessible but curiosity remains contained",
+        "prompt_carriers": [
+          "A short red thread on the courier's left glove catches briefly on the latch.",
+          "The courier counts two breaths before the latch releases.",
+          "One thumb starts under the lid, then withdraws before the lid moves."
+        ]
+      },
+      "already_happened": [],
+      "this_clip_only": [
+        "beat_unlock_case"
+      ],
+      "reserved_for_later": [
+        "beat_open_case",
+        "beat_signal_lights"
+      ],
+      "planned_start_state": {
+        "location": "wet rooftop service area",
+        "reference_tags": [
+          "@Image1"
+        ]
+      },
+      "planned_end_state": {
+        "location": "wet rooftop service area",
+        "reference_tags": [
+          "@Image1"
+        ]
+      },
+      "observed_start_state": null,
+      "observed_end_state": null,
+      "continuity_locks": [
+        "courier identity",
+        "case identity",
+        "red thread on left glove",
+        "reference_tags"
+      ],
+      "allowed_changes": [
+        "case latch may open"
+      ],
+      "continuity_breaks": [],
+      "accepted_deviations": [],
+      "transition_in": "first clip",
+      "transition_out": "case unlocked, not opened",
+      "open_motion_vectors": [],
+      "handoff_requirements": [
+        "do not open case in Clip 01"
+      ],
+      "extension_depth": 0
+    },
+    {
+      "clip_id": "clip_02",
+      "parent_clip_id": "clip_01",
+      "scene_id": "scene_01",
+      "sequence_index": 2,
+      "prompt_version": "6.6.0",
+      "generation_mode": "V2V",
+      "source_clip_tag": "@Video1",
+      "status": "planned",
+      "narrative_job": "Open the unlocked case.",
+      "felt_intent": "The viewer feels anticipation sharpen as the case yields.",
+      "directors_read_lane": "narrative",
+      "authoring_state": {
+        "dramatic_function": "Spend the withheld reveal while keeping the courier's professional mask playable.",
+        "turn": "The unlocked case contains only a forbidden possibility, then its device is physically exposed.",
+        "pov": "The courier; the hinge receives attention until the reflective interior forces the device into peripheral view.",
+        "power_shift": "The closed lid controls information at the start; the exposed device controls the courier's attention at the end.",
+        "hidden_want_objective": "Confirm that the device is real without showing surprise.",
+        "obstacle_tactic": "The rain-dark lid opens toward a reflective interior that can expose every reaction; raise it with fingertips and hold the gaze on the hinge.",
+        "subtext_contradiction": "The courier needs proof but performs curiosity as an operational weakness.",
+        "visible_suppressed_behavior": "The courier's eyes flick toward the device, then return to the hinge.",
+        "non_transferable_detail": "A short red thread tied around the courier's left glove remains trapped beneath the released latch.",
+        "non_transferable_detail_provenance": "authored_choice",
+        "non_transferable_detail_source": null,
+        "stock_solution_refused": "No glowing-object push-in or astonished face; replace them with fingertip leverage, a hinge-held eyeline, and the trapped red thread.",
+        "value_before": "the case is accessible but curiosity remains contained",
+        "value_after": "the forbidden contents are exposed",
+        "prompt_carriers": [
+          "The courier lifts the lid with fingertips rather than a full grip.",
+          "The courier's eyes flick toward the device, then return to the hinge.",
+          "The short red thread stays trapped beneath the released latch."
+        ]
+      },
+      "already_happened": [
+        "beat_unlock_case"
+      ],
+      "this_clip_only": [
+        "beat_open_case"
+      ],
+      "reserved_for_later": [
+        "beat_signal_lights"
+      ],
+      "planned_start_state": {
+        "location": "wet rooftop service area",
+        "reference_tags": [
+          "@Image1"
+        ],
+        "prop_owner": "courier"
+      },
+      "planned_end_state": {
+        "location": "wet rooftop service area",
+        "reference_tags": [
+          "@Image1"
+        ],
+        "prop_owner": "courier",
+        "pose": "case open"
+      },
+      "observed_start_state": null,
+      "observed_end_state": null,
+      "continuity_locks": [
+        "courier identity",
+        "case identity",
+        "red thread on left glove",
+        "reference_tags"
+      ],
+      "allowed_changes": [
+        "case may open"
+      ],
+      "continuity_breaks": [],
+      "accepted_deviations": [],
+      "transition_in": "provisional after Clip 01 acceptance",
+      "transition_out": "case open, signal not lit",
+      "open_motion_vectors": [
+        "case lid opens"
+      ],
+      "handoff_requirements": [
+        "do not finalize until Clip 01 is accepted"
+      ],
+      "extension_depth": 1
+    },
+    {
+      "clip_id": "clip_03",
+      "parent_clip_id": "clip_02",
+      "scene_id": "scene_01",
+      "sequence_index": 3,
+      "prompt_version": "6.6.0",
+      "generation_mode": "V2V",
+      "source_clip_tag": "@Video2",
+      "status": "planned",
+      "narrative_job": "Light the signal device inside the open case.",
+      "felt_intent": "The viewer feels the payoff spark - the signal finally alive against the night.",
+      "directors_read_lane": "narrative",
+      "authoring_state": {
+        "dramatic_function": "Convert the exposed device into the single signal that pays off the guarded handoff.",
+        "turn": "The device is visible but inert, then a stable pulse makes the handoff active.",
+        "pov": "The courier through the switch hand; the pulse is read first in the red thread rather than on a reaction shot.",
+        "power_shift": "Silence withholds confirmation at the start; the courier controls the one permitted transmission by pressing exactly once.",
+        "hidden_want_objective": "Know the signal was received without waiting for a reply.",
+        "obstacle_tactic": "The activation glow can expose the courier while no reply confirms a listener; press once, flatten the gloved hand, and leave after the pulse stabilizes.",
+        "subtext_contradiction": "A deliberately unanswered transmission is the only proof the courier permits.",
+        "visible_suppressed_behavior": "The courier's hand hovers for a second press, then settles flat beside the device.",
+        "non_transferable_detail": "The short red thread trapped beneath the released latch turns blue in the first pulse.",
+        "non_transferable_detail_provenance": "authored_choice",
+        "non_transferable_detail_source": null,
+        "stock_solution_refused": "No face-filling glow, countdown, or second confirmation press; replace them with one switch action and the red thread changing color.",
+        "value_before": "the forbidden contents are exposed",
+        "value_after": "the handoff becomes an active signal",
+        "prompt_carriers": [
+          "The courier presses the signal switch exactly once.",
+          "The gloved hand hovers for a second press, then settles flat beside the device.",
+          "The trapped red thread turns blue in the first signal pulse."
+        ]
+      },
+      "already_happened": [
+        "beat_unlock_case",
+        "beat_open_case"
+      ],
+      "this_clip_only": [
+        "beat_signal_lights"
+      ],
+      "reserved_for_later": [],
+      "planned_start_state": {
+        "location": "wet rooftop service area",
+        "reference_tags": [
+          "@Image1"
+        ],
+        "prop_owner": "courier",
+        "pose": "case open"
+      },
+      "planned_end_state": {
+        "location": "wet rooftop service area",
+        "reference_tags": [
+          "@Image1"
+        ],
+        "prop_owner": "courier",
+        "pose": "watching lit signal device"
+      },
+      "observed_start_state": null,
+      "observed_end_state": null,
+      "continuity_locks": [
+        "courier identity",
+        "case identity",
+        "red thread on left glove",
+        "reference_tags"
+      ],
+      "allowed_changes": [
+        "signal light may activate"
+      ],
+      "continuity_breaks": [],
+      "accepted_deviations": [],
+      "transition_in": "provisional after Clip 02 acceptance",
+      "transition_out": "signal lit",
+      "open_motion_vectors": [
+        "signal pulse stabilizes"
+      ],
+      "handoff_requirements": [
+        "do not finalize until Clip 02 is accepted"
+      ],
+      "extension_depth": 2
+    }
+  ],
+  "take_history": [],
+  "current_clip_id": "clip_01",
+  "canon_revision": 1,
+  "updated_at": "2026-06-20"
+}

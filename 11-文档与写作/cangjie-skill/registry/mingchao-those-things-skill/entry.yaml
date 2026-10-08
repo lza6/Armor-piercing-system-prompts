@@ -1,0 +1,13 @@
+schema_version: 1
+slug: mingchao-those-things-skill
+name: 明朝那些事儿 Skill
+summary: 从历史叙事中提炼权力结构、制度失灵、人物判断与表达方法。
+source_type: github
+source_url: https://github.com/qbdx-hub/mingchao-those-things-skill
+skill_count: 7
+domains: [历史, 写作]
+language: [zh-CN]
+status: active
+quality: community
+featured: false
+use_cases: [分析权力结构, 理解制度失灵, 改进历史表达]

@@ -1,0 +1,6 @@
+{
+  "base_resp": {
+    "status_code": 1028,
+    "status_msg": "Daily quota exhausted for image-01"
+  }
+}

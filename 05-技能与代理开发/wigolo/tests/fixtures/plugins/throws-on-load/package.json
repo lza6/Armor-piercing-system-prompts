@@ -1,0 +1,5 @@
+{
+  "name": "test-throws-on-load",
+  "version": "1.0.0",
+  "main": "index.mjs"
+}

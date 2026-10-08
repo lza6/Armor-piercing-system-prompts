@@ -1,0 +1,114 @@
+{
+  "tool": "count_tokens.py v0.1",
+  "config": "benchmarks/naval/token-config.json",
+  "config_sha256_16": "b83ec08c8fae168a",
+  "load_model_note": "见脚本 docstring；全部为静态假设，不代表任何宿主实际计费",
+  "results": {
+    "cl100k_base": {
+      "A-original-pack": {
+        "type": "atomic_pack",
+        "root": "books/naval-almanack-skill",
+        "entrypoint_count": 19,
+        "discovery_payload": 3897,
+        "per_task_payload": {
+          "min": 2070,
+          "median": 2207,
+          "max": 2345,
+          "n": 19
+        },
+        "corpus_installable": 49901,
+        "corpus_total": 113417
+      },
+      "B-single": {
+        "type": "single",
+        "root": "benchmarks/naval/prototypes/single/naval-almanack",
+        "entrypoint_count": 1,
+        "capability_count": 19,
+        "discovery_payload": 340,
+        "entry_tokens": 2611,
+        "per_task_payload": {
+          "min": 4568,
+          "median": 4730,
+          "max": 4844,
+          "n": 19
+        },
+        "per_task_upper_bound": 6772,
+        "corpus_total": 52599
+      },
+      "C-compact-pack": {
+        "type": "compact_pack",
+        "root": "benchmarks/naval/prototypes/compact-pack",
+        "entrypoint_count": 7,
+        "capability_count": 19,
+        "promoted_count": 6,
+        "discovery_payload": 1575,
+        "per_task_payload_promoted_hit": {
+          "min": 2157,
+          "median": 2247,
+          "max": 2345,
+          "n": 6
+        },
+        "per_task_payload_router_hit": {
+          "min": 4795,
+          "median": 4957,
+          "max": 5071,
+          "n": 19
+        },
+        "corpus_total": 68799
+      }
+    },
+    "o200k_base": {
+      "A-original-pack": {
+        "type": "atomic_pack",
+        "root": "books/naval-almanack-skill",
+        "entrypoint_count": 19,
+        "discovery_payload": 2682,
+        "per_task_payload": {
+          "min": 1531,
+          "median": 1616,
+          "max": 1704,
+          "n": 19
+        },
+        "corpus_installable": 37230,
+        "corpus_total": 82859
+      },
+      "B-single": {
+        "type": "single",
+        "root": "benchmarks/naval/prototypes/single/naval-almanack",
+        "entrypoint_count": 1,
+        "capability_count": 19,
+        "discovery_payload": 222,
+        "entry_tokens": 1960,
+        "per_task_payload": {
+          "min": 3407,
+          "median": 3503,
+          "max": 3594,
+          "n": 19
+        },
+        "per_task_upper_bound": 4998,
+        "corpus_total": 38008
+      },
+      "C-compact-pack": {
+        "type": "compact_pack",
+        "root": "benchmarks/naval/prototypes/compact-pack",
+        "entrypoint_count": 7,
+        "capability_count": 19,
+        "promoted_count": 6,
+        "discovery_payload": 1092,
+        "per_task_payload_promoted_hit": {
+          "min": 1571,
+          "median": 1633,
+          "max": 1674,
+          "n": 6
+        },
+        "per_task_payload_router_hit": {
+          "min": 3576,
+          "median": 3672,
+          "max": 3763,
+          "n": 19
+        },
+        "corpus_total": 50053
+      }
+    }
+  }
+}

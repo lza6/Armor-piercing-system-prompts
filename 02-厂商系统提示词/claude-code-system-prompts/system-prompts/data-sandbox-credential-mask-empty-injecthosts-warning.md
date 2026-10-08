@@ -1,0 +1,6 @@
+<!--
+name: "Data: Sandbox credential mask empty injectHosts warning"
+description: "Warns that sandbox credential masks with empty injectHosts expose only sentinel values and explains how to resolve adapter, managed-settings, and local configuration causes"
+ccVersion: "2.1.221"
+-->
+proxy never substitutes the real credential, so tools needing these will fail to authenticate. If the adapter forced this (a filesystem.allowRead entry re-opened a denied credential path), remove the conflicting allowRead entry or the deny; if a parent/managed settings tier supplied this mask, sentinel-only is its intended posture (that channel cannot grant injection, so an injectHosts set there is stripped on load) and the entry can only be removed in the parent settings; otherwise set injectHosts or remove the entry

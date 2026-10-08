@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.20)
+project(ubs_async_buggy CXX)
+set(CMAKE_CXX_STANDARD 20)
+add_executable(ubs_async_buggy async_errors.cpp)
+target_compile_features(ubs_async_buggy PRIVATE cxx_std_20)

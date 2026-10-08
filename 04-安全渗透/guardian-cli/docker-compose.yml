@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  guardian:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: guardian-cli:latest
+    container_name: guardian-pentest
+    
+    # Environment variables (use .env file)
+    env_file:
+      - .env
+    
+    # Volume mounts for persistence
+    volumes:
+      # Reports directory (persistent output)
+      - ./reports:/guardian/reports
+      
+      # Logs directory
+      - ./logs:/guardian/logs
+      
+      # Custom configuration (optional)
+      - ./config:/guardian/config
+      
+      # Custom workflows (optional)
+      - ./workflows:/guardian/workflows
+    
+    # Network configuration
+    network_mode: bridge
+    
+    # Resource limits (optional - adjust based on your needs)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 4G
+    #     reservations:
+    #       cpus: '1'
+    #       memory: 2G
+    
+    # Restart policy
+    restart: "no"
+    
+    # Interactive mode
+    stdin_open: true
+    tty: true
+
+# Optional: Named volumes for better management
+# volumes:
+#   guardian_reports:
+#   guardian_logs:

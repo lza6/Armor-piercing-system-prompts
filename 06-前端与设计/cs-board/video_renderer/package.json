@@ -1,0 +1,25 @@
+{
+  "name": "semantic-infographic-remotion-renderer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "render": "node render.mjs",
+    "align": "node align.mjs"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.515",
+    "@remotion/install-whisper-cpp": "4.0.515",
+    "@remotion/renderer": "4.0.515",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "remotion": "4.0.515"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,10 @@
+Search: "react server components" (3 results, 150ms, engines: searxng)
+
+  [1] React Server Components - react.dev (score: 0.95)
+      React Server Components are a new kind of Component...
+
+  [2] Understanding RSC - vercel.com (score: 0.88)
+      RSC enables a new mental model...
+
+  [3] Server Components Deep Dive - blog.example.com (score: 0.75)
+      A deep dive into the internals of RSC...

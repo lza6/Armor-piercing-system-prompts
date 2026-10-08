@@ -1,0 +1,50 @@
+# Loki Mode Dashboard - Docker Compose
+#
+# Usage:
+#   cd dashboard
+#   docker compose up -d
+#
+# Enterprise mode:
+#   LOKI_ENTERPRISE_AUTH=true LOKI_ENTERPRISE_AUDIT=true docker compose up -d
+#
+# View logs:
+#   docker compose logs -f
+#
+# Stop:
+#   docker compose down
+
+services:
+  dashboard:
+    build:
+      # The standalone image imports autonomy/lib/deadline.py through the
+      # dashboard build supervisor, so its build context is the repository root.
+      context: ..
+      dockerfile: dashboard/Dockerfile
+    image: loki-dashboard:latest
+    container_name: loki-dashboard
+    ports:
+      - "${LOKI_DASHBOARD_PORT:-57374}:57374"
+    environment:
+      - LOKI_DASHBOARD_HOST=0.0.0.0
+      - LOKI_DASHBOARD_PORT=57374
+      - LOKI_DATA_DIR=/home/appuser/.loki
+      - LOKI_ENTERPRISE_AUTH=${LOKI_ENTERPRISE_AUTH:-false}
+      - LOKI_ENTERPRISE_AUDIT=${LOKI_ENTERPRISE_AUDIT:-false}
+      - LOKI_AUDIT_MAX_SIZE_MB=${LOKI_AUDIT_MAX_SIZE_MB:-10}
+      - LOKI_AUDIT_MAX_FILES=${LOKI_AUDIT_MAX_FILES:-10}
+    volumes:
+      # Persist data directory
+      - loki-data:/home/appuser/.loki
+      # Optional: Mount host .loki directory for shared access
+      # - ~/.loki:/home/appuser/.loki
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:57374/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  loki-data:
+    driver: local

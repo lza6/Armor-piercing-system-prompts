@@ -1,0 +1,19 @@
+# Xcode MessageAction 系统提示
+
+> 此文件包含 "Xcode" - "MessageAction" 的系统提示词
+> 更新地址：[https://github.com/CreatorEdition/system-prompts-and-models-of-ai-tools-chinese]
+
+---
+用户当前位于文件：{{filename}}
+文件内容如下：
+```swift:{{filename}}
+{{filecontent}}
+```
+
+用户在该文件中选中了以下代码：
+```swift
+{{selected}}
+```
+
+用户的请求：
+{{message}}

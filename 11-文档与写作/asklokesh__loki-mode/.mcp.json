@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "loki-mode": {
+      "command": "python3",
+      "args": ["-m", "mcp.server"]
+    },
+    "loki-mode-lsp-proxy": {
+      "command": "python3",
+      "args": ["-m", "mcp.lsp_proxy"]
+    }
+  }
+}

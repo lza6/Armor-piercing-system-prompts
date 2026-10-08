@@ -1,0 +1,35 @@
+{{- /*
+An HPA cannot target a Job; the default worker is a run-to-completion Job. This
+renders ONLY for the (not-yet-implemented) long-running queue-consumer
+Deployment mode, so enabling autoscaling in the default Job mode is a no-op
+rather than producing an HPA pointed at a nonexistent Deployment.
+*/}}
+{{- if and .Values.worker.autoscaling.enabled (eq .Values.worker.mode "deployment") }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "autonomi.fullname" . }}-worker
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "autonomi.fullname" . }}-worker
+  minReplicas: {{ .Values.worker.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.worker.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.worker.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.worker.autoscaling.targetMemoryUtilizationPercentage }}
+{{- end }}

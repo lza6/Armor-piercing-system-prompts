@@ -1,0 +1,13 @@
+schema_version: 1
+slug: 1000-true-fans-skill
+name: 1000 个铁粉 Skill
+summary: 面向个人品牌、核心用户关系、信任积累与可持续变现的行动工具。
+source_type: github
+source_url: https://github.com/kangarooking/1000-true-fans-skill
+skill_count: 13
+domains: [创作者, 商业]
+language: [zh-CN]
+status: active
+quality: verified
+featured: false
+use_cases: [定位核心用户, 设计会员关系, 规划创作者收入结构]

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cangjie-skill.org/schemas/change-set.schema.json",
+  "title": "Cangjie Change Set",
+  "description": "新增/变更资料先生成 change-set，不直接改 Skill（方案 §6.2）。",
+  "type": "object",
+  "required": ["schema_version", "change_id", "content_pack", "created_at", "changes"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "change_id": { "type": "string" },
+    "content_pack": { "type": "string" },
+    "created_at": { "type": "string" },
+    "base_version": { "type": "string" },
+    "new_version": { "type": "string" },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["change_type", "chunk_id"],
+        "properties": {
+          "change_type": { "enum": ["exact_duplicate", "near_duplicate", "additive", "correction", "contradiction", "deletion", "modified"] },
+          "chunk_id": { "type": "string" },
+          "old_hash": { "type": ["string", "null"] },
+          "new_hash": { "type": ["string", "null"] },
+          "heading_path": { "type": "array", "items": { "type": "string" } },
+          "requires_human_confirmation": { "type": "boolean", "default": false },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "added": { "type": "integer" },
+        "removed": { "type": "integer" },
+        "modified": { "type": "integer" },
+        "unchanged": { "type": "integer" }
+      }
+    }
+  }
+}

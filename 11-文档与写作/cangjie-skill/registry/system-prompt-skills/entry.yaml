@@ -1,0 +1,13 @@
+schema_version: 1
+slug: system-prompt-skills
+name: System Prompt Skills
+summary: 从 165 个 AI 产品系统提示词中蒸馏的角色设计、约束与交互模式。
+source_type: github
+source_url: https://github.com/kangarooking/system-prompt-skills
+skill_count: 15
+domains: [AI, 提示词]
+language: [zh-CN, en]
+status: active
+quality: verified
+featured: true
+use_cases: [设计系统提示词, 约束模型行为, 复用成熟交互模式]

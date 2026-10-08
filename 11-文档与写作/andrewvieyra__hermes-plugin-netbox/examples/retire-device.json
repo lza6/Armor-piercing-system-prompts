@@ -1,0 +1,8 @@
+{
+  "description": "Retire sw3: release its IP and delete the device (requires allow_delete: true)",
+  "operations": [
+    {"op": "update", "endpoint": "ipam/ip-addresses", "match": {"address": "10.0.0.3/24"},
+     "data": {"status": "deprecated", "assigned_object_type": null, "assigned_object_id": null}},
+    {"op": "delete", "endpoint": "dcim/devices", "match": {"name": "sw3", "site": "sfo"}}
+  ]
+}

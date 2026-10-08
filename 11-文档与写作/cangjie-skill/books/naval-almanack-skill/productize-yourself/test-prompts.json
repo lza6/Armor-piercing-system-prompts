@@ -1,0 +1,52 @@
+{
+  "skill": "productize-yourself",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我做了三年运营，感觉随时会被替代，怎么找到自己的不可替代性？",
+      "expected_behavior": "激活 productize-yourself, 引导盘点特殊知识信号(对你像玩对别人像工作/不可培训)并做独特性×可规模化检验",
+      "notes": "正面场景: 找独特优势/护城河"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "想搞副业，但不知道选什么方向，怎么判断哪个赛道适合我？",
+      "expected_behavior": "激活 productize-yourself, 用特殊知识三定律和『这对我来说是真的吗/我在产品化它吗』过滤方向",
+      "notes": "正面场景: 副业方向选择"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "How do I find my moat and turn myself into a product?",
+      "expected_behavior": "激活 productize-yourself, 输出特殊知识×杠杆的双重定位流程",
+      "notes": "正面场景: 英文 trigger"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "帮我算一下这个项目投入 10 万能赚多少，要不要 All in？",
+      "expected_behavior": "不应激活本 skill, 应激活 wealth-structure (风险/出局红线) 或 decision-heuristics",
+      "notes": "跨 skill 混淆诱饵: 财富结构/风险决策"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我查一下 Python 列表的用法",
+      "expected_behavior": "纯信息查询, 不应调用任何定位类 skill",
+      "notes": "诱饵: 非定位场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我简历上什么都会一点但什么都不精，该怎么写？",
+      "expected_behavior": "边缘: 若诉求是『定位独特优势』则激活并给出最小定位; 若只是要简历润色则不激活, 说明差异",
+      "notes": "边界: 定位 vs 简历执行"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

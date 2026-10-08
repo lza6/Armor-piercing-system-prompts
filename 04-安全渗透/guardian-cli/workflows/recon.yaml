@@ -1,0 +1,51 @@
+# Reconnaissance Workflow
+# Comprehensive reconnaissance of a target domain
+
+name: reconnaissance
+description: Complete reconnaissance workflow including subdomain enumeration, port scanning, and technology detection
+
+steps:
+  - name: subdomain_discovery
+    type: tool
+    tool: subfinder
+    objective: "Enumerate all subdomains of the target domain"
+    parameters:
+      all_sources: true
+    
+  - name: port_scan_main_domain
+    type: tool
+    tool: nmap
+    objective: "Scan main domain for open ports and services"
+    parameters:
+      ports: "top-1000"
+      scan_type: "-sV"
+    
+  - name: http_probing
+    type: tool
+    tool: httpx
+    objective: "Probe all discovered domains for HTTP services"
+    parameters:
+      tech_detect: true
+    
+  - name: vulnerability_scan
+    type: tool
+    tool: nuclei
+    objective: "Scan for common vulnerabilities"
+    parameters:
+      severity: ["critical", "high"]
+  
+  - name: analyze_results
+    type: analysis
+    agent: analyst
+    objective: "Correlate findings from all tools"
+    
+  - name: generate_report
+    type: report
+    agent: reporter
+    format: markdown
+
+# Configuration
+settings:
+  max_parallel_tools: 2
+  require_confirmation: true
+  save_intermediate: true

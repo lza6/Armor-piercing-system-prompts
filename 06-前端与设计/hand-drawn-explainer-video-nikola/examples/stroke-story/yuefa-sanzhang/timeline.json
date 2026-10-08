@@ -1,0 +1,17 @@
+{
+  "duration": 38.5,
+  "audioDuration": 37.848,
+  "audio_duration": 37.848,
+  "narration_text": "约法三章。刘邦靠三句话，赢得关中民心。公元前二百零六年，刘邦攻入咸阳。秦朝刚灭，百姓最怕的，不是换了谁当皇帝，而是换个统治者，继续折腾。刘邦没有急着大肆搜刮，而是召集关中父老，宣布：杀人者死；伤人及盗，抵罪；余悉除去秦法。杀人偿命，伤人和盗窃依法治罪，其余秦朝苛法，全部废除。史书记载，秦人大喜，纷纷拿出牛、羊、酒食，慰劳汉军。这就是“约法三章”，就是这么来的。",
+  "voice": "zh_male_liufei_uranus_bigtts",
+  "alignment": "reused_verified_sentence_timeline",
+  "scenes": [
+    {"n": 1, "start": 0.0, "end": 7.4, "image": "assets/scene-01-enter-xianyang.png", "caption": "约法三章。刘邦靠三句话，赢得关中民心。公元前二百零六年，刘邦攻入咸阳。"},
+    {"n": 2, "start": 7.4, "end": 13.26, "image": "assets/scene-02-people-fear.png", "caption": "秦朝刚灭，百姓最怕的，不是换了谁当皇帝，而是换个统治者，继续折腾。"},
+    {"n": 3, "start": 13.26, "end": 17.72, "image": "assets/scene-03-gather-elders.png", "caption": "刘邦没有急着大肆搜刮，而是召集关中父老，宣布："},
+    {"n": 4, "start": 17.72, "end": 23.1, "image": "assets/scene-04-three-rules.png", "caption": "杀人者死；伤人及盗，抵罪；余悉除去秦法。"},
+    {"n": 5, "start": 23.1, "end": 29.12, "image": "assets/scene-05-abolish-laws.png", "caption": "杀人偿命，伤人和盗窃依法治罪，其余秦朝苛法，全部废除。"},
+    {"n": 6, "start": 29.12, "end": 35.1, "image": "assets/scene-06-people-rejoice.png", "caption": "史书记载，秦人大喜，纷纷拿出牛、羊、酒食，慰劳汉军。"},
+    {"n": 7, "start": 35.1, "end": 38.5, "image": "assets/scene-07-ending.png", "caption": "这就是“约法三章”，就是这么来的。"}
+  ]
+}

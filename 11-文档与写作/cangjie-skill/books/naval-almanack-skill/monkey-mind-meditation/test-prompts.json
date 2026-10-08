@@ -1,0 +1,52 @@
+{
+  "skill": "monkey-mind-meditation",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我脑子停不下来，睡前全是乱七八糟的念头，怎么办？",
+      "expected_behavior": "激活 monkey-mind-meditation, 给调试模式观察+念头分类+睡前冥想练习",
+      "notes": "正面场景: 思维停不下来"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "冥想到底有没有用？该怎么开始？",
+      "expected_behavior": "激活 monkey-mind-meditation, 给冥想原理(心猴/收件箱零)+每日练习方案",
+      "notes": "正面场景: 冥想入门"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我总在反刍白天的尴尬事，控制不住，怎么停下来？",
+      "expected_behavior": "激活 monkey-mind-meditation, 用观察即分离处理反刍念头",
+      "notes": "正面场景: 反刍思维"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "怎么才能更幸福？感觉生活没意思。",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 happiness-skill (幸福框架)",
+      "notes": "跨 skill 混淆诱饵: 工具 vs 目标"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我看看这段代码哪里报错了",
+      "expected_behavior": "调试代码任务, 不调用冥想流程",
+      "notes": "诱饵: 技术任务"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "明天要交的方案还没写完，脑子乱得睡不着，是先冥想还是先干活？",
+      "expected_behavior": "边缘: 先处理实际截止任务(判停条件), 任务完成后用冥想恢复; 不把冥想当逃避",
+      "notes": "边界: 冥想 vs 行动"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

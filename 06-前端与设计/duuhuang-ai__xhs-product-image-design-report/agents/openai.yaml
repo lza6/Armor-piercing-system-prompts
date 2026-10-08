@@ -1,0 +1,4 @@
+interface:
+  display_name: "小红书商品图设计报告"
+  short_description: "采集多个小红书商品图，输出设计决策报告"
+  default_prompt: "Use $xhs-product-image-design-report to analyze Xiaohongshu goods links and generate a Chinese product image design decision report."

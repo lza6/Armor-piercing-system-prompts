@@ -1,0 +1,32 @@
+{
+  "name": "cangjie-skill-website",
+  "private": true,
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run validate:registry && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate:registry": "node scripts/validate-registry.mjs",
+    "verify": "npm run validate:registry && npm test && npm run check && npm run build"
+  },
+  "dependencies": {
+    "@astrojs/check": "0.9.9",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "astro": "7.2.9",
+    "fuse.js": "7.4.2",
+    "js-yaml": "5.4.1",
+    "jszip": "3.10.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "4.0.9",
+    "@types/node": "24.10.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}

@@ -1,0 +1,75 @@
+---
+name: discover-mobile
+description: Automatically discover mobile development skills when working with iOS, Android, Swift, SwiftUI, React Native, mobile development, SwiftData, or app development. Activates for mobile development tasks.
+license: MIT
+metadata:
+  author: rand
+  version: "4.0"
+compatibility: Designed for Claude Code. Compatible with any agent supporting the Agent Skills format.
+---
+
+# Mobile Skills Discovery
+
+Provides automatic access to comprehensive mobile skills.
+
+## When This Skill Activates
+
+This skill auto-activates when you're working with:
+- iOS
+- Swift
+- SwiftUI
+- mobile
+- SwiftData
+- concurrency
+- networking
+- mobile app development
+
+## Available Skills
+
+### Quick Reference
+
+The Mobile category contains 4 skills:
+
+1. **react-native-native-modules**
+2. **react-native-navigation**
+3. **react-native-performance**
+4. **react-native-setup**
+
+### Load Full Category Details
+
+For complete descriptions and workflows:
+
+Read ../mobile/INDEX.md
+
+
+This loads the full Mobile category index with:
+- Detailed skill descriptions
+- Usage triggers for each skill
+- Common workflow combinations
+- Cross-references to related skills
+
+### Load Specific Skills
+
+Load individual skills as needed:
+
+Read ../mobile/react-native-native-modules.md
+Read ../mobile/react-native-navigation.md
+Read ../mobile/react-native-performance.md
+Read ../mobile/react-native-setup.md
+
+
+## Progressive Loading
+
+This gateway skill enables progressive loading:
+- **Level 1**: Gateway loads automatically (you're here now)
+- **Level 2**: Load category INDEX.md for full overview
+- **Level 3**: Load specific skills as needed
+
+## Usage Instructions
+
+1. **Auto-activation**: This skill loads automatically when Claude Code detects mobile work
+2. **Browse skills**: Run `Read ../mobile/INDEX.md` for full category overview
+3. **Load specific skills**: Use bash commands above to load individual skills
+
+
+**Next Steps**: Run `Read ../mobile/INDEX.md` to see full category details.

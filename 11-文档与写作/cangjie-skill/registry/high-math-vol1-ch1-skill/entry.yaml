@@ -1,0 +1,13 @@
+schema_version: 1
+slug: high-math-vol1-ch1-skill
+name: 高等数学上册第一章 Skill
+summary: 围绕极限、无穷小与连续性的概念理解、解题检查和学习辅助工具。
+source_type: github
+source_url: https://github.com/qbdx-hub/high-math-vol1-ch1-skill
+skill_count: 8
+domains: [数学, 学习]
+language: [zh-CN]
+status: active
+quality: community
+featured: false
+use_cases: [理解极限概念, 检查解题步骤, 规划章节复习]

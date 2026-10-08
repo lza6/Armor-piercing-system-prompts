@@ -1,0 +1,194 @@
+{
+  "version": "1.0.0",
+  "created": "2026-04-14",
+  "entries": [
+    {
+      "id": "example-article",
+      "url": "https://example.com/blog/web-scraping",
+      "category": "article",
+      "htmlFixturePath": "html/example-article.html",
+      "goldenPath": "golden/example-article.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["web-scraping", "tutorial"]
+    },
+    {
+      "id": "article-001",
+      "url": "https://example.com/blog/typescript-guide",
+      "category": "article",
+      "htmlFixturePath": "html/article-001.html",
+      "goldenPath": "golden/article-001.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["typescript", "tutorial"]
+    },
+    {
+      "id": "article-002",
+      "url": "https://example.com/blog/async-patterns",
+      "category": "article",
+      "htmlFixturePath": "html/article-002.html",
+      "goldenPath": "golden/article-002.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["async", "javascript"]
+    },
+    {
+      "id": "article-003",
+      "url": "https://example.com/blog/rust-wasm",
+      "category": "article",
+      "htmlFixturePath": "html/article-003.html",
+      "goldenPath": "golden/article-003.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["rust", "wasm"]
+    },
+    {
+      "id": "docs-001",
+      "url": "https://docs.example.com/api/reference",
+      "category": "docs",
+      "htmlFixturePath": "html/docs-001.html",
+      "goldenPath": "golden/docs-001.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["api", "reference"]
+    },
+    {
+      "id": "docs-002",
+      "url": "https://docs.example.com/sdk/getting-started",
+      "category": "docs",
+      "htmlFixturePath": "html/docs-002.html",
+      "goldenPath": "golden/docs-002.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["sdk", "getting-started"]
+    },
+    {
+      "id": "docs-003",
+      "url": "https://docs.example.com/cli/commands",
+      "category": "docs",
+      "htmlFixturePath": "html/docs-003.html",
+      "goldenPath": "golden/docs-003.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["cli", "reference"]
+    },
+    {
+      "id": "github-001",
+      "url": "https://github.com/user/repo",
+      "category": "github",
+      "htmlFixturePath": "html/github-001.html",
+      "goldenPath": "golden/github-001.md",
+      "expectedExtractor": "site-specific",
+      "tags": ["readme", "repository"]
+    },
+    {
+      "id": "github-002",
+      "url": "https://github.com/user/repo/issues/42",
+      "category": "github",
+      "htmlFixturePath": "html/github-002.html",
+      "goldenPath": "golden/github-002.md",
+      "expectedExtractor": "site-specific",
+      "tags": ["issue", "discussion"]
+    },
+    {
+      "id": "github-003",
+      "url": "https://github.com/user/repo/blob/main/README.md",
+      "category": "github",
+      "htmlFixturePath": "html/github-003.html",
+      "goldenPath": "golden/github-003.md",
+      "expectedExtractor": "site-specific",
+      "tags": ["source", "markdown"]
+    },
+    {
+      "id": "so-001",
+      "url": "https://stackoverflow.com/questions/12345",
+      "category": "stackoverflow",
+      "htmlFixturePath": "html/so-001.html",
+      "goldenPath": "golden/so-001.md",
+      "expectedExtractor": "site-specific",
+      "tags": ["javascript", "error"]
+    },
+    {
+      "id": "so-002",
+      "url": "https://stackoverflow.com/questions/67890",
+      "category": "stackoverflow",
+      "htmlFixturePath": "html/so-002.html",
+      "goldenPath": "golden/so-002.md",
+      "expectedExtractor": "site-specific",
+      "tags": ["python", "async"]
+    },
+    {
+      "id": "spa-001",
+      "url": "https://spa-app.example.com/page",
+      "category": "spa",
+      "htmlFixturePath": "html/spa-001.html",
+      "goldenPath": "golden/spa-001.md",
+      "tags": ["react", "dynamic"]
+    },
+    {
+      "id": "table-001",
+      "url": "https://example.com/data/comparison",
+      "category": "table-heavy",
+      "htmlFixturePath": "html/table-001.html",
+      "goldenPath": "golden/table-001.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["tables", "data"]
+    },
+    {
+      "id": "code-001",
+      "url": "https://example.com/snippets/advanced",
+      "category": "code-heavy",
+      "htmlFixturePath": "html/code-001.html",
+      "goldenPath": "golden/code-001.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["code", "typescript"]
+    },
+    {
+      "id": "api-001",
+      "url": "https://api.example.com/docs/v2",
+      "category": "docs",
+      "htmlFixturePath": "html/api-001.html",
+      "goldenPath": "golden/api-001.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["api", "rest", "endpoints"]
+    },
+    {
+      "id": "blog-001",
+      "url": "https://example.com/blog/postgres-optimization",
+      "category": "article",
+      "htmlFixturePath": "html/blog-001.html",
+      "goldenPath": "golden/blog-001.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["database", "optimization"]
+    },
+    {
+      "id": "wiki-001",
+      "url": "https://en.wikipedia.org/wiki/WebAssembly",
+      "category": "article",
+      "htmlFixturePath": "html/wiki-001.html",
+      "goldenPath": "golden/wiki-001.md",
+      "expectedExtractor": "readability",
+      "tags": ["wikipedia", "wasm"]
+    },
+    {
+      "id": "tutorial-001",
+      "url": "https://example.com/tutorials/react-hooks",
+      "category": "docs",
+      "htmlFixturePath": "html/tutorial-001.html",
+      "goldenPath": "golden/tutorial-001.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["react", "hooks", "tutorial"]
+    },
+    {
+      "id": "changelog-001",
+      "url": "https://example.com/changelog",
+      "category": "article",
+      "htmlFixturePath": "html/changelog-001.html",
+      "goldenPath": "golden/changelog-001.md",
+      "expectedExtractor": "defuddle",
+      "tags": ["changelog", "releases"]
+    },
+    {
+      "id": "reference-001",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas",
+      "category": "docs",
+      "htmlFixturePath": "html/reference-001.html",
+      "goldenPath": "golden/reference-001.md",
+      "expectedExtractor": "site-specific",
+      "tags": ["css", "mdn", "reference"]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+schema_version: 1
+slug: huangdi-neijing-skill
+name: 黄帝内经 Skill
+summary: 从《素问》和《灵枢》中提炼整体观察、节律与系统性健康思维方法。
+source_type: github
+source_url: https://github.com/kangarooking/huangdi-neijing-skill
+skill_count: 22
+domains: [传统文化, 健康思维]
+language: [zh-CN]
+status: active
+quality: verified
+featured: false
+use_cases: [理解整体观念, 分析生活节律, 学习传统医学思想]

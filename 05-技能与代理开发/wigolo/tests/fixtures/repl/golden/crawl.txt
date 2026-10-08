@@ -1,0 +1,4 @@
+Crawl: https://docs.example.com (3 pages crawled, 47 found)
+  [1] /docs/intro (depth: 0, 1204 chars)
+  [2] /docs/quickstart (depth: 1, 893 chars)
+  [3] /docs/api (depth: 1, 2105 chars)

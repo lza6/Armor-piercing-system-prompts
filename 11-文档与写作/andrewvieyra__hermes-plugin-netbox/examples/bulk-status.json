@@ -1,0 +1,8 @@
+{
+  "description": "Mark every planned device in NYC active",
+  "operations": [
+    {"op": "update", "endpoint": "dcim/devices", "match": {"name": "sw2", "site": "nyc"}, "data": {"status": "active"}},
+    {"op": "update", "endpoint": "dcim/devices", "match": {"name": "sw4", "site": "nyc"}, "data": {"status": "active"}},
+    {"op": "update", "endpoint": "dcim/devices", "match": {"name": "sw5", "site": "nyc"}, "data": {"status": "active"}}
+  ]
+}

@@ -1,0 +1,1206 @@
+openapi: 3.1.0
+info:
+  title: Loki Mode API
+  description: |
+    HTTP/SSE API for controlling and monitoring Loki Mode autonomous agent sessions.
+
+    ## Authentication
+
+    By default, the API only accepts connections from localhost without authentication.
+    For remote access, set the `LOKI_API_TOKEN` environment variable and include the
+    token in requests using Bearer authentication.
+
+    ## Server-Sent Events
+
+    The `/api/events` endpoint provides real-time streaming of session events using
+    Server-Sent Events (SSE). Connect using an EventSource client:
+
+    ```javascript
+    const events = new EventSource('http://localhost:8420/api/events');
+    events.addEventListener('task:completed', (e) => {
+      console.log(JSON.parse(e.data));
+    });
+    ```
+  version: 1.0.0
+  contact:
+    name: Loki Mode
+    url: https://github.com/asklokesh/loki-mode
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8420
+    description: Local development server
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: Sessions
+    description: Session management
+  - name: Tasks
+    description: Task management
+  - name: Events
+    description: Real-time event streaming
+  - name: Memory
+    description: Memory system endpoints
+  - name: Suggestions
+    description: Task-aware suggestions
+  - name: Learning
+    description: Learning metrics and aggregation endpoints
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Returns the health status of the API server
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Server is unhealthy or degraded
+
+  /health/ready:
+    get:
+      tags: [Health]
+      summary: Readiness probe
+      description: Kubernetes-style readiness probe
+      operationId: readinessCheck
+      responses:
+        '200':
+          description: Server is ready
+        '503':
+          description: Server is not ready
+
+  /health/live:
+    get:
+      tags: [Health]
+      summary: Liveness probe
+      description: Kubernetes-style liveness probe
+      operationId: livenessCheck
+      responses:
+        '200':
+          description: Server is alive
+
+  /api/status:
+    get:
+      tags: [Health]
+      summary: Detailed status
+      description: Returns detailed status information including system metrics
+      operationId: detailedStatus
+      responses:
+        '200':
+          description: Status information
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/sessions:
+    get:
+      tags: [Sessions]
+      summary: List sessions
+      description: Returns all sessions
+      operationId: listSessions
+      responses:
+        '200':
+          description: List of sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Session'
+                  total:
+                    type: integer
+                  running:
+                    type: integer
+
+    post:
+      tags: [Sessions]
+      summary: Start a new session
+      description: Starts a new autonomous session with the specified provider
+      operationId: startSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartSessionRequest'
+      responses:
+        '201':
+          description: Session started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartSessionResponse'
+        '409':
+          description: Session already running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/sessions/{sessionId}:
+    get:
+      tags: [Sessions]
+      summary: Get session details
+      description: Returns detailed status for a specific session
+      operationId: getSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Session details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionStatusResponse'
+        '404':
+          description: Session not found
+
+    delete:
+      tags: [Sessions]
+      summary: Delete session
+      description: Deletes a stopped session record
+      operationId: deleteSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Session deleted
+        '404':
+          description: Session not found
+        '409':
+          description: Cannot delete running session
+
+  /api/sessions/{sessionId}/stop:
+    post:
+      tags: [Sessions]
+      summary: Stop session
+      description: Sends stop signal to a running session
+      operationId: stopSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Stop signal sent
+        '404':
+          description: Session not found
+        '409':
+          description: Session not running
+
+  /api/sessions/{sessionId}/input:
+    post:
+      tags: [Sessions]
+      summary: Inject human input
+      description: Injects human input into a running session
+      operationId: injectInput
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [input]
+              properties:
+                input:
+                  type: string
+                  description: The input text to inject
+                context:
+                  type: string
+                  description: Optional context for the input
+      responses:
+        '200':
+          description: Input injected
+        '404':
+          description: Session not found
+        '409':
+          description: Session not accepting input
+
+  /api/sessions/{sessionId}/tasks:
+    get:
+      tags: [Tasks]
+      summary: List session tasks
+      description: Returns tasks for a specific session
+      operationId: listTasks
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, queued, running, completed, failed, skipped]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Task list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  pagination:
+                    type: object
+                  summary:
+                    type: object
+        '404':
+          description: Session not found
+
+  /api/tasks:
+    get:
+      tags: [Tasks]
+      summary: List all tasks
+      description: Returns tasks across all sessions
+      operationId: listAllTasks
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Task list
+
+  /api/tasks/active:
+    get:
+      tags: [Tasks]
+      summary: Get active tasks
+      description: Returns currently running tasks
+      operationId: getActiveTasks
+      responses:
+        '200':
+          description: Active tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  count:
+                    type: integer
+
+  /api/tasks/queue:
+    get:
+      tags: [Tasks]
+      summary: Get queued tasks
+      description: Returns pending/queued tasks
+      operationId: getQueuedTasks
+      responses:
+        '200':
+          description: Queued tasks
+
+  /api/events:
+    get:
+      tags: [Events]
+      summary: SSE event stream
+      description: |
+        Server-Sent Events stream for real-time updates.
+        Connect using EventSource API.
+      operationId: streamEvents
+      parameters:
+        - name: sessionId
+          in: query
+          description: Filter events by session
+          schema:
+            type: string
+        - name: types
+          in: query
+          description: Comma-separated event types to subscribe to
+          schema:
+            type: string
+        - name: history
+          in: query
+          description: Number of historical events to replay
+          schema:
+            type: integer
+            default: 0
+        - name: minLevel
+          in: query
+          description: Minimum log level
+          schema:
+            type: string
+            enum: [debug, info, warn, error]
+      responses:
+        '200':
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /api/events/history:
+    get:
+      tags: [Events]
+      summary: Get event history
+      description: Returns recent events from history
+      operationId: getEventHistory
+      parameters:
+        - name: sessionId
+          in: query
+          schema:
+            type: string
+        - name: types
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Event history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                  count:
+                    type: integer
+
+  /api/events/stats:
+    get:
+      tags: [Events]
+      summary: Get event statistics
+      description: Returns event system statistics
+      operationId: getEventStats
+      responses:
+        '200':
+          description: Event statistics
+
+  /api/suggestions:
+    get:
+      tags: [Suggestions]
+      summary: Get task-aware suggestions
+      description: |
+        Returns context-aware suggestions from the memory system based on the provided context.
+        Uses task-aware retrieval to find relevant patterns, episodes, and skills.
+
+        Rate limited to 10 requests per second per client.
+      operationId: getSuggestions
+      parameters:
+        - name: context
+          in: query
+          required: true
+          description: The current task context or goal (max 10,000 characters)
+          schema:
+            type: string
+            maxLength: 10000
+        - name: taskType
+          in: query
+          description: |
+            Type of task for optimized retrieval. Use 'auto' for automatic detection.
+          schema:
+            type: string
+            enum: [auto, debugging, implementation, testing, refactoring, planning]
+            default: auto
+        - name: limit
+          in: query
+          description: Maximum number of suggestions to return (1-50)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 5
+      responses:
+        '200':
+          description: Suggestions retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestionsResponse'
+        '400':
+          description: Validation error (missing context, context too long, or rate limit exceeded)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '503':
+          description: Memory system unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/memory:
+    get:
+      tags: [Memory]
+      summary: Get memory summary
+      description: Returns a summary of the memory system including counts and token economics
+      operationId: getMemorySummary
+      responses:
+        '200':
+          description: Memory summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemorySummary'
+
+  /api/memory/retrieve:
+    post:
+      tags: [Memory]
+      summary: Query memories
+      description: |
+        Retrieves memories matching the query using task-aware retrieval.
+        Query length is limited to 10,000 characters.
+      operationId: retrieveMemories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                  description: The search query (max 10,000 characters)
+                  maxLength: 10000
+                taskType:
+                  type: string
+                  description: Task type for optimized retrieval
+                  enum: [auto, debugging, implementation, testing, refactoring, planning]
+                  default: auto
+                topK:
+                  type: integer
+                  description: Maximum results to return (1-50)
+                  minimum: 1
+                  maximum: 50
+                  default: 5
+      responses:
+        '200':
+          description: Retrieved memories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/learning/metrics:
+    get:
+      tags: [Learning]
+      summary: Get learning metrics
+      description: Returns aggregated learning metrics including signal counts and patterns
+      operationId: getLearningMetrics
+      parameters:
+        - name: timeRange
+          in: query
+          description: Time range for metrics
+          schema:
+            type: string
+            enum: ['1h', '24h', '7d', '30d']
+            default: '7d'
+        - name: signalType
+          in: query
+          description: Filter by signal type
+          schema:
+            type: string
+            enum: [user_preference, error_pattern, success_pattern, tool_efficiency, context_relevance]
+        - name: source
+          in: query
+          description: Filter by signal source
+          schema:
+            type: string
+            enum: [cli, api, vscode, mcp, dashboard]
+      responses:
+        '200':
+          description: Learning metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningMetrics'
+
+  /api/learning/trends:
+    get:
+      tags: [Learning]
+      summary: Get learning signal trends
+      description: Returns signal volume trends over time
+      operationId: getLearningTrends
+      parameters:
+        - name: timeRange
+          in: query
+          description: Time range for trends
+          schema:
+            type: string
+            enum: ['1h', '24h', '7d', '30d']
+            default: '7d'
+        - name: signalType
+          in: query
+          description: Filter by signal type
+          schema:
+            type: string
+        - name: source
+          in: query
+          description: Filter by signal source
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Trend data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LearningTrends'
+
+  /api/learning/signals:
+    get:
+      tags: [Learning]
+      summary: Get recent learning signals
+      description: Returns recent learning signals with pagination
+      operationId: getLearningSignals
+      parameters:
+        - name: timeRange
+          in: query
+          description: Time range
+          schema:
+            type: string
+            default: '7d'
+        - name: limit
+          in: query
+          description: Max signals to return
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          description: Pagination offset
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Learning signals
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signals:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LearningSignal'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /api/learning/aggregate:
+    post:
+      tags: [Learning]
+      summary: Trigger aggregation
+      description: Triggers a new learning aggregation run
+      operationId: triggerAggregation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                timeWindowDays:
+                  type: integer
+                  default: 7
+                minFrequency:
+                  type: integer
+                  default: 2
+                minConfidence:
+                  type: number
+                  default: 0.5
+      responses:
+        '200':
+          description: Aggregation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  result:
+                    type: object
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API token for remote access
+
+  schemas:
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+        prdPath:
+          type: string
+          nullable: true
+        provider:
+          type: string
+          enum: [claude, codex, cline, aider]
+        status:
+          type: string
+          enum: [starting, running, paused, stopping, stopped, failed, completed]
+        startedAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        pid:
+          type: integer
+          nullable: true
+        currentPhase:
+          type: string
+          nullable: true
+        taskCount:
+          type: integer
+        completedTasks:
+          type: integer
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        sessionId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [pending, queued, running, completed, failed, skipped]
+        priority:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        agent:
+          type: string
+          nullable: true
+        output:
+          type: string
+          nullable: true
+        error:
+          type: string
+          nullable: true
+
+    StartSessionRequest:
+      type: object
+      properties:
+        prdPath:
+          type: string
+          description: Path to PRD file
+        provider:
+          type: string
+          enum: [claude, codex, cline, aider]
+          default: claude
+        options:
+          type: object
+          properties:
+            dryRun:
+              type: boolean
+            verbose:
+              type: boolean
+            timeout:
+              type: integer
+
+    StartSessionResponse:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        status:
+          type: string
+        message:
+          type: string
+
+    SessionStatusResponse:
+      type: object
+      properties:
+        session:
+          $ref: '#/components/schemas/Session'
+        tasks:
+          type: object
+          properties:
+            total:
+              type: integer
+            pending:
+              type: integer
+            running:
+              type: integer
+            completed:
+              type: integer
+            failed:
+              type: integer
+        agents:
+          type: object
+          properties:
+            active:
+              type: integer
+            spawned:
+              type: integer
+            completed:
+              type: integer
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+        version:
+          type: string
+        uptime:
+          type: integer
+        providers:
+          type: object
+          properties:
+            claude:
+              type: boolean
+            codex:
+              type: boolean
+            cline:
+              type: boolean
+            aider:
+              type: boolean
+        activeSession:
+          type: string
+          nullable: true
+
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+        details:
+          type: object
+
+    SSEEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        sessionId:
+          type: string
+        data:
+          type: object
+
+    Suggestion:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the suggestion
+        type:
+          type: string
+          enum: [episodic, semantic, skills, anti_patterns]
+          description: Source type of the suggestion
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Confidence score (0-1)
+        content:
+          type: string
+          description: The suggestion content
+        action:
+          type: string
+          description: Recommended action to take
+
+    SuggestionsResponse:
+      type: object
+      properties:
+        suggestions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Suggestion'
+        context:
+          type: string
+          description: The original context (truncated to 200 chars)
+        taskType:
+          type: string
+          description: The detected or specified task type
+
+    LearningMetrics:
+      type: object
+      properties:
+        totalSignals:
+          type: integer
+          description: Total number of learning signals
+        signalsByType:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Signal counts by type
+        signalsBySource:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Signal counts by source
+        avgConfidence:
+          type: number
+          format: float
+          description: Average confidence score
+        aggregation:
+          type: object
+          properties:
+            preferences:
+              type: array
+              items:
+                $ref: '#/components/schemas/AggregatedPreference'
+            error_patterns:
+              type: array
+              items:
+                $ref: '#/components/schemas/AggregatedErrorPattern'
+            success_patterns:
+              type: array
+              items:
+                $ref: '#/components/schemas/AggregatedSuccessPattern'
+            tool_efficiencies:
+              type: array
+              items:
+                $ref: '#/components/schemas/AggregatedToolEfficiency'
+        timeRange:
+          type: string
+        since:
+          type: string
+          format: date-time
+
+    LearningTrends:
+      type: object
+      properties:
+        dataPoints:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              count:
+                type: integer
+              timestamp:
+                type: string
+                format: date-time
+        maxValue:
+          type: integer
+        period:
+          type: string
+        timeRange:
+          type: string
+        signalCount:
+          type: integer
+
+    LearningSignal:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [user_preference, error_pattern, success_pattern, tool_efficiency, context_relevance]
+        source:
+          type: string
+          enum: [cli, api, vscode, mcp, dashboard]
+        action:
+          type: string
+        context:
+          type: object
+        outcome:
+          type: string
+          enum: [success, failure, partial, unknown]
+        confidence:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+
+    AggregatedPreference:
+      type: object
+      properties:
+        preference_key:
+          type: string
+        preferred_value:
+          type: string
+        frequency:
+          type: integer
+        confidence:
+          type: number
+          format: float
+        sources:
+          type: array
+          items:
+            type: string
+        alternatives_rejected:
+          type: array
+          items:
+            type: string
+        first_seen:
+          type: string
+          format: date-time
+        last_seen:
+          type: string
+          format: date-time
+
+    AggregatedErrorPattern:
+      type: object
+      properties:
+        error_type:
+          type: string
+        common_messages:
+          type: array
+          items:
+            type: string
+        frequency:
+          type: integer
+        confidence:
+          type: number
+          format: float
+        sources:
+          type: array
+          items:
+            type: string
+        resolutions:
+          type: array
+          items:
+            type: string
+        resolution_rate:
+          type: number
+          format: float
+        first_seen:
+          type: string
+          format: date-time
+        last_seen:
+          type: string
+          format: date-time
+
+    AggregatedSuccessPattern:
+      type: object
+      properties:
+        pattern_name:
+          type: string
+        common_actions:
+          type: array
+          items:
+            type: string
+        frequency:
+          type: integer
+        confidence:
+          type: number
+          format: float
+        sources:
+          type: array
+          items:
+            type: string
+        avg_duration_seconds:
+          type: number
+        preconditions:
+          type: array
+          items:
+            type: string
+        postconditions:
+          type: array
+          items:
+            type: string
+        first_seen:
+          type: string
+          format: date-time
+        last_seen:
+          type: string
+          format: date-time
+
+    AggregatedToolEfficiency:
+      type: object
+      properties:
+        tool_name:
+          type: string
+        usage_count:
+          type: integer
+        success_count:
+          type: integer
+        failure_count:
+          type: integer
+        avg_execution_time_ms:
+          type: number
+        total_tokens_used:
+          type: integer
+        success_rate:
+          type: number
+          format: float
+        efficiency_score:
+          type: number
+          format: float
+        confidence:
+          type: number
+          format: float
+        sources:
+          type: array
+          items:
+            type: string
+        alternative_tools:
+          type: array
+          items:
+            type: string
+        first_seen:
+          type: string
+          format: date-time
+        last_seen:
+          type: string
+          format: date-time
+
+    MemorySummary:
+      type: object
+      properties:
+        episodic:
+          type: object
+          properties:
+            count:
+              type: integer
+            latestDate:
+              type: string
+              format: date-time
+              nullable: true
+        semantic:
+          type: object
+          properties:
+            patterns:
+              type: integer
+            antiPatterns:
+              type: integer
+        procedural:
+          type: object
+          properties:
+            skills:
+              type: integer
+        tokenEconomics:
+          type: object
+          nullable: true
+          properties:
+            discoveryTokens:
+              type: integer
+            readTokens:
+              type: integer
+            ratio:
+              type: number
+            savingsPercent:
+              type: number
+
+    RetrieveResponse:
+      type: object
+      properties:
+        memories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              source:
+                type: string
+              score:
+                type: number
+              content:
+                type: object
+        tokenMetrics:
+          type: object
+          properties:
+            discoveryTokens:
+              type: integer
+            readTokens:
+              type: integer
+            ratio:
+              type: number
+            savingsPercent:
+              type: number
+
+security:
+  - {}
+  - bearerAuth: []

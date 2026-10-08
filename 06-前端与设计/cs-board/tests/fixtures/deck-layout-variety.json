@@ -1,0 +1,88 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "totalDurationMs": 18000,
+  "totalDurationFrames": 540,
+  "style": "清新治愈手账风",
+  "pages": [
+    {
+      "id": "question", "image": "board-01.png", "startFrame": 0, "endFrame": 90,
+      "seriesTitle": "动态 PPT：多种内容表达", "chapterTitle": "01 问题开场", "pageTitle": "为什么努力了，结果仍不稳定？",
+      "layoutType": "question", "composition": "center-stage", "slideRole": "transition", "relationshipType": "none",
+      "coreIdea": "用问题建立观看动机", "visualStrategy": "留白问题与隐喻插图", "narrativeLink": "从悬念进入分析",
+      "nodes": ["不是能力不足", "可能忽略条件", "先找真正变量"], "conclusion": "问题先于答案",
+      "seriesPersistent": false, "chapterPersistent": false,
+      "cues": [
+        {"id":"q1","anchorText":"为什么","startFrame":3,"endFrame":30,"spokenStartMs":100,"spokenEndMs":900,"enterIds":["page-title","illustration","node-1"],"focusId":"page-title","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"q2","anchorText":"结果","startFrame":30,"endFrame":55,"spokenStartMs":1000,"spokenEndMs":1800,"enterIds":["node-2"],"focusId":"node-2","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"q3","anchorText":"变量","startFrame":55,"endFrame":90,"spokenStartMs":1833,"spokenEndMs":2900,"enterIds":["node-3","conclusion"],"focusId":"conclusion","alignmentCoverage":1,"alignmentConfidence":1}
+      ]
+    },
+    {
+      "id": "comparison", "image": "board-02.png", "startFrame": 90, "endFrame": 180,
+      "seriesTitle": "动态 PPT：多种内容表达", "chapterTitle": "02 双方对照", "pageTitle": "看见自己，也要看见对手",
+      "layoutType": "comparison", "composition": "full-width", "slideRole": "detail", "relationshipType": "comparison",
+      "coreIdea": "双方信息共同决定判断", "visualStrategy": "左右阵营与中心隐喻", "narrativeLink": "由问题进入比较",
+      "nodes": ["己：已知能力", "己：已有资源", "彼：外部条件", "彼：真实变化"], "conclusion": "单边信息会制造盲区",
+      "seriesPersistent": true, "chapterPersistent": false,
+      "cues": [
+        {"id":"c1","anchorText":"自己","startFrame":93,"endFrame":120,"spokenStartMs":3100,"spokenEndMs":3900,"enterIds":["page-title","illustration","node-1","node-2"],"focusId":"node-1","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"c2","anchorText":"对手","startFrame":120,"endFrame":150,"spokenStartMs":4000,"spokenEndMs":4900,"enterIds":["node-3","node-4"],"focusId":"node-3","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"c3","anchorText":"盲区","startFrame":150,"endFrame":180,"spokenStartMs":5000,"spokenEndMs":5900,"enterIds":["conclusion"],"focusId":"conclusion","alignmentCoverage":1,"alignmentConfidence":1}
+      ]
+    },
+    {
+      "id": "evidence", "image": "board-03.png", "startFrame": 180, "endFrame": 270,
+      "seriesTitle": "动态 PPT：多种内容表达", "chapterTitle": "03 证据展开", "pageTitle": "判断必须落到可验证的证据",
+      "layoutType": "evidence", "composition": "split-left", "slideRole": "detail", "relationshipType": "none",
+      "coreIdea": "观点与证据逐条对应", "visualStrategy": "插图左置，证据条右置", "narrativeLink": "把比较转成验证",
+      "nodes": ["先确认事实", "再排除干扰", "最后检查结论"], "conclusion": "没有证据，就只是猜测",
+      "seriesPersistent": true, "chapterPersistent": false,
+      "cues": [
+        {"id":"e1","anchorText":"事实","startFrame":183,"endFrame":210,"spokenStartMs":6100,"spokenEndMs":6900,"enterIds":["page-title","illustration","node-1"],"focusId":"node-1","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"e2","anchorText":"干扰","startFrame":210,"endFrame":240,"spokenStartMs":7000,"spokenEndMs":7900,"enterIds":["node-2"],"focusId":"node-2","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"e3","anchorText":"结论","startFrame":240,"endFrame":270,"spokenStartMs":8000,"spokenEndMs":8900,"enterIds":["node-3","conclusion"],"focusId":"conclusion","alignmentCoverage":1,"alignmentConfidence":1}
+      ]
+    },
+    {
+      "id": "layers", "image": "board-04.png", "startFrame": 270, "endFrame": 360,
+      "seriesTitle": "动态 PPT：多种内容表达", "chapterTitle": "04 层级递进", "pageTitle": "从表象，一层层走向根因",
+      "layoutType": "layers", "composition": "top-bottom", "slideRole": "detail", "relationshipType": "hierarchy",
+      "coreIdea": "信息按深度形成层级", "visualStrategy": "阶梯式逐层增加", "narrativeLink": "从证据进入解释",
+      "nodes": ["表层：结果", "中层：行为", "深层：机制", "底层：环境"], "conclusion": "越接近底层，越能改变结果",
+      "seriesPersistent": true, "chapterPersistent": false,
+      "cues": [
+        {"id":"l1","anchorText":"表象","startFrame":273,"endFrame":300,"spokenStartMs":9100,"spokenEndMs":9900,"enterIds":["page-title","illustration","node-1"],"focusId":"node-1","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"l2","anchorText":"机制","startFrame":300,"endFrame":330,"spokenStartMs":10000,"spokenEndMs":10900,"enterIds":["node-2","node-3"],"focusId":"node-3","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"l3","anchorText":"环境","startFrame":330,"endFrame":360,"spokenStartMs":11000,"spokenEndMs":11900,"enterIds":["node-4","conclusion"],"focusId":"conclusion","alignmentCoverage":1,"alignmentConfidence":1}
+      ]
+    },
+    {
+      "id": "path", "image": "board-05.png", "startFrame": 360, "endFrame": 450,
+      "seriesTitle": "动态 PPT：多种内容表达", "chapterTitle": "05 路径过程", "pageTitle": "明确顺序，才能稳定推进",
+      "layoutType": "path", "composition": "full-width", "slideRole": "detail", "relationshipType": "sequence",
+      "coreIdea": "原文明确步骤时使用路径", "visualStrategy": "横向路线与检查点", "narrativeLink": "把解释变成行动",
+      "nodes": ["识别目标", "收集信息", "判断条件", "执行行动"], "conclusion": "顺序来自文案，不来自装饰箭头",
+      "seriesPersistent": true, "chapterPersistent": false,
+      "cues": [
+        {"id":"p1","anchorText":"目标","startFrame":363,"endFrame":390,"spokenStartMs":12100,"spokenEndMs":12900,"enterIds":["page-title","illustration","node-1"],"focusId":"node-1","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"p2","anchorText":"信息","startFrame":390,"endFrame":420,"spokenStartMs":13000,"spokenEndMs":13900,"enterIds":["node-2","node-3"],"focusId":"node-3","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"p3","anchorText":"行动","startFrame":420,"endFrame":450,"spokenStartMs":14000,"spokenEndMs":14900,"enterIds":["node-4","conclusion"],"focusId":"conclusion","alignmentCoverage":1,"alignmentConfidence":1}
+      ]
+    },
+    {
+      "id": "summary", "image": "board-06.png", "startFrame": 450, "endFrame": 540,
+      "seriesTitle": "动态 PPT：多种内容表达", "chapterTitle": "06 结尾总结", "pageTitle": "最后，只记住三句话",
+      "layoutType": "summary", "composition": "split-right", "slideRole": "summary", "relationshipType": "none",
+      "coreIdea": "压缩全文形成记忆点", "visualStrategy": "编号总结与结尾插图", "narrativeLink": "完成全文收束",
+      "nodes": ["问题决定入口", "结构服从内容", "元素跟随旁白"], "conclusion": "先做 PPT，再让它动起来",
+      "seriesPersistent": true, "chapterPersistent": false,
+      "cues": [
+        {"id":"s1","anchorText":"问题","startFrame":453,"endFrame":480,"spokenStartMs":15100,"spokenEndMs":15900,"enterIds":["page-title","illustration","node-1"],"focusId":"node-1","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"s2","anchorText":"结构","startFrame":480,"endFrame":510,"spokenStartMs":16000,"spokenEndMs":16900,"enterIds":["node-2","node-3"],"focusId":"node-3","alignmentCoverage":1,"alignmentConfidence":1},
+        {"id":"s3","anchorText":"动起来","startFrame":510,"endFrame":540,"spokenStartMs":17000,"spokenEndMs":17900,"enterIds":["conclusion"],"focusId":"conclusion","alignmentCoverage":1,"alignmentConfidence":1}
+      ]
+    }
+  ]
+}

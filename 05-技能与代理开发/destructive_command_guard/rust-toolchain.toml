@@ -1,0 +1,9 @@
+[toolchain]
+# Pinned to a known-good nightly: bare `nightly` (current) cannot compile
+# rustix 1.1.4 (a toolchain regression), which silently produced a Windows-only
+# v0.6.3 release (the Linux/macOS build-from-source path failed) and broke fresh
+# installs on new distros (#147). Pinning restores a reproducible, building
+# toolchain for releases, CI, and `cargo install`-from-source. Bump when a newer
+# nightly resolves the rustix issue.
+channel = "nightly-2026-08-31"
+components = ["rustfmt", "clippy"]

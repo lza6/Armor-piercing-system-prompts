@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "version": "0.4.13",
+  "source": {
+    "commit": "7be240f7fbdef6dc1a35c49774187130e3b933d7",
+    "dirty": false,
+    "inputSha256": "b6a45d1254c2bba253f1956781631d3d59fc63b3066d65758b86bc97c91b8604"
+  },
+  "contentSha256": "477bd2124e2d2f4915aec52a11754354f9f998205b934b71334433a7c04ac556",
+  "fingerprintExcludes": [
+    "project/distribution-source.json",
+    ".gitignore",
+    "project/.npmrc"
+  ],
+  "npmFilesSha256": "20522803eb3d99b1aa5ab0c348921141e850ff6ce79bb3bc9a3c66343408e0f6"
+}

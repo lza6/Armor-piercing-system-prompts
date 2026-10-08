@@ -1,0 +1,278 @@
+# capability-map.yaml — Naval 试点的人工能力映射（Phase 0）
+# 规则：主入口 description、核心原则、意图路由均由人工填写，编译器不做猜测。
+# 重要度必须附依据（引用图入度 = INDEX.md 引用图中指向该节点的边数；DIGEST 角色 = 精华长文中的篇幅与位置）。
+# 晋级门五条：独立意图 / 清晰契约 / 单独可运行 / 跨书复用 / 独立评测价值。预算：入口总数 <= 8（1 路由 + <=7 晋级）。
+
+map_version: 1
+
+book:
+  title: 《纳瓦尔宝典：财富与幸福指南》
+  author: 纳瓦尔·拉维坎特（Eric Jorgenson 整理）
+  source_pack: books/naval-almanack-skill
+  baseline_tag: baseline-naval-19skill-20260825
+
+entry: # single 模式主入口
+  name: naval-almanack
+  description: |
+    当用户询问《纳瓦尔宝典》(The Almanack of Naval Ravikant) 相关内容，或在以下领域寻求建议时调用:
+    财富构建(怎么赚钱/股权期权/杠杆/副业与职业定位/时薪与外包决策)、判断与决策(重大选择纠结/心智模型/打工vs创业)、
+    幸福与心智(欲望与焦虑/接受与内耗/冥想/刷手机上瘾/愤怒与期望/攀比妒忌)、人生哲学(生命意义/该不该信玄学/诚实沟通/选朋友圈子/怎么读书学习)。
+    不适用于: 具体投资标的与选股、临床心理治疗、急性危机(先求助专业人士)。
+    Triggers: 纳瓦尔/Naval/纳瓦尔宝典/致富/财富/幸福/判断力/冥想/读书/人生意义
+  core_principles:
+    - 财富=睡觉时仍在赚钱的资产；靠「责任→产权→杠杆」构建，无法靠出租时间致富。
+    - 用特殊知识（对你像玩、对别人像工作）产品化自己，成为不可替代。
+    - 判断力比努力重要；无法决定就答否；两条均等的路选短期更痛苦的那条。
+    - 财富、知识、声誉、关系都遵循复利；只玩长期正和游戏，与能共事一辈子的人同行。
+    - 幸福是可训练的技能：减少欲望、活在当下；任何处境只有三选项——改变/接受/离开。
+    - 阅读是终极元技能：读你所爱、原著优先，每天 1-2 小时即进入极少数人行列。
+  out_of_scope:
+    - 具体投资标的分析、选股与理财产品建议
+    - 临床抑郁、精神疾病急性发作等需要专业治疗的场景（先就医）
+    - 急性自杀风险（先紧急求助）
+    - 需要外交辞令的谈判策略与具体薪酬数字
+  stop_conditions:
+    - 意图在路由表与能力索引中均无法命中 → 明确告知超出本书范围，不硬套书中框架。
+    - 涉及医疗/法律/人身安全 → 停止套用方法论，建议专业求助。
+    - 纯事实查询（书名/作者/出版年/章节）→ 用核心原则与 overview 回答后即停，不展开人生建议。
+
+router_entry: # compact pack 的来源路由入口
+  name: naval-almanack
+  description: |
+    当用户询问《纳瓦尔宝典》这本书本身(书名/作者/章节/整书概览/术语)，或涉及本书未独立成 Skill 的主题时调用:
+    幸福训练/欲望管理、接受与内耗、冥想与心猴、地位游戏与攀比、选朋友与圈子、打工vs创业(委托代理)、
+    诚实沟通、身份与自我形象、期望与愤怒、生命意义、该不该信玄学(理性验证)、长期复利与声誉、判断力训练。
+    以下意图优先使用同包独立 Skill: wealth-structure(致富/股权期权)、productize-yourself(职业定位/副业方向)、
+    decision-heuristics(重大选择纠结)、hourly-rate-time(时薪/外包/时间分配)、reading-metaskill(怎么读书学习)、screen-detox(刷手机上瘾)。
+    Triggers: 纳瓦尔/Naval/纳瓦尔宝典/幸福/冥想/内耗/攀比/圈子/复利/人生意义
+
+promotion_budget: 8 # 入口总数上限（含路由入口）
+
+capabilities:
+  - id: cap.naval.wealth-structure
+    slug: wealth-structure
+    title: 财富结构：责任+产权+杠杆+避免出局
+    importance: high
+    importance_rationale: 引用图入度1/出度3的财富主线枢纽；DIGEST 第一章核心；「怎么赚钱」是本书最高频外部意图。
+    one_liner: 先诊断收入结构：有无产权、用了几种杠杆、下行风险会不会让你出局。
+    intents: ["怎么赚钱/如何致富", "该不该要期权/股权", "评估一个生意或副业的结构"]
+    keywords: [致富, 赚钱, 股权, 期权, 杠杆, 被动收入]
+    also_read: [productize-yourself, long-term-compounding]
+    pack_destination: promoted
+    promotion_notes: 五条全过——谈 offer/期权是脱离书语境的独立意图；契约清晰（输入生意/offer，输出结构诊断）；可单独运行；跨书复用中（财富类书通用意图）；有独立评测价值。
+
+  - id: cap.naval.productize-yourself
+    slug: productize-yourself
+    title: 特殊知识发现与产品化定位
+    importance: high
+    importance_rationale: 引用图起点节点（推荐学习顺序第 1 位）；「找方向/不可替代」是独立高频求助意图。
+    one_liner: 找到「对你像玩、对别人像工作」的特殊知识，再用代码/媒体杠杆规模化。
+    intents: ["职业/副业/自由职业方向纠结", "我该做什么才能赚钱且不被替代", "寻找独特优势"]
+    keywords: [找方向, 独特优势, 副业, 不可替代, 特殊知识]
+    also_read: [wealth-structure]
+    pack_destination: promoted
+    promotion_notes: 五条全过——职业定位是完全独立的求助意图，用户不会以「纳瓦尔」为入口提问；契约清晰；跨书复用高。
+
+  - id: cap.naval.decision-heuristics
+    slug: decision-heuristics
+    title: 决策启发式：无法决定就答否
+    importance: high
+    importance_rationale: 引用图入度1（judgment 组合）；「重大选择纠结」是最典型的独立可执行任务意图。
+    one_liner: 无法决定就答否；三个重大决定值得花一两年；两条均等的路选短期更痛苦的。
+    intents: ["换工作/买房/搬城/合伙/结婚等重大选择纠结", "列了利弊表还是拿不定主意"]
+    keywords: [纠结, 拿不定主意, 要不要, 该不该, 利弊]
+    also_read: [judgment-training]
+    pack_destination: promoted
+    promotion_notes: 五条全过——「帮我做决定」不需要书语境；输入选项输出启发式判定，契约最清晰；独立评测容易出题。
+
+  - id: cap.naval.hourly-rate-time
+    slug: hourly-rate-time
+    title: 高时薪时间分配与外包判据
+    importance: medium
+    importance_rationale: 引用图入度0（工具型叶子）；但「这事值不值得我做/外包」是清晰独立的执行型意图。
+    one_liner: 给自己定离谱高的时薪，低于时薪的事外包或不做；不随收入升级生活方式。
+    intents: ["琐事/外包值不值得", "时间分配与安排", "离财务自由还差什么"]
+    keywords: [时薪, 时间管理, 外包, 琐事, 财务自由, 退休]
+    also_read: [wealth-structure]
+    pack_destination: promoted
+    promotion_notes: 独立意图/契约/可运行/评测四条过；跨书复用中。工具属性最强，适合独立触发。
+
+  - id: cap.naval.reading-metaskill
+    slug: reading-metaskill
+    title: 阅读元技能：读什么与怎么读
+    importance: high
+    importance_rationale: 引用图被 judgment-training 依赖（判断力的输入管线）；「怎么读书/学习」是高频跨书通用意图。
+    one_liner: 读你所爱直到爱上阅读；原著与经典优先；没有读完义务；以教促学。
+    intents: ["想养成阅读习惯", "读什么书/怎么读", "如何学习新领域/入门某学科"]
+    keywords: [阅读, 读书, 怎么学习, 入门, 原著, 书单]
+    also_read: [judgment-training]
+    pack_destination: promoted
+    promotion_notes: 五条全过——跨书复用性全包最高（任何学习场景都可触发）；不依赖书语境。
+
+  - id: cap.naval.screen-detox
+    slug: screen-detox
+    title: 屏幕戒断与多巴胺管理
+    importance: medium
+    importance_rationale: 引用图入度2（happiness 链）；「戒手机」是完全独立的行为改变意图，用户不会从书出发提问。
+    one_liner: 屏幕活动是用长期后果换短期快感的多巴胺零食；用习惯替换五步戒断。
+    intents: ["刷手机/短视频/社交媒体上瘾", "想戒断多巴胺零食"]
+    keywords: [刷手机, 上瘾, 短视频, 社交媒体, 多巴胺, 戒断]
+    also_read: [happiness-skill]
+    pack_destination: promoted
+    promotion_notes: 独立意图最强（帮我戒手机）；契约清晰（五步法）；可单独运行；独立评测容易。跨书复用中。
+
+  - id: cap.naval.judgment-training
+    slug: judgment-training
+    title: 判断力训练：方向>努力、心智模型库
+    importance: high
+    importance_rationale: 引用图入度2（wealth-structure、rational-buddhism 均依赖它），是全书方法论底座。
+    one_liner: 判断力（知道行为的长期后果）比努力重要；从基础学科重建推理，收集心智模型。
+    intents: ["需要方向性判断/这事靠谱吗", "想提升决策能力/学心智模型"]
+    keywords: [判断力, 方向, 第一性原理, 心智模型, 思维模型]
+    also_read: [reading-metaskill, decision-heuristics]
+    pack_destination: router
+    promotion_notes: 独立意图弱——「提升判断力」是学习型咨询而非任务，通常与决策/阅读一起出现；留路由域。
+
+  - id: cap.naval.long-term-compounding
+    slug: long-term-compounding
+    title: 复利与长期游戏
+    importance: high
+    importance_rationale: 引用图入度1/出度2；DIGEST 财富章第二支柱；与多能力组合出现。
+    one_liner: 财富、知识、声誉、关系都遵循复利；只玩长期正和游戏。
+    intents: ["要不要长期投入某段关系/某个项目", "如何积累声誉与信任"]
+    keywords: [长期, 复利, 声誉, 合作, 信任]
+    also_read: [peer-selection, wealth-structure]
+    pack_destination: router
+    promotion_notes: 意图与 wealth-structure/peer-selection 高度重叠，独立触发会造成近邻混淆；留路由域待使用证据。
+
+  - id: cap.naval.principal-agent
+    slug: principal-agent
+    title: 委托-代理识别
+    importance: medium
+    importance_rationale: 引用图入度1；解释型框架，多与职业选择组合出现。
+    one_liner: 看收益与创造价值绑定多紧——绑得紧像委托人把事做好，松则像代理人为自己优化。
+    intents: ["为什么大公司磨洋工/小公司拼命", "打工还是创业/该不该自己干"]
+    keywords: [激励, 代理, 委托人, 打工, 创业, 利益绑定]
+    also_read: [judgment-training]
+    pack_destination: router
+    promotion_notes: 「打工vs创业」与 productize-yourself/wealth-structure 意图重叠；解释型多于任务型；留路由域。
+
+  - id: cap.naval.happiness-skill
+    slug: happiness-skill
+    title: 幸福是可训练的技能
+    importance: high
+    importance_rationale: 引用图出度5的幸福链枢纽（连接 acceptance/冥想/戒断/游戏/自由/身份）；DIGEST 第二章核心。
+    one_liner: 幸福=缺憾感清空的默认状态；欲望是与自己的契约，同时只留一个重大欲望。
+    intents: ["怎么才能更幸福", "为什么得到了还不满足", "怎么减少焦虑"]
+    keywords: [幸福, 不快乐, 欲望, 焦虑, 知足, 活在当下]
+    also_read: [acceptance, monkey-mind-meditation]
+    pack_destination: router
+    promotion_notes: 幸福域 8 个能力意图相互交叠（幸福/接受/冥想/自由/身份/意义），按方案 §4.6.5 原则先统一留在路由域，等 split-on-evidence。
+
+  - id: cap.naval.game-selection
+    slug: game-selection
+    title: 游戏选择：地位游戏 vs 财富游戏 vs 单人游戏
+    importance: medium
+    importance_rationale: 引用图入度2；解释「攀比/妒忌/被攻击」的框架，常与幸福域组合。
+    one_liner: 识别自己在玩哪种游戏；躲开零和地位游戏，回到内在记分卡。
+    intents: ["为什么有人攻击我/大家卷来卷去", "怎么不在乎别人眼光", "为什么妒忌"]
+    keywords: [地位, 攀比, 内卷, 妒忌, 零和, 内在记分卡]
+    also_read: [happiness-skill, long-term-compounding]
+    pack_destination: router
+    promotion_notes: 解释型框架，意图入口分散且与幸福域重叠；留路由域。
+
+  - id: cap.naval.acceptance
+    slug: acceptance
+    title: 情境三选项：改变/接受/离开
+    importance: medium
+    importance_rationale: 引用图入度2（happiness、identity 组合）；幸福域近邻能力（方案 §4.6.5 点名示例）。
+    one_liner: 任何处境只有三选项——改变它/接受它/离开它；三者都不做是痛苦之源。
+    intents: ["困在无法改变的处境里反复内耗", "该忍还是该走"]
+    keywords: [接受, 忍, 内耗, 放不下, 该走该留]
+    also_read: [life-meaning, happiness-skill]
+    pack_destination: router
+    promotion_notes: 与 self-liberation/happiness 近邻混淆风险高，方案明确先留统一路由域。
+
+  - id: cap.naval.self-liberation
+    slug: self-liberation
+    title: 期望边界、愤怒解体与就业自由
+    importance: medium
+    importance_rationale: 引用图入度2；幸福域近邻能力。
+    one_liner: 期望不是合同（约定才是）；愤怒是自我惩罚；低生活成本买来就业自由。
+    intents: ["被别人的期望压垮", "容易愤怒/怎么不生气", "感觉被工作困住/怎么说不"]
+    keywords: [期望, 愤怒, 自由, 取悦别人, 说不]
+    also_read: [happiness-skill, honesty-communication]
+    pack_destination: router
+    promotion_notes: 意图与 acceptance/happiness 交叠；留路由域。
+
+  - id: cap.naval.monkey-mind-meditation
+    slug: monkey-mind-meditation
+    title: 心猴关停与冥想
+    importance: medium
+    importance_rationale: 引用图入度2；「学冥想」有独立性但通用冥想指导非本书独有增量，先观察。
+    one_liner: 内心独白是失控程序不是「我」；用调试模式逐条观察念头，意识到即失去控制。
+    intents: ["脑子停不下来/焦虑反刍", "想学冥想/提升专注力"]
+    keywords: [冥想, 焦虑, 胡思乱想, 专注, 心猴]
+    also_read: [happiness-skill, rational-buddhism]
+    pack_destination: router
+    promotion_notes: 独立意图存在（教我冥想），但本书增量相对通用冥想内容有限，且属幸福近邻域；留路由域待证据。
+
+  - id: cap.naval.peer-selection
+    slug: peer-selection
+    title: 五只黑猩猩：主动选择同伴
+    importance: medium
+    importance_rationale: 引用图入度2；「选圈子」意图与 long-term-compounding、decision-heuristics 重叠。
+    one_liner: 你的行为由最常接触的五个人预测；同伴是主动选择而非巧合。
+    intents: ["交朋友/选伴侣/换圈子纠结", "感觉被周围人拖累/该不该疏远某人"]
+    keywords: [朋友, 圈子, 伴侣, 疏远, 五只黑猩猩]
+    also_read: [long-term-compounding, honesty-communication]
+    pack_destination: router
+    promotion_notes: 意图有一定独立性但与决策域重叠；留路由域。
+
+  - id: cap.naval.identity-work
+    slug: identity-work
+    title: 身份清空与自我形象杠杆
+    importance: medium
+    importance_rationale: 引用图入度2；抽象度高，用户极少以「身份」为入口直接提问。
+    one_liner: 放下身份才能看清真相；更新自我形象才能替代自律。
+    intents: ["发现自己在为立场辩护/看不清现实", "反复立志却改变不了自己"]
+    keywords: [立场, 身份, 自我形象, 自律失败]
+    also_read: [acceptance, honesty-communication]
+    pack_destination: router
+    promotion_notes: 意图表述抽象、入口分散；留路由域。
+
+  - id: cap.naval.honesty-communication
+    slug: honesty-communication
+    title: 彻底诚实与反馈技术
+    importance: medium
+    importance_rationale: 引用图出度3入度0；沟通建议类意图有通用竞品，本书增量中等。
+    one_liner: 所想与所说一致；具体表扬、一般批评；秘密越少快乐越多。
+    intents: ["怎么真诚沟通/拒绝别人/给反馈", "不想说场面话/发现自己在隐瞒"]
+    keywords: [诚实, 沟通, 拒绝, 批评, 表扬, 场面话]
+    also_read: [identity-work]
+    pack_destination: router
+    promotion_notes: 通用沟通类意图竞争大、书增量中等；留路由域。
+
+  - id: cap.naval.rational-buddhism
+    slug: rational-buddhism
+    title: 理性佛学：验证一切
+    importance: medium
+    importance_rationale: 引用图出度2；哲学收尾章；提问频率低。
+    one_liner: 亲自测试一切、保留有用的；不可证伪的主张不进入基本真理。
+    intents: ["某主张/玄学/灵修该不该信", "想建立自己的验证标准"]
+    keywords: [该不该信, 玄学, 灵修, 可证伪, 验证]
+    also_read: [life-meaning, monkey-mind-meditation]
+    pack_destination: router
+    promotion_notes: 低频哲学咨询；留路由域。
+
+  - id: cap.naval.life-meaning
+    slug: life-meaning
+    title: 生命意义三答案
+    importance: medium
+    importance_rationale: 引用图入度2；哲学收尾；触发场景与幸福域连续。
+    one_liner: 意义=个人创造+愿意为之受苦；拥抱死亡是意义的入口。
+    intents: ["活着的意义是什么/虚无感", "找不到方向/该为什么努力"]
+    keywords: [生命的意义, 虚无, 为什么活着]
+    also_read: [rational-buddhism, acceptance]
+    pack_destination: router
+    promotion_notes: 低频、高风险边界（自杀风险须转介）；留路由域并保留判停规则。

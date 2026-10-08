@@ -1,0 +1,12 @@
+# 05. Autonomy clause
+**Problem:** Implementation agents sometimes return a plan, ask for approval, and exit without changing code. A clean process exit then looks like progress even though no implementation or verification occurred.
+**The rule (paste into CLAUDE.md):**
+```text
+For every implementation task whose SCOPE and OUT-OF-SCOPE boundaries are already defined, begin implementation immediately. Do not ask for approval, offer a plan for approval, or stop at recommendations. When ambiguity does not alter writable files, public interfaces, data formats, dependencies, external state, or human-owned actions, choose the smallest reversible option inside SCOPE and record it as an assumption. Otherwise stop and name the missing decision. Run <VERIFY_COMMAND> after editing and report the exact command and exit code. End with `DONE: <implemented result>` only when the requested files changed and verification exited 0. End with `FAILED: <direct blocker>` when implementation or verification cannot finish. Stop before any destructive action, payment, account or identity action, external publication, secret access, or change outside SCOPE; report `HUMAN_ACTION_REQUIRED: <action>` without performing it. Treat a response containing only a plan, approval request, or recommendation as STALL, not completion.
+```
+**Why it binds:** The trigger is limited to implementation work with frozen boundaries, so autonomy does not become unlimited authority. The rule bans three observable stopping behaviors and supplies an exact replacement: edit, verify, and report. The 2026-08-18 incident followed the forbidden path—a worker proposed a plan, requested approval, exited, and changed no code. Requiring a changed-file check, verification exit code, and terminal status makes that failure mechanically visible. Explicit human-only stops keep irreversible work outside the autonomy grant.
+**Variations:**
+- Monorepo: require the assumption to remain inside the named package and forbid edits to shared configuration unless SCOPE lists it.
+- Solo: allow the agent to choose the narrowest existing verification command, but require it to name the source used to select that command.
+- Team: require assumptions that alter user-visible behavior or public interfaces to stop as `HUMAN_ACTION_REQUIRED` instead of being chosen autonomously.
+**Anti-pattern:** “Be proactive and use your judgment.” It neither defines when autonomy starts nor distinguishes reversible ambiguity from actions that require human authority.

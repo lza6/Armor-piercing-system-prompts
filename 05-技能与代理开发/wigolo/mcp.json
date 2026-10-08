@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "wigolo": {
+      "command": "npx",
+      "args": ["-y", "wigolo"]
+    }
+  }
+}

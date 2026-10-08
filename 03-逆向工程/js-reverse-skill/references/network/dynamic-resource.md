@@ -1,0 +1,222 @@
+# 动态 HTML / JS 资源保鲜与运行时刷新
+
+当目标站点的 HTML、JS bundle、动态 chunk、challenge JS、403/风控页面或内联脚本可能随时间、会话、Cookie、seed、nonce、地域、TLS 指纹或点击动作变化时读取本文件。目标是防止把已经过期的本地快照当作最终补环境输入。
+
+## 核心规则
+
+- 下载到本地的动态 HTML / JS 默认只是 **分析快照**，不能直接作为最终产物的固定依赖。
+- 最终入口运行时必须先刷新当前有效资源，再加载当前资源生成加密参数并发送请求。
+- 如果资源会过期，最终项目必须包含资源刷新模块，例如 `src/resources/fetch-runtime-resources.js` 或等价封装。
+- cURL / HAR / fixture 中的旧 HTML、旧 JS、旧 seed、旧 token、旧 Cookie 只能作为证据和 expected，不得硬编码到最终 signer。
+- 请求失败或参数不一致时，先检查资源是否过期、JS hash 是否变化、challenge seed 是否变化，再继续补 WebAPI。
+
+## 动态性判定
+
+任一条件命中时，将资源标记为动态或高风险：
+
+| 证据 | 说明 |
+|---|---|
+| `Cache-Control: no-store/no-cache/private/max-age=0` | 不应长期复用 |
+| `Expires` 已过期或 TTL 很短 | 需要运行时刷新 |
+| URL 含 `t/ts/timestamp/nonce/rand/random/_` 等 query | 可能每次变化 |
+| 同 URL 多次请求 body hash 不一致 | 不能固定本地文件 |
+| HTML 内联 `seed/nonce/config/challenge/token` 每次变化 | 必须刷新入口页 |
+| 403 / challenge 页面返回 JS | 通常与当前会话绑定 |
+| 响应包含 `Set-Cookie` | 可能刷新设备 Cookie / 风控 Cookie |
+| JS URL 从当前 HTML 动态拼接 | 需要最终入口重新解析 HTML |
+| JS 内容依赖当前 Cookie / Storage / 地域 / TLS | 需要和请求客户端链路绑定 |
+| 黑盒加密 SDK 定期更新（站点 md5 随日期变化） | 公钥/密钥随版本轮换，旧副本必失败，见下方专节 |
+
+## 黑盒加密 SDK 定期更新（公钥/密钥随版本轮换）
+
+部分站点把签名/加密 SDK 作为"黑盒挑战资源"（如 udc.js 类动态混淆 JS），服务端定期换版本——**公钥/密钥随版本变化**。这类资源的特点是：本地快照分析期完全可用（算法逻辑不变、脱壳后明文正确），但交付运行期复用旧副本时**请求全被拒**（服务端解不开密文），且错误表现与签名错误一致、极难排查（猿人学 match9 实测：udc.js 过期 → m 无效永远被拒）。
+
+识别信号：
+
+| 信号 | 说明 |
+|---|---|
+| SDK 站点 md5 随日期变化 | 公钥/密钥随版本轮换，旧副本必失败 |
+| 旧副本"解析全对但请求全拒" | 算法未变、密文解不开 = 密钥过期，不是算法错误 |
+| 下载文件 md5 与预期漂移 | 可能是下载链路损坏（见下方二进制纪律），先排除再怀疑站点升级 |
+
+纪律：
+
+1. **每次运行抓取最新版**：`urlopen().read()` 字节流 + `wb` 写回，或 Node `response.body` 字节直接写盘；不得复用本地快照作为最终 signer 主输入。
+2. **全程二进制处理**：禁止 `decode('utf-8', errors='ignore')` 下载后写文本——文本解码会**丢字节损坏文件**（JS 语法仍可解析、脱壳仍能出明文，但 md5 变化、密钥损坏，错误与站点升级混淆难排查）。下载与写回两端都必须是二进制。
+3. 抓取后记录 md5 / 版本到 resource-manifest（`case/notes/resource-manifest.json`），复测失败时先 diff 站点是否升级，再查签名逻辑。
+
+## 会话配套资源（同次渲染配套，禁止跨渲染混用）
+
+比"定期更新"更隐蔽的动态性：**多个资源之间存在解密配套关系**，由服务端在同一次渲染中配套下发（match10 实测：瑞数 v3 变种，HTML 内联引导器与接口下发的密文字符串表）。这类资源单独看都可能"解析正常"，跨渲染混用时解密结果静默损坏：
+
+- 识别信号：引导代码（引导器/组装器）内嵌会话绑定值；密文资源由特定接口在同一次页面渲染中下发；两次拉取 HTML 后引导代码 hash 不同。
+- 混用后果（match10 实测）：旧渲染的引导器 + 新渲染的密文 → 流式解密在固定字节处错乱 → 拼出残缺代码 → 签名动态段全零（零值填充串）→ 服务端 400。错误表现与签名算法错误、通道层拦截完全一致，极难排查。
+- 纪律：
+  1. 最终入口每次运行**新鲜 GET 入口 HTML**，从同次响应中提取配套的全部资源（内联引导脚本、meta challenge、动态密文），禁止复用任何一次历史渲染的快照与本次资源拼接。
+  2. 资源间存在引用关系时（引导器解密密文、组装器消费字符串表），在 resource-manifest 中用 `dependsOn` 记录配套关系，并标注 `pairedWithin: "single-render"`。
+  3. 签名输出出现零值填充段（如单字符重复串）时，第一优先级排查资源配套性，其次才是环境缺失。
+
+## 资源清单
+
+每个已保存资源都记录到 `case/notes/resource-manifest.json`（模板见 `assets/fixture-templates/resource-manifest.json`，复制后按实际填充；`scripts/check_dynamic_resources.js` 依赖本文件结构）：
+
+```json
+{
+  "resources": [
+    {
+      "url": "https://example.com/challenge.js?ts=...",
+      "type": "js",
+      "file": "case/js/snapshots/challenge-001.js",
+      "capturedAt": "2026-06-23T00:00:00.000Z",
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "set-cookie": "脱敏记录"
+      },
+      "sha256": "body hash",
+      "dynamic": true,
+      "use": "analysis-snapshot",
+      "requiredForFinal": true,
+      "runtimeRefresh": true,
+      "refreshEntry": "result/src/resources/fetch-runtime-resources.js",
+      "dependsOn": ["Cookie", "HTML seed", "TLS client"]
+    }
+  ]
+}
+```
+
+字段要求：
+
+- `dynamic: true`：明确动态资源。
+- `use: "analysis-snapshot"`：只用于分析，不进入最终主路径。
+- `use: "runtime-refresh"` 或 `runtimeRefresh: true`：最终运行前刷新。
+- `requiredForFinal: true`：最终生成参数需要它；此时必须提供运行时刷新方案。
+- `refreshEntry`：最终项目中负责重新获取该资源的模块。
+
+## 目录约定
+
+```text
+case/
+├── js/
+│   ├── snapshots/        # 动态资源快照，只用于分析
+│   ├── static/           # 已确认可长期复用的静态 bundle
+│   └── extracted/
+├── notes/
+│   └── resource-manifest.json
+└── result/
+    ├── final.js
+    └── src/
+        ├── resources/    # 运行时刷新 HTML / JS / challenge
+        ├── env/
+        ├── signer/
+        └── request/
+```
+
+动态资源可以保存在 `case/js/snapshots/`，但不得原样复制到 `result/` 作为 signer 主输入。
+
+## 最终入口流程
+
+涉及动态 HTML / JS 时，最终入口应按以下顺序执行：
+
+1. 使用用户已确认的 TLS 指纹兼容客户端请求入口页或 challenge 页。
+2. 解析最新 HTML，提取当前 seed、nonce、config、动态 JS URL、Set-Cookie。
+3. 按当前页面状态请求最新 JS / chunk / challenge 资源。
+4. 验证资源 hash、状态码和关键字段，并更新运行时资源上下文。
+5. 将当前 JS / seed / Cookie / Storage 注入补环境运行链路。
+6. 生成目标加密参数。
+7. 用同一会话 / Cookie / TLS 客户端发送最终请求。
+
+不得在最终入口中只执行"加载旧本地 JS 快照 → 生成参数 → 请求"。
+
+## 资源刷新模块模板
+
+`result/src/resources/fetch-runtime-resources.js` 建议形态：
+
+```javascript
+'use strict';
+
+// 资源刷新模块：在最终入口运行时获取当前有效的 HTML / JS / challenge 资源。
+// 不得使用本地快照作为固定依赖。
+
+async function fetchRuntimeResources(session, { entryUrl }) {
+  // 1. 请求入口 HTML
+  const htmlResp = await session.request({ url: entryUrl, method: 'GET' });
+  const html = htmlResp.body;
+
+  // 2. 解析 HTML，提取动态 seed / nonce / config / JS URL
+  const parsed = parseHtmlForResources(html);
+
+  // 3. 请求动态 JS 资源
+  const jsResources = [];
+  for (const jsUrl of parsed.jsUrls) {
+    const jsResp = await session.request({ url: jsUrl, method: 'GET' });
+    jsResources.push({
+      url: jsUrl,
+      code: jsResp.body,
+      sha256: sha256(jsResp.body),
+    });
+  }
+
+  // 4. 验证资源 hash 和关键字段
+  validateResources(parsed, jsResources);
+
+  return {
+    html,
+    seed: parsed.seed,
+    nonce: parsed.nonce,
+    config: parsed.config,
+    jsResources,
+    cookies: session.state.cookieJar,
+  };
+}
+
+function parseHtmlForResources(html) {
+  // 按 case 实际情况解析 HTML，提取 seed / nonce / config / JS URL
+  // 这里只提供接口，实际实现按目标站点结构定制
+  throw new Error('请按目标站点 HTML 结构补齐 parseHtmlForResources');
+}
+
+function validateResources(parsed, jsResources) {
+  // 验证资源 hash、状态码和关键字段
+  // 失败时抛出错误，不要继续生成参数
+}
+
+function sha256(text) {
+  const crypto = require('crypto');
+  return crypto.createHash('sha256').update(text).digest('hex');
+}
+
+module.exports = { fetchRuntimeResources };
+```
+
+## 验证
+
+进入最终交付前运行：
+
+```bash
+node scripts/check_dynamic_resources.js --case-dir <project-root> --markdown
+node scripts/check_dynamic_resources.js --case-dir <project-root> --require-runtime-refresh --markdown
+```
+
+检查失败时先修复资源刷新链路，再继续补环境或最终请求。
+
+## 与其他文件的关系
+
+- 最终请求 Session 模式与请求链顺序：见 `network/session-chain.md`
+- TLS 指纹兼容客户端选择：见 `network/tls-validation.md`
+- 补环境调试循环：见 `env/env-debug-loop.md`
+
+## 输出模板
+
+```markdown
+## 动态资源保鲜检查
+
+- 是否存在动态 HTML / JS：
+- 动态资源清单：
+- 是否只作为分析快照：
+- 是否影响最终参数生成：
+- 最终入口是否运行时刷新：
+- 刷新模块：
+- 当前资源 hash 是否与 fixture 一致：
+- 失败时是否先排查资源过期：
+```

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autonomi.dev/schemas/outcome-contract/v0.1",
+  "title": "Autonomi Outcome Contract v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "intent", "acceptance", "executor", "verifier"],
+  "properties": {
+    "schema": {"const": "autonomi-outcome-contract/v0.1"},
+    "id": {"type": "string", "minLength": 1},
+    "intent": {"type": "string", "minLength": 1},
+    "acceptance": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "executor": {"$ref": "#/$defs/identity"},
+    "verifier": {"$ref": "#/$defs/identity"},
+    "constraints": {"type": "object"},
+    "risk": {
+      "type": "object", "additionalProperties": false,
+      "required": ["level"],
+      "properties": {
+        "level": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+        "notes": {"type": "string", "minLength": 1}
+      }
+    },
+    "budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["max_amount", "currency"],
+      "properties": {
+        "max_amount": {"type": "number", "minimum": 0},
+        "currency": {"type": "string", "minLength": 1}
+      }
+    },
+    "deployment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["environment", "approval_required"],
+      "properties": {
+        "environment": {"type": "string", "minLength": 1},
+        "approval_required": {"type": "boolean"}
+      }
+    },
+    "rollback": {
+      "type": "object", "additionalProperties": false,
+      "required": ["required", "strategy"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "strategy": {"type": "string", "minLength": 1}
+      }
+    },
+    "dispute": {
+      "type": "object", "additionalProperties": false,
+      "required": ["process"],
+      "properties": {
+        "process": {"type": "string", "minLength": 1},
+        "arbiter": {"$ref": "#/$defs/identity"}
+      }
+    },
+    "evidence": {
+      "type": "array", "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "$defs": {
+    "identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "enum": ["human", "agent", "service", "organization"]}
+      }
+    }
+  }
+}

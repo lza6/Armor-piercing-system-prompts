@@ -1,0 +1,7 @@
+Fetch: https://react.dev/reference/rsc/server-components
+
+  # Server Components
+
+  Server Components are a new kind of Component that renders ahead of time...
+
+  [cached: false, 96 chars]

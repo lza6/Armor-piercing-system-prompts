@@ -1,0 +1,40 @@
+# WordPress Specific Audit Workflow
+# Focused scan for WordPress sites using WPScan and related tools
+
+name: wordpress_audit
+description: Specialized security audit for WordPress installations
+version: 1.0.0
+author: Guardian AI
+
+steps:
+  - name: tech_verification
+    tool: whatweb
+    description: Verify target is WordPress
+  
+  - name: wpscan_enum
+    tool: wpscan
+    description: Enumerate WordPress users, plugins, and themes
+    args:
+      enumerate: "u,p,t"
+      detection_mode: "mixed"
+    dependencies:
+      - tech_verification
+
+  - name: wpscan_vuln
+    tool: wpscan
+    description: Scan for known vulnerabilities in core, plugins, and themes
+    args:
+      # Requires API token in config for full data
+      random_user_agent: true
+    dependencies:
+      - wpscan_enum
+
+  - name: sql_check_wp
+    tool: sqlmap
+    description: Check for SQL injection in WP parameters
+    args:
+      forms: true
+      batch: true
+      crawl: 2
+    dependencies:
+      - tech_verification

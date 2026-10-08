@@ -1,0 +1,160 @@
+# Project Setup Guide
+
+Setting up CocoIndex projects for different use cases.
+
+## Creating a New Project
+
+```bash
+cocoindex init my-project
+cd my-project
+```
+
+This creates: `main.py`, `pyproject.toml`, `README.md`. The generated `main.py` sets the internal database location in its lifespan via `builder.settings.db_path = pathlib.Path("./cocoindex.db")`.
+
+```bash
+uv run cocoindex update main.py   # or: pip install -e . && cocoindex update main.py
+```
+
+## Dependencies by Use Case
+
+### Vector Embedding Pipeline
+
+```toml
+[project]
+dependencies = [
+    "cocoindex>=1.0.0",
+    "sentence-transformers",
+    "asyncpg",
+]
+```
+
+### PostgreSQL Integration
+
+```toml
+[project]
+dependencies = [
+    "cocoindex>=1.0.0",
+    "asyncpg",
+]
+```
+
+### SQLite Integration
+
+```toml
+[project]
+dependencies = [
+    "cocoindex>=1.0.0",
+    "sqlite-vec",
+]
+```
+
+### LanceDB Integration
+
+```toml
+[project]
+dependencies = [
+    "cocoindex>=1.0.0",
+    "lancedb",
+]
+```
+
+### Qdrant Integration
+
+```toml
+[project]
+dependencies = [
+    "cocoindex>=1.0.0",
+    "qdrant-client",
+]
+```
+
+### Kafka Integration
+
+```toml
+[project]
+dependencies = [
+    "cocoindex>=1.0.0",
+    "confluent-kafka",
+]
+```
+
+### LLM-Based Extraction
+
+```toml
+[project]
+dependencies = [
+    "cocoindex>=1.0.0",
+    "litellm",
+    "instructor",
+    "pydantic>=2.0",
+    "asyncpg",
+]
+```
+
+---
+
+## Environment Configuration
+
+### `.env` File
+
+The `cocoindex` CLI automatically loads `.env` from the current directory (via `find_dotenv`).
+
+```bash
+# CocoIndex internal database (optional fallback).
+# Only used if the lifespan does not set builder.settings.db_path.
+# The `cocoindex init` template sets db_path in the lifespan instead, so this is not needed there.
+COCOINDEX_DB=./cocoindex.db
+
+# PostgreSQL (if using)
+POSTGRES_URL=postgres://user:pass@localhost/db
+
+# Qdrant (if using)
+QDRANT_URL=http://localhost:6333
+
+# API keys (if using LLM extraction)
+OPENAI_API_KEY=your-openai-api-key
+ANTHROPIC_API_KEY=your-anthropic-api-key
+```
+
+### Manual Settings (in lifespan)
+
+```python
+@coco.lifespan
+def coco_lifespan(builder: coco.EnvironmentBuilder) -> Iterator[None]:
+    builder.settings.db_path = pathlib.Path("./custom.db")
+    yield
+```
+
+---
+
+## Running Your Pipeline
+
+```bash
+pip install -e .                    # Install dependencies
+cocoindex update main.py            # Run pipeline
+cocoindex update main.py -L         # Run in live mode
+cocoindex show main.py              # Show component paths
+cocoindex drop main.py -f           # Reset everything
+```
+
+---
+
+## Common Issues
+
+### Import Errors
+
+```bash
+pip install -e .
+```
+
+### Database Connection Errors
+
+Verify database is running and `.env` has correct URLs. See [setup_database.md](./setup_database.md).
+
+---
+
+## See Also
+
+- [Database Setup](./setup_database.md)
+- [Patterns](./patterns.md)
+- [API Reference](./api_reference.md)

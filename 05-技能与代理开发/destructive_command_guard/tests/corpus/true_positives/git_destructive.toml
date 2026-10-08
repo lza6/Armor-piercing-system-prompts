@@ -1,0 +1,165 @@
+# True positives: git commands that MUST be blocked
+#
+# These commands are genuinely destructive and dcg should deny them.
+
+[[case]]
+description = "git reset --hard discards uncommitted changes"
+command = "git reset --hard"
+expected = "deny"
+rule_id = "core.git:reset-hard"
+[case.log]
+decision = "deny"
+mode = "deny"
+pack_id = "core.git"
+pattern_name = "reset-hard"
+rule_id = "core.git:reset-hard"
+reason_contains = "destroys uncommitted changes"
+
+[[case]]
+description = "git reset --hard with ref"
+command = "git reset --hard HEAD~5"
+expected = "deny"
+rule_id = "core.git:reset-hard"
+
+[[case]]
+description = "git clean with force"
+command = "git clean -fd"
+expected = "deny"
+rule_id = "core.git:clean-force"
+
+[[case]]
+description = "git clean -fdx removes ignored files"
+command = "git clean -fdx"
+expected = "deny"
+rule_id = "core.git:clean-force"
+
+# NOTE: git checkout -f is not currently blocked.
+# Tracked in: tests/corpus/README.md (future enhancement)
+# [[case]]
+# description = "git checkout with force overwrites"
+# command = "git checkout -f main"
+# expected = "deny"
+# rule_id = "core.git:checkout-force"
+
+[[case]]
+description = "git stash drop discards stash"
+command = "git stash drop"
+expected = "deny"
+rule_id = "core.git:stash-drop"
+
+[[case]]
+description = "git stash clear drops all stashes"
+command = "git stash clear"
+expected = "deny"
+rule_id = "core.git:stash-clear"
+
+[[case]]
+description = "git branch -D force deletes"
+command = "git branch -D feature-branch"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "git branch -d deletes a merged branch ref"
+command = "git branch -d merged-branch"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "git branch --delete removes a branch ref"
+command = "git branch --delete merged-branch"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "git branch combined short flags delete a branch ref"
+command = "git branch -vd merged-branch"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "git branch unique delete abbreviation removes a branch ref"
+command = "git branch --del merged-branch"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "git branch negated format takes no value before delete"
+command = "git branch --no-format -d merged-branch"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "git branch uppercase move overwrites an existing ref"
+command = "git branch -M old-name existing-name"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "git branch uppercase copy overwrites an existing ref"
+command = "git branch -C old-name existing-name"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "mixed-case Windows git executable still deletes a branch"
+command = "gIt.ExE branch --delete merged-branch"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "literal POSIX substitutions cannot splice a hidden branch deletion"
+command = "g$(printf it) br$(printf anch) -$(printf d) merged-branch"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"
+
+[[case]]
+description = "unresolved POSIX output cannot occupy a branch option role"
+command = "git branch $(branch_option_producer)"
+expected = "deny"
+# Re-attributed in #274: the proof is the unresolvable dynamic token, not a
+# literal deletion flag, so the denial explains the field-splitting hazard
+# and its safe spellings (quote the name, or add `--`).
+rule_id = "core.git:branch-dynamic-token"
+
+[[case]]
+description = "literal POSIX substitutions cannot splice reset hard"
+command = "g$(printf it) re$(printf set) --ha$(printf rd)"
+expected = "deny"
+rule_id = "core.git:reset-hard"
+
+[[case]]
+description = "git push --force"
+command = "git push --force origin main"
+expected = "deny"
+rule_id = "core.git:push-force-long"
+
+[[case]]
+description = "git push -f (short form)"
+command = "git push -f origin main"
+expected = "deny"
+rule_id = "core.git:push-force-short"
+
+[[case]]
+description = "an unquoted delimiter really is expanded by the outer shell (#357)"
+command = "python3 - <<PY\ngit branch $name\nPY"
+expected = "deny"
+rule_id = "core.git:branch-dynamic-token"
+
+[[case]]
+description = "a shell receiver executes its quoted heredoc body (#357)"
+command = "bash <<'EOF'\ngit branch $name\nEOF"
+expected = "deny"
+rule_id = "core.git:branch-dynamic-token"
+
+[[case]]
+description = "an unmodeled receiver may be a shell and keeps the conservative deny (#357)"
+command = "dash <<'EOF'\ngit branch $name\nEOF"
+expected = "deny"
+rule_id = "core.git:branch-dynamic-token"
+
+[[case]]
+description = "a literal branch deletion in a quoted interpreter body still denies (#357)"
+command = "python3 - <<'PY'\ngit branch -D main\nPY"
+expected = "deny"
+rule_id = "core.git:branch-force-delete"

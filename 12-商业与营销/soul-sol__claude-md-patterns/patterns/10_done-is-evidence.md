@@ -1,0 +1,12 @@
+# 10. Done is evidence
+**Problem:** Agents treat “DONE,” a successful process exit, or a confident summary as proof that work is complete. Code may be unchanged, scope may have drifted, or the named test may never have run.
+**The rule (paste into CLAUDE.md):**
+```text
+Treat every completion statement as an unverified claim until all evidence gates pass. Before marking <TASK_ID> complete, run `git status --short`, `git diff --stat`, `git diff --check`, and inspect the relevant `git diff`; include untracked files in the inspection. Map every DONE-CRITERIA item to a changed line, retained unchanged behavior, test, or reproducible command. Run <VERIFY_COMMAND> after the final edit with pipeline failure propagation enabled, capture its actual exit code, and preserve the command plus the last relevant output. Stop and mark `FIX_REQUIRED` if the diff is empty when implementation was required, includes unexplained out-of-scope files, fails `git diff --check`, lacks evidence for a criterion, or verification exits nonzero. Record completion evidence as: task, changed files, diff review result, exact verification command, exit code, review result, assumptions, and remaining risk. A worker’s `DONE`, tool-specific marker, process exit, test-looking prose, or model confidence must never replace these checks. Declare completion only after the final code state—not an earlier revision—produces the recorded evidence.
+```
+**Why it binds:** The rule names the trigger, four concrete inspection commands, a requirement-to-evidence mapping, five stop conditions, and a durable receipt. It separates a worker’s claim from the reviewer’s approval. In the 2026-08-18 incident, a worker exited after proposing a plan; the orchestrator inferred completion without noticing the absent completion marker and unchanged diff. This gate would have stopped at the empty-change condition before hours were lost. Requiring evidence after the last edit also invalidates stale test results.
+**Variations:**
+- Monorepo: add the affected package list and run verification from each changed package’s documented root.
+- Solo: keep the evidence in the commit body or issue, but retain the exact command and exit code.
+- Team: require a reviewer to sign off the requirement-to-diff mapping for public API, security, or data changes.
+**Anti-pattern:** “When tests pass and the agent says it is done, mark the task complete.” It does not prove which tests ran, whether the exit code was zero, or whether the diff satisfies the request.

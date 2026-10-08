@@ -1,0 +1,94 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "totalDurationMs": 8000,
+  "totalDurationFrames": 240,
+  "style": "清新治愈手账风",
+  "pages": [
+    {
+      "id": "page-1",
+      "image": "board-01.png",
+      "startFrame": 0,
+      "endFrame": 120,
+      "seriesTitle": "前额叶：大脑“执行官”的5大硬核训练法",
+      "chapterTitle": "前额叶训练",
+      "pageTitle": "五项训练，推动大脑进阶",
+      "layoutType": "overview",
+      "slideRole": "overview",
+      "relationshipType": "none",
+      "coreIdea": "明确五项训练分别是什么",
+      "visualStrategy": "左侧五项训练清单，右侧大脑主题插图",
+      "narrativeLink": "先建立全文结构，再逐项解释",
+      "nodes": [
+        "舒尔特方格训练",
+        "视觉追踪训练",
+        "专注力专项训练",
+        "短时记忆训练",
+        "编队追踪训练"
+      ],
+      "conclusion": "",
+      "seriesPersistent": false,
+      "chapterPersistent": false,
+      "cues": [
+        {
+          "id": "page-1-cue-1",
+          "anchorText": "这5项训练",
+          "startFrame": 15,
+          "endFrame": 120,
+          "spokenStartMs": 500,
+          "spokenEndMs": 1500,
+          "enterIds": ["page-title", "illustration", "node-1", "node-2", "node-3", "node-4", "node-5"],
+          "focusId": "node-1",
+          "alignmentCoverage": 1,
+          "alignmentConfidence": 1
+        }
+      ]
+    },
+    {
+      "id": "page-2",
+      "image": "board-02.png",
+      "startFrame": 120,
+      "endFrame": 240,
+      "seriesTitle": "前额叶：大脑“执行官”的5大硬核训练法",
+      "chapterTitle": "前额叶训练",
+      "pageTitle": "舒尔特方格：抑制干扰",
+      "layoutType": "focus",
+      "slideRole": "detail",
+      "relationshipType": "none",
+      "coreIdea": "视觉搜索训练帮助抑制干扰",
+      "visualStrategy": "左侧三个关键词，右侧方格训练插图",
+      "narrativeLink": "从总览进入第一项训练",
+      "nodes": ["快速找目标", "过滤干扰", "减少东张西望"],
+      "conclusion": "让注意力更聚焦",
+      "seriesPersistent": true,
+      "chapterPersistent": true,
+      "cues": [
+        {
+          "id": "page-2-cue-1",
+          "anchorText": "舒尔特方格训练",
+          "startFrame": 135,
+          "endFrame": 180,
+          "spokenStartMs": 4500,
+          "spokenEndMs": 5300,
+          "enterIds": ["page-title", "illustration", "node-1", "node-2", "node-3"],
+          "focusId": "node-1",
+          "alignmentCoverage": 1,
+          "alignmentConfidence": 1
+        },
+        {
+          "id": "page-2-cue-2",
+          "anchorText": "让注意力更聚焦",
+          "startFrame": 210,
+          "endFrame": 240,
+          "spokenStartMs": 7000,
+          "spokenEndMs": 7600,
+          "enterIds": ["conclusion"],
+          "focusId": "conclusion",
+          "alignmentCoverage": 1,
+          "alignmentConfidence": 1
+        }
+      ]
+    }
+  ]
+}

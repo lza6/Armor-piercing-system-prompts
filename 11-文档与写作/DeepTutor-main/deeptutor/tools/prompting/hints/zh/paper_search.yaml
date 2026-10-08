@@ -1,0 +1,6 @@
+short_description: "搜索 arXiv 论文，用于补充学术背景和近期方法。"
+when_to_use: "当任务需要研究文献、前沿方法或学术引用时使用。"
+input_format: "简洁关键词查询，通常建议用英文。"
+guideline: "paper_search 适合研究型问题，不适合普通教材型知识。"
+note: "它更适合学术主题和前沿研究趋势。"
+phase: "expansion"

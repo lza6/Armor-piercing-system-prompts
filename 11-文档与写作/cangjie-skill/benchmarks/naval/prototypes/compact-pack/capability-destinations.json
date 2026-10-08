@@ -1,0 +1,36 @@
+{
+  "map": "benchmarks/naval/capability-map.yaml",
+  "note": "手工编写（Phase 0 不实现 compile_pack.py）。owner 永远是 Capability Bundle；本文件只记录编译去向。",
+  "entrypoints": {
+    "router": "naval-almanack",
+    "promoted": [
+      "wealth-structure",
+      "productize-yourself",
+      "decision-heuristics",
+      "hourly-rate-time",
+      "reading-metaskill",
+      "screen-detox"
+    ]
+  },
+  "destinations": {
+    "cap.naval.wealth-structure": ["promoted:wealth-structure", "router:references/capabilities/wealth-structure.md"],
+    "cap.naval.productize-yourself": ["promoted:productize-yourself", "router:references/capabilities/productize-yourself.md"],
+    "cap.naval.decision-heuristics": ["promoted:decision-heuristics", "router:references/capabilities/decision-heuristics.md"],
+    "cap.naval.hourly-rate-time": ["promoted:hourly-rate-time", "router:references/capabilities/hourly-rate-time.md"],
+    "cap.naval.reading-metaskill": ["promoted:reading-metaskill", "router:references/capabilities/reading-metaskill.md"],
+    "cap.naval.screen-detox": ["promoted:screen-detox", "router:references/capabilities/screen-detox.md"],
+    "cap.naval.judgment-training": ["router:references/capabilities/judgment-training.md"],
+    "cap.naval.long-term-compounding": ["router:references/capabilities/long-term-compounding.md"],
+    "cap.naval.principal-agent": ["router:references/capabilities/principal-agent.md"],
+    "cap.naval.happiness-skill": ["router:references/capabilities/happiness-skill.md"],
+    "cap.naval.game-selection": ["router:references/capabilities/game-selection.md"],
+    "cap.naval.acceptance": ["router:references/capabilities/acceptance.md"],
+    "cap.naval.self-liberation": ["router:references/capabilities/self-liberation.md"],
+    "cap.naval.monkey-mind-meditation": ["router:references/capabilities/monkey-mind-meditation.md"],
+    "cap.naval.peer-selection": ["router:references/capabilities/peer-selection.md"],
+    "cap.naval.identity-work": ["router:references/capabilities/identity-work.md"],
+    "cap.naval.honesty-communication": ["router:references/capabilities/honesty-communication.md"],
+    "cap.naval.rational-buddhism": ["router:references/capabilities/rational-buddhism.md"],
+    "cap.naval.life-meaning": ["router:references/capabilities/life-meaning.md"]
+  }
+}

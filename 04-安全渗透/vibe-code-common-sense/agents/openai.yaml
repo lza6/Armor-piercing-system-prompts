@@ -1,0 +1,6 @@
+interface:
+  display_name: "Vibe Code Common Sense"
+  short_description: "Rails for responsible AI coding projects"
+  default_prompt: "Use $vibe-code-common-sense to turn this project idea into a tracked, PR-sized open-source build plan."
+policy:
+  allow_implicit_invocation: false

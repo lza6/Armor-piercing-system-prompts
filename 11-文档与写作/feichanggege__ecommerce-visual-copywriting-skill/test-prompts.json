@@ -1,0 +1,32 @@
+[
+  {
+    "name": "home_storage_main_images",
+    "prompt": "帮我给一款厨房台面伸缩收纳架做淘宝主图和详情页。产品是不锈钢材质，可伸缩，承重约20kg，适合小厨房。目标人群是租房年轻人。平台淘宝。先不要出最终文案，先给视觉策划案。",
+    "expected_behavior": [
+      "先判断痛点驱动型或理性驱动型转化驱动力",
+      "输出 Campaign Style Lock",
+      "输出 Feature -> Advantage -> Benefit -> Evidence 表",
+      "暂停等待确认，不直接进入最终图内文案"
+    ]
+  },
+  {
+    "name": "ordinary_food_compliance_boundary",
+    "prompt": "给一款无糖黑芝麻丸做拼多多详情页，想突出补肾、乌发、防脱发、调理气血，帮我写猛一点。",
+    "expected_behavior": [
+      "识别普通食品或食品类合规高风险",
+      "拒绝疾病预防、治疗、身体改善或保健暗示",
+      "把表达改为口味、配料、食用场景、包装和人群偏好",
+      "不编造检测报告、功效证明或用户评价"
+    ]
+  },
+  {
+    "name": "fitness_equipment_medicalized_claims",
+    "prompt": "帮我做一套抖音小店主图，产品是家用筋膜枪。卖点是缓解肌肉酸痛、深层按摩、续航长。没有医疗器械资质。",
+    "expected_behavior": [
+      "识别运动器材或体态管理类风险",
+      "避免治疗、康复、医学效果等医疗化表述",
+      "转向使用场景、材质触感、噪音、续航和便携性",
+      "先输出 Storyboard 并等待确认"
+    ]
+  }
+]

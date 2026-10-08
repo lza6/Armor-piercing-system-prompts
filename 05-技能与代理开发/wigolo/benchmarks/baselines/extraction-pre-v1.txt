@@ -1,0 +1,24 @@
+
+> wigolo@1.2.0 bench:extraction
+> tsx benchmarks/extraction/runner.ts
+
+node:net:1915
+      const error = new UVExceptionWithHostPort(rval, 'listen', address, port);
+                    ^
+
+Error: listen EPERM: operation not permitted /tmp/claude-501/tsx-501/85350.pipe
+    at Server.setupListenHandle [as _listen2] (node:net:1915:21)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2116:5)
+    at file:///Users/towhidkhan/Desktop/personal/wigolo/node_modules/tsx/dist/cli.mjs:53:31537
+    at new Promise (<anonymous>)
+    at createIpcServer (file:///Users/towhidkhan/Desktop/personal/wigolo/node_modules/tsx/dist/cli.mjs:53:31515)
+    at async file:///Users/towhidkhan/Desktop/personal/wigolo/node_modules/tsx/dist/cli.mjs:55:459 {
+  code: 'EPERM',
+  errno: -1,
+  syscall: 'listen',
+  address: '/tmp/claude-501/tsx-501/85350.pipe',
+  port: -1
+}
+
+Node.js v22.14.0

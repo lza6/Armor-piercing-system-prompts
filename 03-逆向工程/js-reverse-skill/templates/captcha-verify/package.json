@@ -1,0 +1,14 @@
+{
+  "name": "captcha-verify-result",
+  "version": "1.0.0",
+  "description": "验证码逆向交付物（load→solve→verify 三段链路）",
+  "main": "final.js",
+  "dependencies": {
+    "curl-cffi-node": "*",
+    "minimist": "^1.2.8"
+  },
+  "scripts": {
+    "verify": "node final.js",
+    "sign-only": "node final.js --sign-only"
+  }
+}

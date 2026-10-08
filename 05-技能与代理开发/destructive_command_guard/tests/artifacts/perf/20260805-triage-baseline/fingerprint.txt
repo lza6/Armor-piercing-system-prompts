@@ -1,0 +1,6 @@
+Apple M4 Pro
+cores: 14 (perf: 10, eff: 4)
+ram: 64 GiB
+ProductName:		macOS ProductVersion:		26.2 BuildVersion:		25C56 
+rustc 1.98.0-nightly (8954863c8 2026-06-05)
+4dc38ba

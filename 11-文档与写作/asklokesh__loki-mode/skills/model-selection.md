@@ -1,0 +1,539 @@
+# Model Selection & Task Tool
+
+## Session-Pinned Model (default)
+
+Since v6.81.0, the main RARV loop uses **one pinned model per session** instead of rotating models per RARV phase. This eliminates per-iteration tier churn and keeps the main loop behavior predictable.
+
+- Controlled by `LOKI_SESSION_MODEL` (default: `sonnet`).
+- Accepted values: `opus`, `sonnet`, `haiku`, or a raw tier name (`planning`, `development`, `fast`). The value names a **tier**, not a fixed model: it is mapped to an abstract tier (opus -> planning, sonnet -> development, haiku -> fast) which is then resolved to a concrete model through the provider config (`PROVIDER_MODEL_PLANNING/DEVELOPMENT/FAST`). On stock config the default `sonnet` pin = the **development** tier = `PROVIDER_MODEL_DEVELOPMENT` = **sonnet** (since v7.104.0, `CLAUDE_DEFAULT_DEVELOPMENT=sonnet`; planning and fast also default to sonnet on the stock path). This is why `loki plan` quotes Sonnet on the stock default path: the quote names the dispatched model, and every tier resolves to the same sonnet model unless the provider config overrides a tier. A mid-flight `.loki/state/model-override` is different: that alias is fed straight to `--model` (a `sonnet` override dispatches sonnet, no tier route).
+- `get_rarv_tier()` is retained and still used for subagent Task-tool dispatches (planning vs implementation vs fast work), not for the main loop.
+
+**Rollback (legacy RARV tier rotation in the main loop):**
+
+```bash
+LOKI_LEGACY_TIER_SWITCHING=true ./autonomy/run.sh ./prd.md
+```
+
+Set `LOKI_LEGACY_TIER_SWITCHING=true` to restore the previous per-iteration `get_rarv_tier "$ITERATION_COUNT"` behavior in the main loop.
+
+---
+
+## Fable 5 (top-tier advisory model)
+
+Claude Fable 5 (alias `fable`, full id `claude-fable-5`) is Anthropic's most capable widely released model. It is NOT a default workhorse: it is priced at exactly **2x Opus** ($10 / $50 per MTok in/out vs Opus $5 / $25), uses always-on adaptive thinking, and is reserved for the few decision points where its extra investigation and self-verification pay off.
+
+**When Fable is documented to help (route here, opt-in, cost shown):**
+- Architecture decisions, root-cause investigations, outage debugging.
+- Long-horizon tasks you would otherwise decompose.
+
+**When NOT to route to Fable:**
+- Security review. Fable's safety classifiers refuse cybersecurity content, and in non-interactive (`-p`) mode a flagged request ends the turn with a refusal instead of a transparent Opus re-run, which would break the unanimous-council gate. Security review stays on Opus, always. (Defensive-cyber capability lives in Mythos 5 via Project Glasswing, not Fable.)
+- Default planning/development/fast work. The 2x cost is only worth it for the cases above.
+
+### Mid-flight model switching
+
+You can change the model a **live run** uses, from the dashboard or by writing a state file. The switch applies at the **next iteration boundary** (each iteration spawns a fresh `claude -p`, which fixes the model per invocation, so it never changes mid-invocation). The override applies to the **current run only**: the runner clears a leftover override at the start of a fresh run, so a switch never silently carries into future runs. The override is also clamped by `LOKI_MAX_TIER`: if the operator set a cost ceiling, an override above it is clamped down with one honest log line, and the dashboard reports the clamped effective model. The clamp is scoped, not blanket: on the override path a `sonnet` ceiling downgrades only `fable` (to `PROVIDER_MODEL_DEVELOPMENT`, sonnet by default per `providers/claude.sh:61`), while a plain `opus` override stays opus; a `haiku` ceiling pins to `PROVIDER_MODEL_FAST`; an `opus` ceiling caps only `fable` back to opus. (The clamp is enforced on the bash runner, which is the live `start` route; the experimental Bun runner does not yet port it.)
+
+- Dashboard: the Model selector in the session-control panel. The Fable option shows its 2x-Opus cost; an inline notice discloses the iteration-boundary timing. It calls `POST /api/session/model`.
+- File / CLI: write an allowlisted alias (`haiku`, `sonnet`, `opus`, `fable`) to `.loki/state/model-override`. Empty or absent file reverts to the tier mapping. Invalid content is ignored (the runtime warns once). The value is allowlist-validated because it is fed straight into `claude --model`.
+
+```bash
+# Switch a live run to Fable for the next iteration
+echo fable > .loki/state/model-override
+# Revert to the tier mapping
+rm -f .loki/state/model-override
+```
+
+### Architecture-tier opt-in: `LOKI_FABLE_ARCHITECT`
+
+`LOKI_FABLE_ARCHITECT=1` routes ONLY the **first iteration** (the architecture / REASON pass) to Fable; every later iteration uses the session tier (the default pin, e.g. Sonnet/Opus). Default OFF because of the 2x cost. An explicit `LOKI_CLAUDE_MODEL_PLANNING` / `LOKI_MODEL_PLANNING` still wins, and the `LOKI_MAX_TIER` ceiling still clamps Fable down. This first-iteration scope is deliberate: under the default session pinning there is no recurring "planning tier", so scoping to the architecture iteration is the only honest way to give the architecture pass Fable without converting the whole session. `loki plan` discloses the extra Fable architecture iteration in its quote.
+
+```bash
+LOKI_FABLE_ARCHITECT=1 loki start ./prd.md
+```
+
+### Financial / physical-stakes work (manual override, by design)
+
+For diffs that move money or mutate infrastructure (payments, billing, spend authorization, Terraform/k8s/infra changes), routing to Fable is **founder-directed and not doc-evidenced**, so Loki does NOT auto-route based on file-path heuristics in this release. Use the mid-flight switch (set the model to `fable` for those iterations, then clear it) as the deliberate, consent-based mechanism. This keeps the high-cost model an explicit human choice, not an implicit one.
+
+### Cost estimate honesty
+
+`loki plan` quotes the model the runner actually dispatches, on **every** path, for the levers the runner honors. This includes the stock no-lever default: the `sonnet` session pin resolves through the development tier to sonnet, so the quote names Sonnet on the default path (`providers/claude.sh:61` sets `CLAUDE_DEFAULT_DEVELOPMENT="sonnet"`, and the estimator mirrors it at `autonomy/loki:17378-17382`; a stock `loki plan` prints `Model distribution: Sonnet x1`). Set `LOKI_SESSION_MODEL=fable`, or have a pending `.loki/state/model-override` of `fable`, and the estimate uses Fable's $10/$50 pricing with a 2x-Opus note. The quote, the dashboard `effective` model, and the actual `claude --model` argument always agree on both routes: the session-pin tier route (no override) and the override-path clamp (override present) are each mirrored exactly in the estimator and the dashboard, so the same lever that changes the quote changes the run. `LOKI_MAX_TIER` is applied to the quote too, so the estimate never quotes a model above the operator's cost ceiling. (`LOKI_MODEL` is not a session lever and does not affect the run; use `LOKI_SESSION_MODEL`.)
+
+**Where the dispatched model is disclosed (precisely):**
+- Override path (a `.loki/state/model-override` alias): the runner logs the override and the clamp line (`model override: <model>`, plus the one honest clamp-down log line when `LOKI_MAX_TIER` reduces it); the dashboard `GET /api/session/model` `effective` field reports the clamped model.
+- Session pin / architect path (no override, the default): the runner logs the RARV effective-model line each iteration (`RARV Phase: <phase> -> Tier: <tier> (<model>)`), and `loki plan` discloses the provenance (`pinned via LOKI_SESSION_MODEL=<pin> -> <tier> tier -> <model>`) so the quoted model is legible against the pin alias. The `LOKI_FABLE_ARCHITECT=1` first-iteration Fable opt-in is disclosed as an extra architecture iteration in the quote.
+
+---
+
+## Multi-Provider Support (v5.0.0)
+
+Loki Mode supports five AI providers. The authoritative list is
+`SUPPORTED_PROVIDERS` in `providers/loader.sh:8`; each provider's capability
+flags live in its own `providers/<name>.sh`. Claude has full features. Every
+other provider runs sequentially (no Task tool, no parallel agents), but only
+those with `PROVIDER_DEGRADED=true` are flagged degraded.
+
+| Provider | Full Features | `PROVIDER_DEGRADED` | CLI Flag |
+|----------|---------------|---------------------|----------|
+| **Claude Code** | Yes | false (`providers/claude.sh:104`) | `--provider claude` (default) |
+| **OpenAI Codex CLI** | No | true (`providers/codex.sh:180`) | `--provider codex` |
+| **Cline CLI** | No | false (`providers/cline.sh:97`) | `--provider cline` |
+| **Aider** | No | true (`providers/aider.sh:95`) | `--provider aider` |
+| **opencode** | No | false (`providers/opencode.sh:66`) | `--provider opencode` |
+
+Only **codex** and **aider** are flagged degraded. Cline and opencode are
+sequential but not degraded, so do not describe them as degraded-mode providers.
+
+**opencode** is the model-agnostic route: it reaches 75+ model providers, so it
+is the path to cheap/open models. It is sequential like the others
+(`PROVIDER_HAS_SUBAGENTS=false`, `PROVIDER_HAS_PARALLEL=false`,
+`PROVIDER_HAS_TASK_TOOL=false` at `providers/opencode.sh:61-63`) but it does
+support MCP (`PROVIDER_HAS_MCP=true`, `:64`), which is why it is not marked
+degraded.
+
+**Degraded mode limitations:**
+- No Task tool (cannot spawn subagents)
+- No parallel execution (sequential RARV cycle only)
+- No MCP server integration (Codex has MCP support but not yet integrated with Loki)
+- Single model with parameter adjustment (effort/thinking level)
+
+---
+
+## Abstract Model Tiers
+
+**Default (v5.3.0):** Haiku disabled for quality. All tasks use Opus or Sonnet.
+
+| Tier | Purpose | Claude (default) | Claude (--allow-haiku) | Codex |
+|------|---------|------------------|------------------------|-------|
+| **planning** | PRD analysis, architecture, system design | opus | opus | effort=xhigh |
+| **development** | Feature implementation, complex bugs, tests | opus | sonnet | effort=high |
+| **fast** | Unit tests, docs, linting, simple tasks | sonnet | haiku | effort=low |
+
+### Enabling Haiku
+
+To enable Haiku for fast-tier tasks (cost optimization at potential quality trade-off):
+
+```bash
+# Via environment variable
+LOKI_ALLOW_HAIKU=true ./autonomy/run.sh ./prd.md
+
+# Via CLI flag
+./autonomy/run.sh --allow-haiku ./prd.md
+
+# Via loki CLI wrapper
+loki start --allow-haiku ./prd.md
+```
+
+When Haiku is enabled:
+- Development tier uses Sonnet (instead of Opus)
+- Fast tier uses Haiku (instead of Sonnet)
+- Planning tier always uses Opus (unchanged)
+
+---
+
+## Model Selection by SDLC Phase
+
+| Tier | SDLC Phases | Examples |
+|------|-------------|----------|
+| **planning** | Bootstrap, Discovery, Architecture | PRD analysis, system design, technology selection, API contracts |
+| **development** | Development, QA, Deployment | Feature implementation, complex bugs, integration/E2E tests, code review, deployment |
+| **fast** | All other operations (parallel for Claude) | Unit tests, docs, bash commands, linting, monitoring |
+
+**Claude-specific model names:** opus, sonnet, haiku (haiku requires --allow-haiku flag)
+**Codex effort levels:** xhigh, high, medium, low
+
+## Task Tool Examples (Claude Only)
+
+**NOTE:** Task tool is Claude-specific. Codex, Cline, and Aider run in degraded mode without subagents.
+
+```python
+# Planning tier (opus) for Bootstrap, Discovery, Architecture
+Task(subagent_type="Plan", model="opus", description="Design system architecture", prompt="...")
+Task(subagent_type="Plan", model="opus", description="Analyze PRD requirements", prompt="...")
+
+# Development tier (sonnet) for Development, QA, and Deployment
+Task(subagent_type="general-purpose", model="sonnet", description="Implement API endpoint", prompt="...")
+Task(subagent_type="general-purpose", model="sonnet", description="Write integration tests", prompt="...")
+Task(subagent_type="general-purpose", model="sonnet", description="Deploy to production", prompt="...")
+
+# Fast tier (haiku) for everything else (PREFER for parallelization)
+Task(subagent_type="general-purpose", model="haiku", description="Run unit tests", prompt="...")
+Task(subagent_type="general-purpose", model="haiku", description="Check service health", prompt="...")
+```
+
+### Provider Detection in Code
+
+```bash
+# In run.sh, check provider before using Task tool
+if [ "${PROVIDER_HAS_TASK_TOOL:-false}" = "true" ]; then
+    # Claude: Use Task tool with parallel agents
+    Task(model="haiku", description="Run tests", prompt="...")
+else
+    # Codex/Cline/Aider: Run sequentially without subagents
+    # Execute RARV cycle in main thread
+fi
+```
+
+## Task Categories
+
+**Opus (Bootstrap -> Architecture - Planning ONLY):**
+- Bootstrap: Project setup, dependency analysis, environment configuration
+- Discovery: PRD analysis, requirement extraction, gap identification
+- Architecture: System design, technology selection, schema design, API contracts
+
+**Sonnet (Development -> Deployment):**
+- Development: Feature implementation, API endpoints, complex bug fixes, database migrations
+- QA: Integration tests, E2E tests, security scanning, performance testing, code review
+- Deployment: Release automation, infrastructure provisioning, monitoring setup
+
+**Haiku (Operations - Use Extensively in Parallel):**
+- Writing/running unit tests
+- Generating documentation
+- Running bash commands (npm install, git operations)
+- Simple bug fixes (typos, imports, formatting)
+- File operations, linting, static analysis
+- Monitoring, health checks, log analysis
+
+## Parallelization Strategy (Claude Only)
+
+**NOTE:** Parallelization requires Task tool, which is Claude-specific. Codex, Cline, and Aider run sequentially.
+
+```python
+# Claude: Launch 10+ Haiku agents in parallel for unit test suite
+for test_file in test_files:
+    Task(subagent_type="general-purpose", model="haiku",
+         description=f"Run unit tests: {test_file}",
+         run_in_background=True)
+
+# Codex/Cline/Aider: Run tests sequentially (no parallelization)
+for test_file in test_files:
+    run_test(test_file)  # Sequential execution
+```
+
+## Extended Thinking Mode
+
+**Use thinking prefixes for complex planning:**
+
+| Prefix | When to Use | Example |
+|--------|-------------|---------|
+| `"think"` | Standard planning | Architecture outlines, feature scoping |
+| `"think hard"` | Complex decisions | System design, trade-off analysis |
+| `"ultrathink"` | Critical/ambiguous | Multi-service architecture, security design |
+
+```python
+Task(
+    subagent_type="Plan",
+    model="opus",
+    description="Design auth architecture",
+    prompt="think hard about the authentication architecture. Consider OAuth vs JWT..."
+)
+```
+
+**When to use:** Discovery, Architecture, Critical decisions
+**When NOT to use:** Haiku tasks, repetitive work, obvious implementations
+
+### Claude Adaptive Thinking (Effort Parameter)
+
+Claude models support an `effort` parameter that controls reasoning depth without requiring thinking prefixes. This is separate from extended thinking and applies at the API level.
+
+| Effort Level | When to Use | Token Impact |
+|--------------|-------------|--------------|
+| `low` | Simple, well-defined tasks | Minimal reasoning tokens |
+| `medium` | Standard tasks (default) | Balanced reasoning |
+| `high` | Complex multi-step tasks | Extended reasoning |
+| `max` | Critical decisions, architecture | Maximum reasoning depth |
+
+**Note:** The effort parameter and thinking prefixes serve different purposes. Effort controls the model's internal reasoning budget; thinking prefixes guide the structure of the response.
+
+### Codex --sandbox workspace-write Flag
+
+Codex CLI deprecated `--full-auto` in v0.125+ (removed from `codex exec --help`,
+emits a deprecation warning if used). The documented replacement is
+`--sandbox workspace-write`. The `exec` subcommand is non-interactive by default
+(approval: never), so the sandbox flag alone keeps the loop autonomous:
+
+```bash
+# Recommended (codex 0.125+)
+codex exec --sandbox workspace-write "$prompt"
+
+# Legacy (still supported)
+codex exec --dangerously-bypass-approvals-and-sandbox "$prompt"
+```
+
+## Prompt Repetition for Haiku
+
+**For Haiku on structured tasks, repeat prompts 2x to improve accuracy 4-5x.**
+
+```python
+base_prompt = "Run unit tests in tests/ directory and report results"
+repeated_prompt = f"{base_prompt}\n\n{base_prompt}"  # 2x repetition
+Task(model="haiku", description="Run unit tests", prompt=repeated_prompt)
+```
+
+**Research:** Accuracy improves from 21.33% to 97.33% (arXiv 2512.14982v1)
+
+**When to apply:** Unit tests, linting, parsing, list operations
+**When NOT to apply:** Opus/Sonnet, creative tasks, complex reasoning
+
+## Advanced Parameters
+
+**Background Agents:**
+```python
+Task(description="Long analysis task", run_in_background=True, prompt="...")
+# Returns immediately with output_file path
+```
+
+**Agent Resumption:**
+```python
+result = Task(description="Complex refactor", prompt="...")
+# Later: resume with agent_id
+Task(resume="agent-abc123", prompt="Continue from where you left off")
+```
+
+## Confidence-Based Routing
+
+| Confidence | Tier | Behavior |
+|------------|------|----------|
+| >= 0.95 | Auto-Approve | Direct execution, no review |
+| 0.70-0.95 | Direct + Review | Execute then validate |
+| 0.40-0.70 | Supervisor Mode | Full coordination with review |
+| < 0.40 | Human Escalation | Too uncertain |
+
+```python
+# Simple tasks -> Direct dispatch to Haiku
+Task(model="haiku", description="Fix import in utils.py", prompt="...")
+
+# Complex tasks -> Supervisor orchestration
+Task(description="Implement user authentication with OAuth", prompt="...")
+```
+
+## Tiered Agent Escalation Triggers
+
+*Inspired by [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) tiered architecture.*
+
+**Tier Mapping:** LOW=fast=Haiku, MEDIUM=development=Sonnet, HIGH=planning=Opus. This section uses LOW/MEDIUM/HIGH for clarity in escalation context.
+
+Explicit signals that determine when to escalate from one tier to another. These triggers enable automatic tier selection based on task characteristics and runtime conditions.
+
+### Tier Definitions
+
+| Tier | Model | Cost | Speed | Use Case |
+|------|-------|------|-------|----------|
+| **LOW** | Haiku | Lowest | Fastest | Simple, repetitive, well-defined tasks |
+| **MEDIUM** | Sonnet | Medium | Balanced | Complex implementation, testing, debugging |
+| **HIGH** | Opus | Highest | Slowest | Critical decisions, architecture, security |
+
+### Automatic Escalation Triggers
+
+#### LOW -> MEDIUM Escalation
+
+Escalate from Haiku to Sonnet when:
+
+| Trigger | Threshold | Rationale |
+|---------|-----------|-----------|
+| Error count | > 2 consecutive failures | Haiku struggling with complexity |
+| File count | > 5 files modified | Cross-cutting changes need context |
+| Lines changed | > 200 lines | Large changes need careful review |
+| Test failures | > 3 failing tests | Need deeper debugging |
+| Dependency changes | Any package.json/requirements.txt | Dependency resolution is complex |
+| Retry attempts | > 1 retry on same task | Task too complex for current tier |
+
+```python
+# Example: Auto-escalate on repeated failures
+if task.error_count > 2:
+    task.escalate(to="sonnet", reason="Multiple failures indicate complexity")
+```
+
+#### MEDIUM -> HIGH Escalation
+
+Escalate from Sonnet to Opus when:
+
+| Trigger | Threshold | Rationale |
+|---------|-----------|-----------|
+| Error count | > 3 consecutive failures | Even Sonnet struggling |
+| Complexity score | > 15 cyclomatic | Highly complex logic needs planning |
+| Architecture files | Any changes to core/* | Architecture decisions are critical |
+| Breaking changes | API contract modifications | Need careful impact analysis |
+| Performance issues | > 2x baseline regression | Need optimization strategy |
+| Integration scope | > 3 services affected | Cross-service coordination |
+
+```python
+# Example: Auto-escalate for architecture changes
+if "core/" in modified_files or "architecture" in task.tags:
+    task.escalate(to="opus", reason="Architecture changes require planning tier")
+```
+
+#### HIGH -> HUMAN Escalation (Terminal)
+
+When even Opus fails, escalate to human intervention:
+
+| Trigger | Threshold | Action |
+|---------|-----------|--------|
+| Error count | > 5 consecutive at HIGH tier | Create `.loki/signals/HUMAN_REVIEW_NEEDED` |
+| Ambiguous requirements | Cannot determine correct behavior | Create signal with specific questions |
+| External dependencies | Blocked on third-party API/service | Document blocker, pause task |
+| Ethical concerns | Task may violate principles | Halt immediately, document concern |
+
+```python
+# Terminal escalation - no automated recovery
+if task.tier == "opus" and task.error_count > 5:
+    create_signal(".loki/signals/HUMAN_REVIEW_NEEDED", {
+        "task_id": task.id,
+        "reason": "5+ failures at planning tier",
+        "attempts": task.attempt_log,
+        "recommendation": "Manual investigation required"
+    })
+    task.status = "blocked_on_human"
+```
+
+### Threshold Rationale
+
+Why these specific thresholds? Each value is grounded in research or proven heuristics:
+
+| Threshold | Value | Justification |
+|-----------|-------|---------------|
+| **Error count > 2** (LOW->MEDIUM) | 3 attempts | "Two strikes" principle: first failure may be transient (network, timeout), second suggests genuine complexity. Third attempt warrants escalation to capable tier. |
+| **Error count > 3** (MEDIUM->HIGH) | 4 attempts | Sonnet has significantly more capability than Haiku, so allow one additional attempt before expensive Opus escalation. Balances cost vs. success rate. |
+| **Error count > 5** (HIGH->HUMAN) | 6 attempts | Planning tier (Opus) exhausted all automated reasoning options. Further attempts unlikely to succeed; human judgment required. |
+| **File count > 5** | 6+ files | Cross-cutting changes affecting 5+ files require holistic understanding of system interactions. Research on code review effectiveness shows reviewer accuracy drops with multi-file changes. |
+| **Lines changed > 200** | 200 LOC | Studies on code review effectiveness (Cisco, SmartBear) show review quality degrades significantly above 200-400 LOC. Microsoft's internal research suggests 200 LOC as optimal review size. |
+| **Cyclomatic complexity > 15** | McCabe threshold | Industry standard since McCabe (1976). NIST considers >15 "high risk." Many static analysis tools default to this threshold. |
+| **Test failures > 3** | 4+ failures | Distinguishes isolated flakiness from systemic issues. Single test failure may be flaky; 3+ indicates deeper problems requiring debugging capability. |
+| **Retry attempts > 1** | 2+ retries | First retry accounts for transient issues. Second retry at same tier signals fundamental mismatch between task complexity and model capability. |
+| **5+ successful tasks** (de-escalation) | Success streak | Sustained success indicates task complexity has reduced or model has adapted. Safe to try lower-cost tier with quick re-escalation if needed. |
+
+**References:**
+- McCabe, T.J. (1976). "A Complexity Measure." IEEE Transactions on Software Engineering.
+- Cisco Code Review Study: Optimal review size 200-400 LOC for defect detection.
+- SmartBear "Best Kept Secrets of Peer Code Review": Review effectiveness drops 50% above 400 LOC.
+
+### Always-HIGH Triggers (No Escalation Path)
+
+These tasks ALWAYS start at HIGH tier (Opus):
+
+| Category | Examples | Rationale |
+|----------|----------|-----------|
+| **Security** | Auth, encryption, secrets, RBAC | Security cannot be compromised |
+| **Architecture** | System design, service boundaries, data models | Foundation decisions |
+| **Breaking Changes** | API versioning, schema migrations, deprecations | High blast radius |
+| **Production Incidents** | Outage response, data corruption, rollback | Critical impact |
+| **Compliance** | GDPR, HIPAA, SOC2 implementations | Regulatory requirements |
+| **Cost Decisions** | Infrastructure scaling, vendor selection | Financial impact |
+
+```python
+# Example: Security tasks always use Opus
+ALWAYS_HIGH_PATTERNS = [
+    r"(auth|security|encrypt|secret|credential|token|password)",
+    r"(architecture|system.design|schema.migration)",
+    r"(production|incident|outage|rollback)",
+    r"(compliance|gdpr|hipaa|soc2|pci)",
+]
+
+if any(re.search(p, task.description, re.I) for p in ALWAYS_HIGH_PATTERNS):
+    task.tier = "HIGH"  # No escalation, start at Opus
+```
+
+### De-escalation Triggers (Cost Optimization)
+
+De-escalate to lower tier when conditions improve:
+
+| Trigger | Action | Rationale |
+|---------|--------|-----------|
+| 5+ successful tasks at tier | Consider de-escalation | Complexity resolved |
+| Single-file changes | Use LOW for isolated fixes | Simple scope |
+| Test-only changes | Use LOW for unit tests | Well-defined output |
+| Documentation | Use LOW for docs/comments | Low risk |
+
+```python
+# Example: De-escalate when task becomes routine
+if task.success_streak >= 5 and task.scope == "single_file":
+    task.deescalate(to="haiku", reason="Task scope is simple and stable")
+```
+
+### Escalation Flow Diagram
+
+```
+                    +------------------+
+                    |   Task Arrives   |
+                    +--------+---------+
+                             |
+                    +--------v---------+
+                    | Check ALWAYS_HIGH |
+                    +--------+---------+
+                             |
+              +--------------+--------------+
+              |                             |
+        [matches]                     [no match]
+              |                             |
+     +--------v--------+           +--------v--------+
+     |   START: HIGH   |           |   START: LOW    |
+     |    (Opus)       |           |    (Haiku)      |
+     +-----------------+           +--------+--------+
+                                            |
+                                   +--------v--------+
+                                   |  Execute Task   |
+                                   +--------+--------+
+                                            |
+                              +-------------+-------------+
+                              |                           |
+                        [success]                   [failure]
+                              |                           |
+                    +---------v---------+       +---------v---------+
+                    | Continue at tier  |       | Check thresholds  |
+                    +-------------------+       +---------+---------+
+                                                          |
+                                              +-----------+-----------+
+                                              |                       |
+                                        [under limit]           [over limit]
+                                              |                       |
+                                     +--------v--------+     +--------v--------+
+                                     |  Retry at tier  |     | ESCALATE tier   |
+                                     +-----------------+     +-----------------+
+```
+
+### Implementation in Provider Context
+
+For Claude (full features):
+```python
+# Task tool with tier awareness
+Task(
+    model=determine_tier(task),  # Returns "opus", "sonnet", or "haiku"
+    description=task.description,
+    prompt=task.prompt,
+    metadata={"escalation_count": task.escalation_count}
+)
+```
+
+For Codex (degraded mode):
+```python
+# Map tiers to effort levels
+TIER_MAPPING = {
+    "codex": {"HIGH": "xhigh", "MEDIUM": "high", "LOW": "low"},
+}
+effort_level = TIER_MAPPING[provider][determine_tier(task)]
+```
+
+### Metrics for Tier Optimization
+
+Track these metrics to tune escalation thresholds:
+
+| Metric | Purpose | Target |
+|--------|---------|--------|
+| Escalation rate | How often tasks escalate | < 20% |
+| First-tier success | Tasks completed without escalation | > 80% |
+| Cost per task | Average token cost by tier | Minimize |
+| Time to completion | Including escalation delays | Minimize |
+| Quality score | Post-completion review score | > 4.0/5.0 |
+
+```python
+# Log escalation events for analysis
+log_escalation(
+    task_id=task.id,
+    from_tier=current_tier,
+    to_tier=new_tier,
+    trigger=trigger_reason,
+    error_count=task.error_count,
+    timestamp=now()
+)
+```

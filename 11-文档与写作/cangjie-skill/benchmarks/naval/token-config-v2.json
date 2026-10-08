@@ -1,0 +1,21 @@
+{
+  "note": "Phase 1 A 类静态指标配置：对比基线 19-Skill 包与 v2.1 正式编译产物（dist/，由 cangjie.py compile 从 Capability Bundle 生成）。Phase 0 原型（benchmarks/naval/prototypes/）保留作历史对照。",
+  "tokenizers": ["cl100k_base", "o200k_base"],
+  "versions": {
+    "atomic_pack_baseline": {
+      "type": "atomic_pack",
+      "root": "books/naval-almanack-skill",
+      "entry_glob": "*/SKILL.md"
+    },
+    "single_compiled": {
+      "type": "single",
+      "root": "dist/naval-almanack-single"
+    },
+    "compact_pack_compiled": {
+      "type": "compact_pack",
+      "root": "dist/naval-almanack-pack",
+      "router": "naval-almanack",
+      "promoted_glob": "*/SKILL.md"
+    }
+  }
+}

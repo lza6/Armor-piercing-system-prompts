@@ -1,0 +1,52 @@
+{
+  "skill": "screen-detox",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我刷短视频上瘾，一刷就是两小时，晚上更空虚，怎么戒？",
+      "expected_behavior": "激活 screen-detox, 给多巴胺机制+环境改造+替代活动+对外承诺流程",
+      "notes": "正面场景: 短视频上瘾"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "睡前不刷手机就难受，怎么戒掉这个习惯？",
+      "expected_behavior": "激活 screen-detox, 给习惯替换五步(挑一件事/可视化/识别触发/替代品/告诉朋友)",
+      "notes": "正面场景: 习惯戒断"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "感觉被算法控制了，怎么把时间还给自己？",
+      "expected_behavior": "激活 screen-detox, 给屏幕时间量化+环境设计+非屏幕活动填充",
+      "notes": "正面场景: 数字自主"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我想多读点书，但总是读不进去，怎么办？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 reading-metaskill (阅读习惯)",
+      "notes": "跨 skill 混淆诱饵: 戒断 vs 建设"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我查一下这周末的电影排片",
+      "expected_behavior": "信息查询, 不调用任何 skill",
+      "notes": "诱饵: 查询场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我靠剪辑短视频赚钱，每天必须刷 6 小时手机，算上瘾吗？",
+      "expected_behavior": "边缘: 区分工作屏幕与消费屏幕, 只对消费时段应用戒断流程",
+      "notes": "边界: 工作 vs 消费"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

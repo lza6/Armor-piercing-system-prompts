@@ -1,0 +1,13 @@
+schema_version: 1
+slug: loop-engineering-skill
+name: Loop Engineering Skill
+summary: 从 Loop Engineering 长视频中提炼的软件开发、AI 编程与工程实践方法。
+source_type: github
+source_url: https://github.com/kangarooking/loop-engineering-skill
+skill_count: 8
+domains: [工程, AI]
+language: [zh-CN, en]
+status: active
+quality: verified
+featured: false
+use_cases: [设计 AI 编程流程, 改进软件工程实践, 复盘开发工作流]

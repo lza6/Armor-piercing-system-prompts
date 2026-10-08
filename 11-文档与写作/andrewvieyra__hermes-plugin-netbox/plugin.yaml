@@ -1,0 +1,75 @@
+name: netbox
+version: 0.4.0
+manifest_version: 2
+api_version: 1
+description: "NetBox change management for Hermes: query objects, build a plan with a field-level diff, apply it with a journal, and roll back. Nothing is written without a reviewed plan."
+author: Andrew Vieyra
+license: MIT
+homepage: https://github.com/andrewvieyra/hermes-plugin-netbox
+tags: [netbox, dcim, ipam, infrastructure, change-management]
+kind: standalone
+requires_env:
+  - name: NETBOX_URL
+    description: "Base URL of the NetBox instance, e.g. https://netbox.example.com"
+    secret: false
+  - name: NETBOX_TOKEN
+    description: "NetBox API token (v1 'Token' or v2 'nbt_' bearer token)"
+    url: "https://netboxlabs.com/docs/netbox/integrations/rest-api/#authentication"
+    secret: true
+optional_env:
+  - NETBOX_VERIFY_SSL
+  - NETBOX_TIMEOUT
+provides_tools:
+  - netbox_query
+  - netbox_plan
+  - netbox_apply
+  - netbox_rollback
+  - netbox_plans
+provides_hooks: []
+python_dependencies:
+  - "requests>=2.28,<3"
+config_schema:
+  allow_delete:
+    type: bool
+    default: false
+    description: "Allow delete operations in plans. Off by default; deletes cascade in NetBox and rollback re-creates objects with new IDs."
+  max_operations:
+    type: int
+    default: 200
+    description: "Maximum operations accepted in one plan."
+  max_query_results:
+    type: int
+    default: 500
+    description: "Maximum objects netbox_query returns in one call (pagination stops here)."
+  max_plan_age_hours:
+    type: int
+    default: 24
+    description: "Plans older than this are refused by netbox_apply; re-plan instead."
+  audit_log:
+    type: bool
+    default: true
+    description: "Append one JSON line per plan/apply/rollback event to the audit log (SIEM-friendly)."
+  audit_log_path:
+    type: str
+    default: ""
+    description: "Audit log file. Empty means <HERMES_HOME>/plugin-data/netbox/audit.jsonl."
+  audit_include_request:
+    type: bool
+    default: true
+    description: "Record the user's triggering message (truncated to 500 characters) in the actor record."
+  write_mode:
+    type: str
+    default: full
+    description: "full: the model may apply after asking. operator_only: only /netbox and `hermes netbox` may apply or roll back. read_only: no writes at all; apply/rollback tools are hidden."
+  plan_retention_days:
+    type: int
+    default: 90
+    description: "Delete plan files older than this many days (in-flight plans are kept). 0 keeps plans forever."
+  link_changelog:
+    type: bool
+    default: true
+    description: "After apply and rollback, look up NetBox's own change log for the writes made and store the record ids and request ids in the journal."
+  audit_sinks:
+    type: list
+    default: []
+    description: "Forward audit events to syslog (udp/tcp/tls, json or CEF) and/or an HTTP collector (json or Splunk HEC). See docs/sinks.md."

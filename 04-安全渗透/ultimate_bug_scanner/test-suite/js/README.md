@@ -1,0 +1,40 @@
+# JavaScript/TypeScript UBS Mini Suite
+
+- `buggy/security.js` contains eval, innerHTML, and missing error handling.
+- `clean/security.js` shows the safe equivalents.
+- `buggy/resource-lifecycle.js` and `clean/resource-lifecycle.js` cover browser resource cleanup, including Blob/Object URL revocation.
+- `async_errors/async-event-emitter-listener-*.ts` covers TypeScript EventEmitter-style listeners that accidentally pass an `async` callback to `.on()` / `.once()` / `.addListener()`, leaving rejections unhandled.
+- `async_errors/async-event-listener-*.ts` covers TypeScript event listeners that accidentally pass an `async` callback to `addEventListener`, leaving rejections unhandled.
+- `async_errors/async-flatmap-*.ts` covers TypeScript `flatMap(async ...)` callbacks, where the returned Promise is not awaited or flattened after resolution.
+- `async_errors/async-foreach-*.ts` covers TypeScript async loops that accidentally pass an `async` callback to `forEach`, which cannot be awaited by the caller.
+- `async_errors/jsx-async-handler-*.tsx` covers JSX event props that accidentally pass an `async` callback directly, leaving React to ignore returned Promise rejections.
+- `async_errors/async-map-awaited-*.ts` covers TypeScript `await array.map(async ...)`, where `await` observes the array instead of the mapped promises.
+- `async_errors/async-map-ignored-*.ts` covers TypeScript `map(async ...)` loops whose returned promises are ignored instead of awaited or returned.
+- `async_errors/async-predicate-*.ts` covers TypeScript async predicates passed to `filter`/`some`/`every`/`find`, where the Promise is treated as truthy.
+- `async_errors/async-promise-executor-*.ts` covers TypeScript `new Promise(async ...)` executors that drop thrown errors.
+- `async_errors/async-reduce-*.ts` covers TypeScript `reduce(async ...)` callbacks, where the accumulator becomes a Promise instead of the expected value.
+- `async_errors/async-sort-comparator-*.ts` covers TypeScript `sort(async ...)` / `toSorted(async ...)` comparators, where the Promise result is not a numeric comparator value.
+- `async_errors/async-timer-*.ts` covers TypeScript timer callbacks that accidentally pass an `async` callback to `setTimeout`/`setInterval`, leaving rejections unhandled.
+- `async_errors/promise-all-foreach-*.ts` covers TypeScript `Promise.all(ids.forEach(...))` calls where `forEach` returns `undefined` instead of a promise list.
+- `async_errors/promise-all-map-*.ts` covers TypeScript `Promise.all(ids.map(...))` calls where a block-bodied `map` callback forgets to return the promise.
+- `async_errors/use-effect-async-*.tsx` covers TypeScript/React effects that accidentally return a Promise by passing an async callback directly to `useEffect`.
+- `security/dangerously-set-html-*.tsx` covers TypeScript/React XSS risk from unsanitized `dangerouslySetInnerHTML`.
+- `security/cookie-security-*.ts` covers TypeScript auth/session cookies missing `httpOnly`, `secure`, or safe SameSite settings.
+- `security/cors-credentials-*.ts` covers TypeScript/Node CORS configurations that combine credentials with wildcard or reflected origins.
+- `security/fetch-timeout-*.ts` covers TypeScript fetch calls that need AbortSignal cancellation/timeout wiring.
+- `security/header-injection-*.ts` covers TypeScript/Node response headers fed by request/query/body/header values without CR/LF stripping or encoding.
+- `security/jwt-verification-*.ts` covers TypeScript JWT code that decodes tokens or disables verification before trusting claims.
+- `security/message-event-origin-*.ts` covers TypeScript cross-origin message receivers that trust `event.data` without validating `event.origin`.
+- `security/open-redirect-*.tsx` covers TypeScript/Next.js redirects that route URL/query/header-derived targets without validating same-origin relative paths or an allowlist.
+- `security/path-traversal-*.ts` covers TypeScript/Node file read/download/write/upload sinks fed by request, route, body, upload filename, Express header accessors, or framework `headers()` paths without basename sanitization or resolved-root containment checks.
+- `security/random-security-*.ts` covers TypeScript token/session/OTP generation that accidentally uses `Math.random()`.
+- `security/sql-injection-*.ts` covers TypeScript SQL execution sinks fed by request-derived interpolated SQL strings, including Prisma raw unsafe APIs.
+- `security/ssrf-fetch-*.ts` covers TypeScript/Node outbound HTTP clients fed by request/query/header/host-derived URLs without allowlist validation.
+- `security/tls-verification-*.ts` covers TypeScript/Node HTTP/TLS clients that disable certificate verification directly or through local false/zero constants.
+- `security/archive-extraction-*.ts` covers TypeScript/Node archive extraction that writes entry paths into destination paths without containment validation.
+- `security/post-message-*.ts` covers TypeScript cross-origin messaging leaks from wildcard `postMessage` target origins.
+- `security/target-blank-*.tsx` covers TypeScript/React reverse-tabnabbing protection for JSX `target="_blank"` links.
+- `security/window-open-*.ts` covers TypeScript reverse-tabnabbing protection for `window.open(..., "_blank")`.
+- `security/error-code-constants-*.mjs` covers GH #102: SCREAMING_SNAKE error/enum codes under credential-named keys (`Object.freeze({ CREDENTIALS: 'E_CREDENTIALS' })`) must not be reported as hardcoded secrets, while real literals, uppercase keys, `Object.freeze` wrappers and `E_*` env fallbacks still are.
+- `resource_lifecycle/object-url-*.ts` covers TypeScript Blob/Object URL cleanup regression samples.
+- These smaller samples complement the full `test-suite/buggy` / `clean` collections and are used by the automated runner.

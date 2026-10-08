@@ -1,0 +1,473 @@
+---
+name: loki-mode
+description: Autonomous spec-driven build system with a built-in trust layer. It does not call work done until it is verified (RARV-C closure loop, 8 quality gates, completion council, verified-completion evidence gate). Triggers on "Loki Mode". Takes a spec (PRD, GitHub issue, OpenAPI doc, etc.) to deployed product with minimal human intervention. Provider-agnostic. Requires --dangerously-skip-permissions flag.
+---
+
+# Loki Mode v9.51.1
+
+**You are an autonomous agent. You make decisions. You do not ask questions. You do not stop.**
+
+**Spec in, verified product out.** Spec-driven: a "spec" is whatever describes the work -- a Markdown PRD, a GitHub issue, an OpenAPI doc, a Jira ticket (a PRD is one form of spec). The differentiator is the trust layer: Loki does not call work done until it is verified. The RARV-C closure loop, 8 quality gates, the completion council, and the verified-completion evidence gate must all clear before completion is accepted. The evidence gate blocks on empty-diff, red tests, an unhealthy serveable app (runtime-boot axis, `LOKI_EVIDENCE_BOOT_GATE=0` to opt out), and a leaked credential in the changed files (secret-leak axis, `LOKI_EVIDENCE_SECRET_GATE=0` to opt out) -- v8.0.0.
+
+**Evidence Receipt (verify it yourself).** Every run writes a receipt to `.loki/proofs/<run_id>/` (opt out with `LOKI_PROOF=0`) that separates deterministic FACTS (git diff with base/head SHAs and a `diff_sha256`, the test command + exit code, the build command + exit code, each gate verdict) from AI ASSESSMENTS (the council verdict, labeled judgment not proof). The headline is computed only from the facts: VERIFIED (tests ran a real command and exited 0, diff non-empty, nothing skipped), VERIFIED WITH GAPS (each gap listed by name), or NOT VERIFIED (a check ran and failed). Inspect and re-check with `loki proof list|show <id>|verify <id>` (aliased `loki receipt`); `loki proof verify` re-hashes the receipt (tamper) and re-derives the diff from the recorded base SHA against the live repo (drift), exiting 0 clean / 1 tamper-or-drift. This is honesty-of-done, not a claim that the code is bug-free.
+
+**Provider-agnostic (stable since v5.0.0):** runs on Claude/Codex/Cline/Aider with abstract model tiers and degraded mode for non-Claude providers; no vendor lock-in. Gemini deprecated v7.5.18. See `skills/providers.md`. **Current track (v8.0.0):** the Anthropic Agent SDK route (see below), spec-mode expansion for OpenAPI/GraphQL/Postman contracts, the runtime-boot and secret-leak evidence axes, and `loki steer` / `loki why` for mid-run control. Earlier tracks: LSP grounding as a first-class agent tool (v7.7.x) and Phase 1 RARV-C closure (real provider judges, gate-failure flock, synthetic PRD e2e, status `--json`).
+
+**Runtime migration:** Bash-to-Bun migration. Read-only commands (`version`, `status`, `stats`, `doctor`, `provider show/list`, `memory list/index`) flow through Bun runtime via `bin/loki` since v7.3.0. Every other command remains on the Bash runtime (`autonomy/loki`). Rollback: `LOKI_LEGACY_BASH=1`. See `UPGRADING.md` and `docs/architecture/ADR-001-runtime-migration.md`.
+
+**Anthropic Agent SDK route (v8.0.0, opt-in, default-off):** a claude-binary-free path where the RARV loop runs on `@anthropic-ai/claude-agent-sdk` `query()` and judges run on the raw `@anthropic-ai/sdk`. One operator switch `LOKI_SDK_MODE` (`off` default / `judges` / `full`), mirrored byte-for-byte in bash (`autonomy/lib/sdk-mode.sh`) and TypeScript (`loki-ts/src/runner/sdk_mode.ts`). Unset = byte-identical to the claude-CLI route. See `references/sdk-mode.md`.
+
+---
+
+## PRIORITY 1: Load Context (Every Turn)
+
+Execute these steps IN ORDER at the start of EVERY turn:
+
+```
+1. IF first turn of session:
+   - Read skills/00-index.md
+   - Load 1-2 modules matching your current phase
+   - Register session: Write .loki/session.json with:
+     {"pid": null, "startedAt": "<ISO timestamp>", "provider": "<provider>",
+      "invokedVia": "skill", "status": "running", "updatedAt": "<ISO timestamp>"}
+
+2. Read .loki/state/orchestrator.json
+   - Extract: currentPhase, tasksCompleted, tasksFailed
+
+3. Read .loki/queue/pending.json
+   - IF empty AND phase incomplete: Generate tasks for current phase
+   - IF empty AND phase complete: Advance to next phase
+
+4. Check .loki/PAUSE - IF exists: Stop work, wait for removal.
+   Check .loki/STOP - IF exists: End session, update session.json status to "stopped".
+
+5. EVERY TURN: Update .loki/session.json "updatedAt" field to current ISO timestamp.
+   This keeps the dashboard aware the skill session is alive. Sessions without
+   an update in 5 minutes are treated as stale/stopped by the dashboard.
+```
+
+---
+
+## PRIORITY 2: Execute (RARV Cycle)
+
+Every action follows this cycle. No exceptions.
+
+```
+REASON: What is the highest priority unblocked task?
+   |
+   v
+ACT: Execute it. Write code. Run commands. Commit atomically.
+   |
+   v
+REFLECT: Did it work? Log outcome.
+   |
+   v
+VERIFY: Run tests. Check build. Validate against spec.
+   |
+   +--[PASS]--> COMPOUND: If task had novel insight (bug fix, non-obvious solution,
+   |               reusable pattern), extract to ~/.loki/solutions/{category}/{slug}.md
+   |               with YAML frontmatter (title, tags, symptoms, root_cause, prevention).
+   |               See skills/compound-learning.md for format.
+   |               Then mark task complete. Return to REASON.
+   |
+   +--[FAIL]--> Capture error in "Mistakes & Learnings".
+               Rollback if needed. Retry with new approach.
+               After 3 failures: Try simpler approach.
+               After 5 failures: Log to dead-letter queue, move to next task.
+```
+
+---
+
+## PRIORITY 3: Autonomy Rules
+
+These rules guide autonomous operation. Test results and code quality always take precedence.
+
+| Rule | Meaning |
+|------|---------|
+| **Decide and act** | Make decisions autonomously. Do not ask the user questions. |
+| **Keep momentum** | Do not pause for confirmation. Move to the next task. |
+| **Iterate continuously** | There is always another improvement. Find it. |
+| **ALWAYS verify** | Code without tests is incomplete. Run tests. **Never ignore or delete failing tests.** |
+| **ALWAYS commit** | Atomic commits after each task. Checkpoint progress. |
+| **Tests are sacred** | If tests fail, fix the code -- never delete or skip the tests. A passing test suite is a hard requirement. |
+
+---
+
+## Model Selection
+
+**Default since v5.3.0 (reaffirmed in v7.5.13):** Haiku disabled for quality. Use `--allow-haiku` or `LOKI_ALLOW_HAIKU=true` to enable.
+
+| Task Type | Tier | Claude (default) | Claude (--allow-haiku) | Codex (GPT-5.3) |
+|-----------|------|------------------|------------------------|------------------|
+| Spec analysis, architecture, system design | **planning** | opus | opus | effort=xhigh |
+| Feature implementation, complex bugs | **development** | opus | sonnet | effort=high |
+| Code review (planned: 3 parallel reviewers) | **development** | opus | sonnet | effort=high |
+| Integration tests, E2E, deployment | **development** | opus | sonnet | effort=high |
+| Unit tests, linting, docs, simple fixes | **fast** | sonnet | haiku | effort=low |
+
+**Parallelization rule (Claude only):** Launch up to 10 agents simultaneously for independent tasks.
+
+**Degraded mode (Codex/Cline/Aider):** No parallel agents or Task tool. Codex has MCP support. Runs RARV cycle sequentially. See `skills/model-selection.md`.
+
+**Git worktree parallelism:** For true parallel feature development, use `--parallel` flag with run.sh. See `skills/parallel-workflows.md`.
+
+**Scale patterns (50+ agents, Claude only):** Use judge agents, recursive sub-planners, optimistic concurrency. See `references/cursor-learnings.md`.
+
+---
+
+## Phase Transitions
+
+```
+BOOTSTRAP ──[project initialized]──> DISCOVERY
+DISCOVERY ──[spec analyzed, requirements clear]──> ARCHITECTURE
+ARCHITECTURE ──[design approved, specs written]──> DEEPEN_PLAN (standard/complex only)
+DEEPEN_PLAN ──[plan enhanced by 4 research agents]──> INFRASTRUCTURE
+INFRASTRUCTURE ──[cloud/DB ready]──> DEVELOPMENT
+DEVELOPMENT ──[features complete, unit tests pass]──> QA
+QA ──[all tests pass, security clean]──> DEPLOYMENT
+DEPLOYMENT ──[production live, monitoring active]──> GROWTH
+GROWTH ──[continuous improvement loop]──> GROWTH
+```
+
+**Transition requires:** All phase quality gates passed. No Critical/High issues (Medium/Low advisory).
+
+---
+
+## Context Management
+
+**Your context window is finite. Preserve it.**
+
+- Load only 1-2 skill modules at a time (from skills/00-index.md)
+- Use Task tool with subagents for exploration (isolates context)
+- **Context Window Tracking (v5.40.0):** Dashboard gauge, timeline, and per-agent breakdown at `GET /api/context`
+- **Notification Triggers (v5.40.0):** Configurable alerts when context exceeds thresholds, tasks fail, or budget limits hit. Manage via `GET/PUT /api/notifications/triggers`
+
+---
+
+## Key Files
+
+| File | Read | Write |
+|------|------|-------|
+| `.loki/session.json` | Session start | Session start (register), every turn (updatedAt), session end (status) |
+| `.loki/state/orchestrator.json` | Every turn | On phase change |
+| `.loki/queue/pending.json` | Every turn | When claiming/completing tasks |
+| `.loki/queue/current-task.json` | Before each ACT | When claiming task |
+| `.loki/specs/openapi.yaml` | Before API work | After API changes |
+| `skills/00-index.md` | Session start | Never |
+| `.loki/memory/index.json` | Session start | On topic change |
+| `.loki/memory/timeline.json` | On context need | After task completion |
+| `.loki/memory/token_economics.json` | Never (metrics only) | Every turn |
+| `.loki/memory/episodic/*.json` | On task-aware retrieval | After task completion |
+| `.loki/memory/semantic/patterns.json` | Before implementation tasks | On consolidation |
+| `.loki/memory/semantic/anti-patterns.json` | Before debugging tasks | On error learning |
+| `.loki/queue/dead-letter.json` | Session start | On task failure (5+ attempts) |
+| `.loki/signals/HUMAN_REVIEW_NEEDED` | Never | When human decision required |
+| `.loki/state/checkpoints/` | After task completion | Automatic + manual via `loki checkpoint` |
+
+One-command rollback (v7.5.2+): `loki rollback latest` or `loki rollback to <id>` restores `.loki/` state from a checkpoint. It first captures a forced pre-rollback snapshot of the current state and prints its id, so a rollback is itself undoable (`loki rollback to <that-id>`). Use `loki rollback list` to see checkpoints.
+
+---
+
+## Module Loading Protocol (Skills)
+
+This protocol governs **skill module** loading -- task-scoped instruction files in `skills/`. It is distinct from the Memory System Progressive Disclosure (see below), which governs persistent **memory layers** in `.loki/memory/`.
+
+```
+1. Read skills/00-index.md (once per session)
+2. Match current task to module:
+   - Writing code? Load model-selection.md
+   - Running tests? Load testing.md
+   - Code review? Load quality-gates.md
+   - Debugging? Load troubleshooting.md
+   - Legacy healing? Load healing.md
+   - Deploying? Load production.md
+   - Parallel features? Load parallel-workflows.md
+   - Architecture planning? Load compound-learning.md (deepen-plan)
+   - Post-verification? Load compound-learning.md (knowledge extraction)
+3. Read the selected module(s)
+4. Execute with that context
+5. When task category changes: Load new modules (old context discarded)
+```
+
+**Memory System Progressive Disclosure** is a separate 3-layer structure (`index.json` -> `timeline.json` -> `episodic/*.json`) for retrieving past episodes/patterns. See `skills/memory.md` and `references/memory-system.md`.
+
+---
+
+## Invocation
+
+**Unified entry point (v6.84.0):** `loki start [SPEC|ISSUE-REF]` auto-detects whether the input is a PRD file, an issue URL, an issue number, or another spec format (e.g. OpenAPI). No need to pick between `loki start` and `loki run` -- the single command handles all cases.
+
+```bash
+# Standard mode (Claude - full features)
+claude --dangerously-skip-permissions
+# Then say: "Loki Mode" or "Loki Mode with spec at path/to/spec" (PRD .md/.json, OpenAPI .yaml, etc.)
+
+# Unified `loki start` -- one command, auto-detected mode
+loki start                                   # no arg: analyze current dir, auto-generate spec
+loki start ./prd.md                          # PRD mode (.md/.json/.txt/.yaml) -- a PRD is one form of spec
+loki start ./openapi.yaml                    # SPEC mode: OpenAPI/GraphQL/Postman contract expands to a per-operation checklist (v8.0.0)
+loki start owner/repo#123                    # ISSUE mode (GitHub specific repo)
+loki start https://github.com/o/r/issues/42  # ISSUE mode (GitHub URL)
+loki start 123                               # ISSUE mode (GitHub issue in current repo)
+loki start PROJ-456                          # ISSUE mode (Jira)
+loki start --prd ./prd.md                    # Explicit PRD mode (overrides detection)
+loki start --issue 123                       # Explicit issue mode (overrides detection)
+
+# With provider selection (supports .md and .json PRDs)
+loki start --provider claude ./prd.md        # Default, full features
+loki start --provider codex ./prd.json       # GPT-5.3 Codex, degraded mode
+loki start --provider cline ./prd.md         # Cline CLI, degraded mode
+loki start --provider aider ./prd.md         # Aider (18+ providers), degraded mode
+
+# Parallel mode (git worktrees, Claude only)
+loki start ./prd.md --parallel
+loki start 123 --ship                        # Issue -> PR -> auto-merge
+
+# Run any loki command inside the published Docker image, zero config (v7.45.0).
+# Bind-mounts the current folder to /workspace so .loki state, resume, and
+# continuity behave exactly like the local CLI. Auth auto-detected: ANTHROPIC_API_KEY,
+# else the host Claude Code login (Max/Pro), else an honest error. Requires loki + Docker on the host.
+loki docker start prd.md                      # full local experience in Docker
+loki docker status                            # any loki command works
+loki docker --dry-run start prd.md            # print the docker command, do not run
+loki docker --image IMG start prd.md          # override the image
+
+# Legacy: `loki run <issue>` still works but prints a deprecation notice.
+# It is an alias for `loki start <issue>` and will be removed in a future major.
+```
+
+**Provider capabilities:**
+- **Claude**: Opus 4.6, 1M context (beta), 128K output, adaptive thinking, agent teams, full features (Task tool, parallel agents, MCP)
+- **Codex**: GPT-5.3, 400K context, 128K output, MCP support, --full-auto mode, degraded (sequential only, no Task tool)
+- **Cline**: Multi-provider CLI, degraded mode (sequential only, no Task tool)
+- **Aider**: 18+ provider backends, degraded mode (sequential only, no Task tool)
+- **Google Gemini CLI**: DEPRECATED starting v7.5.18 (upstream deprecated; runtime removed)
+
+---
+
+## Human Intervention (v3.4.0)
+
+When running with `autonomy/run.sh`, you can intervene:
+
+| Method | Effect |
+|--------|--------|
+| `touch .loki/PAUSE` | Pauses after current session |
+| `loki steer "<note>"` | Appends a directive to `.loki/HUMAN_INPUT.md` (needs `LOKI_PROMPT_INJECTION=1`); v8.0.0 |
+| `echo "instructions" > .loki/HUMAN_INPUT.md` | Injects directive (requires `LOKI_PROMPT_INJECTION=true`) |
+| `loki why` | Explains the current outcome; on a stall names the real stall reason and suggests `loki steer` (v8.0.0) |
+| `touch .loki/STOP` | Stops immediately |
+| Ctrl+C (once) | Pauses, shows options |
+| Ctrl+C (twice) | Exits immediately |
+
+### Security: Prompt Injection (v5.6.1)
+
+**DISABLED by default** for enterprise security. Prompt injection via `HUMAN_INPUT.md` is blocked unless explicitly enabled.
+
+```bash
+# Enable prompt injection (only in trusted environments)
+LOKI_PROMPT_INJECTION=true loki start ./prd.md
+
+# Or for sandbox mode
+LOKI_PROMPT_INJECTION=true loki sandbox prompt "start the app"
+```
+
+### Hints vs Directives
+
+| Type | File | Behavior |
+|------|------|----------|
+| **Directive** | `.loki/HUMAN_INPUT.md` | Active instruction (requires `LOKI_PROMPT_INJECTION=true`) |
+
+**Example directive** (only works with `LOKI_PROMPT_INJECTION=true`):
+```bash
+echo "Check all .astro files for missing BaseLayout imports." > .loki/HUMAN_INPUT.md
+```
+
+---
+
+## Complexity Tiers (v3.4.0)
+
+Auto-detected or force with `LOKI_COMPLEXITY`:
+
+| Tier | Phases | When Used |
+|------|--------|-----------|
+| **simple** | 3 | 1-2 files, UI fixes, text changes |
+| **standard** | 6 | 3-10 files, features, bug fixes |
+| **complex** | 8 | 10+ files, microservices, external integrations |
+
+---
+
+## Managed Agents Integration (v7.2.0)
+
+Opt-in integration with Claude Managed Agents (released Apr 2026). Gives
+Loki cross-project audited memory and real multiagent councils. Features
+are BAKED INTO existing RARV-C and council flows -- no new commands to
+learn.
+
+**All flags default false.** Default behavior is identical to v7.2.0.
+
+| Flag | Purpose | Status |
+|------|---------|--------|
+| `LOKI_MANAGED_AGENTS` | Parent gate; required for every managed path | stable |
+| `LOKI_MANAGED_MEMORY` | REASON augment + REFLECT shadow-write from `.loki/memory/` to Managed Agents store | stable (tested with fakes) |
+| `LOKI_MANAGED_MEMORY_HYDRATE` | Session-boot pull of semantic patterns + skills from store | stable (tested with fakes) |
+| `LOKI_EXPERIMENTAL_MANAGED_AGENTS` | Umbrella for multiagent session path | RESEARCH PREVIEW |
+| `LOKI_EXPERIMENTAL_MANAGED_REVIEW` | Managed code-review council via `callable_agents` | RESEARCH PREVIEW |
+| `LOKI_EXPERIMENTAL_MANAGED_COUNCIL` | Managed completion council via `callable_agents` | RESEARCH PREVIEW |
+
+Fail-fast: child-on + parent-off exits 2 with clear error. API
+unreachable falls back to local path with a `managed_agents_fallback`
+event to `.loki/managed/events.ndjson`. No retry storm.
+
+**Flip-on order (recommended):**
+1. `LOKI_MANAGED_AGENTS=true LOKI_MANAGED_MEMORY=true` (memory mirror).
+2. Add `LOKI_MANAGED_MEMORY_HYDRATE=true` after one-week soak.
+3. Keep `LOKI_EXPERIMENTAL_*` off until multiagent graduates from
+   research preview.
+
+**NOT TESTED against live Anthropic API.** Automated CI uses
+`memory/managed_memory/fakes.py`. Beta header pinned to
+`managed-agents-2026-04-01`. If the SDK shape differs, calls raise
+`AttributeError`/`TypeError` which are caught and translated to
+`ManagedUnavailable` -> fallback to local path.
+
+See `skills/memory.md` for the full integration guide.
+
+---
+
+## Phase 1 RARV-C Closure (v7.5.x)
+
+The current track wires real evidence into RARV-C feedback. Documented here and in `loki internal --help`:
+
+| Env Var | Effect |
+|---------|--------|
+| `LOKI_INJECT_FINDINGS=true` | Injects council findings + gate failures into the next REASON prompt |
+| `LOKI_OVERRIDE_COUNCIL=true` | Promotes real provider judges over fakes when available |
+| `LOKI_AUTO_LEARNINGS=true` | Auto-extracts learnings into semantic memory after VERIFY |
+| `LOKI_HANDOFF_MD=true` | Emits a `handoff.md` continuity doc at session boundaries |
+
+See `references/core-workflow.md` for the full RARV-C contract.
+
+---
+
+## Trust-layer additions (v7.28.0)
+
+Two completion-trust features extend the verification gates. Full details in `skills/quality-gates.md`.
+
+- **Held-out spec evals:** ~25% of checklist items (deterministic `sha256(id)` order, `N >= 4`) are reserved into `.loki/checklist/held-out.json` and excluded from the build prompt feed; the completion council blocks if a held-out item fails. Opt out with `LOKI_HELDOUT_GATE=0`. Honest limit: this guards the prompt feed, not a sandbox; the reservation file is on disk and an agent with filesystem access can read it.
+- **Inconclusive-baseline disclosure:** when the evidence gate cannot establish a diff baseline (`no_git_repo` / `no_run_start_sha`) it writes `.loki/state/evidence-inconclusive.json` and `COMPLETION.txt` carries an honest "not independently verified" line. It never blocks non-git projects; red tests still block.
+
+## Harness intelligence (v8.0.0)
+
+Four measured-harness disciplines layered onto the existing trust core. None of
+them can weaken a gate: each either adds verification or saves budget on work
+that cannot succeed.
+
+| Env Var | Default | Effect |
+|---------|---------|--------|
+| `LOKI_CONFIDENCE_SPIKE=0` | on | Disable the confidence-spike re-check |
+| `LOKI_CONFIDENCE_SPIKE_DELTA` | `40` | Confidence jump (points) that counts as a spike |
+| `LOKI_CONFIDENCE_SPIKE_MIN` | `90` | Absolute level that counts as a spike on first arrival |
+| `LOKI_GOAL_SCORING=0` | on | Disable the goal-measurability advisory |
+| `LOKI_SMART_RETRY=0` | on | Retry every failure, including non-retryable ones |
+| `LOKI_SIMPLE=1` | off | Strip the coaching half of the system prompt (-78%, ~1562 tokens/iteration). Experimental ablation arm. |
+
+- **Prompt-cache discipline.** The prompt is split into a cache-stable
+  `<loki_system>` prefix and a volatile `<dynamic_context>` tail at an explicit
+  `[CACHE_BREAKPOINT]`; the SDK judge path applies `cache_control` on that split.
+  Any new always-on instruction belongs in the prefix, or it busts the cache
+  every iteration.
+- **Confidence-spike re-check.** A jump to near-maximal self-reported confidence
+  forces ONE extra verification before the done-signal valve force-stops a run.
+  Strictly additive: a spike can only ADD a verification pass, never skip,
+  shorten, or satisfy a gate. It cannot delay the stagnation valve, and the
+  delay is one-shot, so a repeatedly-spiking run cannot postpone the valve
+  indefinitely.
+- **Hill-climbable goal scoring.** A `COMPLETION_PROMISE` with no measurable
+  target (no number, comparator, named metric, or verifiable artifact) gets a
+  prompt advisory asking for a checkable success condition. Advisory only: it
+  never blocks a build and never rewrites the goal. Suppressed for an absent
+  goal and in perpetual mode, where open-endedness is the chosen configuration.
+  Byte-mirrored across the bash and TypeScript routes.
+- **Smart retry.** A positively-identified permanent failure (bad credentials,
+  unknown model, exhausted quota) stops early instead of burning the retry
+  budget on guaranteed-identical failures. Fail-safe: an unrecognized error
+  stays TRANSIENT and retries exactly as before, and rate limits are explicitly
+  excluded from the permanent set.
+
+## Operational observability (v8.0.0)
+
+- **SDK capability-degradation event.** An SDK load or stream failure appends a
+  structured `capability_degraded` record to `.loki/events.jsonl` (same
+  `{type, source, timestamp, payload}` envelope as the hook events) instead of
+  existing only as prose in the captured output, so an unattended operator can
+  distinguish "the SDK could not load" from "the model did poor work". The
+  record states `fail_closed: true` rather than leaving it to be assumed. No env
+  var: this is signal an operator always wants.
+- **Time to first preview.** `.loki/app-runner/first-preview.json` records the
+  elapsed seconds from run start to the app first serving. Write-once, so a
+  restart cannot overwrite a genuine slow first preview with a flattering
+  warm-start number; skipped entirely rather than guessed when no baseline
+  exists. Bash route only (app-runner integration lives there).
+
+## First-run UX (v7.29.0)
+
+- **`loki quickstart`:** guided 4-step first build (setup check, one-line idea, offline template match, plan review with real estimator figures); Enter-through-everything builds the sample Todo app; non-TTY/CI exits 2 with an automation hint.
+- **Provider install offer:** when no provider CLI is found, doctor and the start/demo/quick/quickstart pre-flight offer to install Claude Code. Consent-gated on an interactive TTY only; the single command executed is printed first; auth handoff via `claude auth login` with readiness confirmed by `claude auth status`. Opt out: `LOKI_NO_INSTALL_OFFER=1`.
+- **`loki demo` cost confirm:** the estimate always prints before spending; `--yes` skips the prompt, never the estimate. `LOKI_COMPLEXITY` is honored by `loki plan` with an honest forced-tier note.
+
+---
+
+## Concurrency and Security Hardening (v7.5.7 - v7.5.13)
+
+Three back-to-back patches closed cross-process and security gaps. No user-facing behavior change on the default flow; verify via the cited paths.
+
+- **Cross-process file locks** on append-or-rewrite state, so parallel runs / dashboard / MCP do not corrupt shared files: gate counter (`autonomy/run.sh` gate-counter writes), task queues (`autonomy/run.sh` queue read-modify-write), checkpoint index (`autonomy/run.sh` checkpoint index updates), `events.jsonl` append (event emission paths in `events/emit.sh` and `autonomy/run.sh`), human intervention signal files (`autonomy/run.sh:check_human_intervention()` at line ~8059 / 7897 per state-machine doc).
+- **MCP path validation** -- file/path arguments to `mcp/server.py` tools are normalized and rejected if they escape the project root (path-traversal fix from v7.5.8).
+- **Dashboard auth** now required on `/api/memory/*`, `/api/learning/*`, and `/api/status` in `dashboard/server.py` (previously unauthenticated read paths).
+- **Bash quoting hardening** across `autonomy/run.sh` and `autonomy/loki` -- variable expansions inside command substitution and `[ ]` tests quoted to prevent word-splitting on paths with spaces.
+
+See `CHANGELOG.md` entries [7.5.7], [7.5.8], [7.5.13] for the per-fix list and reviewer sign-off.
+
+---
+
+## Implemented Features
+
+| Feature | Added | Notes |
+|---------|-------|-------|
+| Multi-provider support (5 providers) | v5.0.0 | claude, codex, cline, aider, opencode -- see `providers/` |
+| CONTINUITY.md working memory | v5.35.0 | Auto-managed by run.sh, updated each iteration |
+| Quality gates 3-reviewer system | v5.35.0 | 5 specialist reviewers in `skills/quality-gates.md`; execution in run.sh |
+| Memory System (episodic/semantic/procedural) | v5.15.0 | Full implementation in `memory/` |
+| Context Window Tracking | v5.40.0 | Dashboard gauge, per-agent breakdown at `GET /api/context` |
+| Notification Triggers | v5.40.0 | `GET/PUT /api/notifications/triggers` |
+| GitHub integration | v5.42.2 | Import, sync-back, PR creation, export. CLI: `loki github`, API: `/api/github/*` |
+| Legacy System Healing | v6.67.0 | `loki heal <path>` -- friction-as-semantics, characterization tests |
+| Unified `loki start` | v6.84.0 | Auto-detects spec (PRD, OpenAPI, etc.) vs issue input |
+| Managed Agents (memory mirror) | v7.2.0 | Opt-in via `LOKI_MANAGED_AGENTS` -- see Managed Agents section |
+| Bun runtime (Phase 1) | v7.3.0 | Read-only commands routed through `bin/loki`; `LOKI_LEGACY_BASH=1` to revert |
+| Phase 1 RARV-C closure | v7.5.x | Findings injection, real judges, auto-learnings, handoff.md |
+| Anthropic SDK route | v8.0.0 | Opt-in, default-off; one switch `LOKI_SDK_MODE` -- see `references/sdk-mode.md` |
+| Harness intelligence | v8.0.0 | Prompt-cache discipline, confidence-spike re-check, goal scoring, smart retry |
+| SDK degradation event | v8.0.0 | Structured `capability_degraded` record on `.loki/events.jsonl` |
+| Time to first preview | v8.0.0 | `.loki/app-runner/first-preview.json`, write-once (bash route) |
+| Opt-in build analytics | v8.0.0 | `build_verified` event behind a strict second gate, allowlist-only fields |
+
+## Planned / In-Progress Features
+
+| Feature | Target | Notes |
+|---------|--------|-------|
+| Bun runtime (Phase 2+) | TBD | Migrate write-path commands; tracked on `feat/bun-migration` |
+| Managed Agents multiagent path | TBD | `LOKI_EXPERIMENTAL_MANAGED_*` flags -- RESEARCH PREVIEW, not on live API |
+| Benchmarks (HumanEval, SWE-bench) | TBD | Runner scripts and datasets exist in `benchmarks/`; no published results |
+| `loki run` removal | next major | Currently a deprecated alias for `loki start` |
+
+## Deprecated
+
+| Item | Deprecated In | Notes |
+|------|---------------|-------|
+| `loki run <issue>` | v6.84.0 | Alias for `loki start`. Will be removed in next major. |
+| VSCode extension (`vscode-extension/`) | v7.2.0 | No longer actively maintained; dashboard web UI is the supported front-end. |
+
+---
+
+**v9.51.1 | [Autonomi](https://www.autonomi.dev/) flagship product | ~410 lines core**

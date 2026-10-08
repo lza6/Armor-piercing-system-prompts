@@ -1,0 +1,75 @@
+{{- if .Values.security.networkPolicy.enabled }}
+# Control plane: accept ingress on the dashboard port from anywhere in the
+# namespace. Tracks config.dashboardPort so a non-default port is not silently
+# firewalled off (the port was previously hardcoded 57374).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "autonomi.fullname" . }}-controlplane
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controlplane
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "autonomi.controlplane.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - ports:
+        - port: {{ .Values.config.dashboardPort | int }}
+          protocol: TCP
+  # EGRESS DEFAULTS TO ALLOW-ALL, and that is a deliberate default rather than an
+  # oversight: the engine must reach a hosted provider API (see
+  # `loki doctor --airgap` for the exact host inventory), and a chart that
+  # blocked it by default would leave every new install unable to run a build
+  # with no obvious cause.
+  #
+  # But `- {}` under policyTypes: Egress restricts NOTHING, so an operator who
+  # installs the NetworkPolicy reasonably assumes egress is controlled when it is
+  # not. Air-gapped and regulated environments need to pin it. Set
+  # security.networkPolicy.egress to a real rule list to do that, for example:
+  #
+  #   security:
+  #     networkPolicy:
+  #       egress:
+  #         - to:
+  #             - namespaceSelector:
+  #                 matchLabels: {kubernetes.io/metadata.name: kube-system}
+  #           ports: [{port: 53, protocol: UDP}]      # DNS
+  #         - to:
+  #             - ipBlock: {cidr: 10.0.0.0/8}          # in-network model gateway
+  #
+  # Run `loki doctor --airgap` first: it names every host the engine contacts,
+  # which is what the rule list has to cover.
+  egress:
+    {{- with .Values.security.networkPolicy.egress }}
+    {{- toYaml . | nindent 4 }}
+    {{- else }}
+    - {}
+    {{- end }}
+---
+# Workers: accept ingress only from the control plane
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "autonomi.fullname" . }}-worker
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "autonomi.worker.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "autonomi.controlplane.selectorLabels" . | nindent 14 }}
+  egress:
+    - {}
+{{- end }}

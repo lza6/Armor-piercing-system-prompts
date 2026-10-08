@@ -1,0 +1,39 @@
+# Autonomous AI-Driven Penetration Testing
+# Let the AI decide each step dynamically
+
+name: autonomous
+description: Fully autonomous AI-driven penetration test
+
+mode: autonomous  # Special mode - AI makes all decisions
+
+initial_phase: reconnaissance
+
+# AI will use these guidelines
+ai_guidelines:
+  - "Start with passive reconnaissance"
+  - "Progress from low-impact to high-impact actions"
+  - "Always analyze results before next step"
+  - "Stop when no new findings or max_steps reached"
+  - "Prioritize critical and high severity findings"
+  - "Respect scope and safety constraints"
+
+max_steps: 25
+max_duration_minutes: 120
+
+# Available agents
+agents:
+  planner: enabled
+  tool_selector: enabled
+  analyst: enabled
+  reporter: enabled
+
+# Final report
+report:
+  format: markdown
+  include_ai_trace: true
+  include_reasoning: true
+
+settings:
+  safe_mode: true
+  require_confirmation: true  # User confirms each major action
+  save_intermediate: true

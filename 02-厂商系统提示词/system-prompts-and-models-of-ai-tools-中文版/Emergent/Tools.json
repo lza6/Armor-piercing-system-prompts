@@ -1,0 +1,235 @@
+
+```
+可用工具及其 JSON SCHEMAS：
+
+1. mcp_bulk_file_writer
+   描述: 同时写入多个文件以提高性能
+   Parameters:
+   {
+     "files": {
+       "type": "array",
+       "items": {
+         "type": "object",
+         "properties": {
+           "path": {"type": "string", "description": "文件的绝对路径"},
+           "content": {"type": "string", "description": "文件的原始文本内容"}
+         },
+         "required": ["path", "content"]
+       }
+     },
+     "capture_logs_backend": {"type": "boolean", "default": false},
+     "capture_logs_frontend": {"type": "boolean", "default": false},
+     "status": {"type": "boolean", "default": false}
+   }
+
+2. emergent_integrations_manager
+   描述: 获取用于 llm 集成（openai, anthropic, google）的 Emergent LLM 密钥
+   Parameters: {}
+
+3. extract_file_tool
+   描述: 从文档文件中提取特定的结构化数据
+   Supported formats: .txt, .js, .py, .html, .css, .json, .xml, .csv, .md, .pdf, .docx, .xlsx, .pptx, .png, .jpg, .jpeg, .webp, .heic, .heif, .wav, .mp3, .mpeg, .aiff, .aac, .ogg, .flac, .mov, .mpeg, .mp4, .mpg, .avi, .wmv, .mpegps, .flv
+   Parameters:
+   {
+     "source": {"type": "string", "description": "直接 URL 或本地文件路径"},
+     "prompt": {"type": "string", "description": "要提取的具体数据"},
+     "headers": {"type": "object", "description": "额外的 HTTP 标头（可选）"},
+     "timeout": {"type": "integer", "default": 30}
+   }
+
+4. ask_human
+   描述: 请求人类用户澄清、提供额外信息、确认或反馈
+   Parameters:
+   {
+     "question": {"type": "string", "description": "要向人类提出的问题"}
+   }
+
+5. analyze_file_tool
+   描述: 对文档文件进行 AI 驱动的分析，以获取见解和模式
+   Supported formats: 与 extract_file_tool 相同
+   Parameters:
+   {
+     "source": {"type": "string"},
+     "analysis_type": {"type": "string", "enum": ["general", "structure", "content", "sentiment", "security", "performance", "compliance", "custom"]},
+     "query": {"type": "string", "description": "具体的分析问题（可选）"},
+     "headers": {"type": "object"},
+     "timeout": {"type": "integer", "default": 30}
+   }
+
+6. mcp_glob_files
+   描述: 使用 glob 模式进行快速文件模式匹配
+   Parameters:
+   {
+     "pattern": {"type": "string", "description": "用于匹配文件的 glob 模式"},
+     "path": {"type": "string", "description": "要搜索的目录（可选）"}
+   }
+
+7. execute_bash
+   描述: 在终端中执行 bash 命令
+   Parameters:
+   {
+     "command": {"type": "string", "description": "要执行的 bash 命令"}
+   }
+
+8. grep_tool
+   描述: 使用 ripgrep 和正则表达式模式搜索文件内容
+   Parameters:
+   {
+     "pattern": {"type": "string", "description": "要搜索的正则表达式模式"},
+     "path": {"type": "string", "description": "要搜索的目录或文件"},
+     "case_sensitive": {"type": "boolean"},
+     "context_lines": {"type": "integer"},
+     "include": {"type": "string", "description": "要包含的文件模式"}
+   }
+
+9. mcp_view_file
+   描述: 查看文件或目录内容
+   Parameters:
+   {
+     "path": {"type": "string", "description": "要查看的文件的绝对路径"},
+     "view_range": {"type": "array", "items": {"type": "integer"}, "description": "可选的行范围 [start, end]"}
+   }
+
+10. mcp_search_replace
+    描述: 在文件中搜索并替换精确字符串
+    Parameters:
+    {
+      "path": {"type": "string"},
+      "old_str": {"type": "string", "description": "要替换的精确字符串 - 必须完全匹配"},
+      "new_str": {"type": "string", "description": "替换字符串"},
+      "replace_all": {"type": "boolean", "default": false},
+      "run_lint": {"type": "boolean", "default": false},
+      "status": {"type": "boolean", "default": false}
+    }
+
+11. mcp_lint_python
+    描述: 使用 ruff 进行 Python linting（代码规范检查）
+    Parameters:
+    {
+      "path_pattern": {"type": "string", "description": "文件/目录路径或 glob 模式"},
+      "fix": {"type": "boolean", "default": false},
+      "exclude_patterns": {"type": "array", "items": {"type": "string"}}
+    }
+
+12. mcp_lint_javascript
+    描述: 使用 ESLint 进行 JavaScript/TypeScript linting（代码规范检查）
+    Parameters:
+    {
+      "path_pattern": {"type": "string"},
+      "fix": {"type": "boolean", "default": false},
+      "exclude_patterns": {"type": "array", "items": {"type": "string"}}
+    }
+
+13. mcp_create_file
+    描述: 创建具有指定内容的新文件
+    Parameters:
+    {
+      "path": {"type": "string", "description": "新文件的绝对路径"},
+      "file_text": {"type": "string", "description": "新文件的内容"},
+      "run_lint": {"type": "boolean", "default": false}
+    }
+
+14. mcp_insert_text
+    描述: 在文件的指定行号插入文本
+    Parameters:
+    {
+      "path": {"type": "string"},
+      "new_str": {"type": "string"},
+      "insert_line": {"type": "integer", "minimum": 0},
+      "run_lint": {"type": "boolean", "default": false}
+    }
+
+15. finish
+    描述: 提供简明摘要以确保清晰并用于交接
+    Parameters:
+    {
+      "summary": {"type": "string", "description": "根据给定的输入和示例提供摘要"}
+    }
+
+16. get_assets_tool
+    描述: 从数据库检索当前作业/运行的附加资产
+    Parameters: {}
+
+17. screenshot_tool
+    描述: 使用 Playwright 执行屏幕截图命令
+    Parameters:
+    {
+      "page_url": {"type": "string"},
+      "script": {"type": "string", "description": "完整的 Python Playwright 脚本"},
+      "capture_logs": {"type": "boolean", "default": false}
+    }
+
+18. mcp_view_bulk
+    描述: 按顺序查看多个文件或目录
+    Parameters:
+    {
+      "paths": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 20}
+    }
+
+19. web_search_tool_v2
+    描述: 在网络上搜索当前信息、近期事件或主题
+    Parameters:
+    {
+      "query": {"type": "string"},
+      "search_context_size": {"type": "string", "enum": ["low", "medium", "high"]}
+    }
+
+20. think
+    描述: 思考某事 - 将思考附加到日志中
+    Parameters:
+    {
+      "thought": {"type": "string"}
+    }
+
+21. crawl_tool
+    描述: 从网页上抓取、爬取、检索、获取或提取完整内容
+    Parameters:
+    {
+      "url": {"type": "string"},
+      "extraction_method": {"type": "string", "enum": ["scrape"]},
+      "formats": {"type": "string", "enum": ["html", "markdown", "json"], "default": "markdown"},
+      "question": {"type": "string", "default": "text"}
+    }
+
+22. vision_expert_agent
+    描述: 用于选择和返回相关图片 URL 的 AI 助手
+    Parameters:
+    {
+      "task": {"type": "string", "description": "交给熟练代理执行的详细任务"}
+    }
+
+23. auto_frontend_testing_agent
+    描述: 使用 playwright 和浏览器自动化进行 UI 测试的专家代理
+    Parameters:
+    {
+      "task": {"type": "string"}
+    }
+
+24. deep_testing_backend_v2
+    描述: 使用 curl 测试后端并使用 playwright 测试 UI 的专家代理
+    Parameters:
+    {
+      "task": {"type": "string"}
+    }
+
+25. integration_playbook_expert_v2
+    描述: 创建用于集成第三方 API 和服务的综合手册（playbooks）
+    Parameters:
+    {
+      "task": {"type": "string"}
+    }
+
+26. support_agent
+    描述: 帮助回答有关 Emergent 平台的任何问题
+    Parameters:
+    {
+      "task": {"type": "string"}
+    }
+
+27. deployment_agent
+    描述: 用于调试 Emergent 平台上本地部署问题的专家代理
+    Parameters:
+    {
+      "task": {"type": "string"}
+    }
+```

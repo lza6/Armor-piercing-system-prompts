@@ -1,0 +1,52 @@
+{
+  "skill": "judgment-training",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "这个领域我很陌生，怎么快速建立判断力，不被忽悠？",
+      "expected_behavior": "激活 judgment-training, 从基础学科重建 + 可推导性检验 + 留白思考",
+      "notes": "正面场景: 建立判断力"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "有人满口大词讲区块链，怎么判断他是真懂还是包装？",
+      "expected_behavior": "激活 judgment-training, 用『能否从基础推导/能否向小孩讲明白』检验",
+      "notes": "正面场景: 可信度评估"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我想提升自己的决策能力，该从哪里入手？",
+      "expected_behavior": "激活 judgment-training, 给判断力训练路径(基础学科+心智模型+留白)",
+      "notes": "正面场景: 能力训练"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "这个风水大师说我转运了，我要不要信？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 rational-buddhism (可证伪/亲测标准)",
+      "notes": "跨 skill 混淆诱饵: 思考能力 vs 验证标准"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我写一段 Python 排序代码",
+      "expected_behavior": "编码任务, 不调用判断力训练流程",
+      "notes": "诱饵: 非判断场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我导师说得都对，我该直接听吗？",
+      "expected_behavior": "边缘: 激活, 但提示权威意见也需要过一遍可推导性检验; 若用户只想执行则简化",
+      "notes": "边界: 尊重权威 vs 独立验证"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

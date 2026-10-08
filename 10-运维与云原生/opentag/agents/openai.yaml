@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenTag Slack Teammate"
+  short_description: "Run a persistent Slack teammate on a paired Runner"
+  default_prompt: "Use $opentag to deploy or verify the self-hosted Slack teammate, pair its local ACP Runner to the trusted Control Plane, and keep GitHub publication and delivery claims evidence-backed."

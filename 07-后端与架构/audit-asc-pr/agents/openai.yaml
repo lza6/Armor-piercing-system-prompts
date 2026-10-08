@@ -1,0 +1,4 @@
+interface:
+  display_name: "Audit ASC Pull Request"
+  short_description: "Review ASC CLI PRs and identify concrete defects"
+  default_prompt: "Use $audit-asc-pr to audit this ASC CLI pull request end to end."

@@ -1,0 +1,274 @@
+# Compound Learning & Deep Planning
+
+**Inspired by:** Compound Engineering Plugin (Every/Kieran Klaassen) -- knowledge compounding philosophy where each unit of work makes subsequent work easier.
+
+---
+
+## Knowledge Compounding (Post-VERIFY)
+
+After VERIFY passes, evaluate whether the task produced a **novel insight** worth preserving. Extract structured solutions that feed back into future planning.
+
+### When to Compound
+
+Extract a solution when the task involved:
+- Fixing a bug with a non-obvious root cause
+- Solving a problem that required research or multiple attempts
+- Discovering a reusable pattern or anti-pattern
+- Hitting a pitfall that future projects could avoid
+- Finding a performance optimization worth documenting
+
+### When NOT to Compound
+
+Skip compounding for:
+- Trivial changes (typos, formatting, renaming)
+- Standard CRUD operations
+- Changes with no novel insight
+- Tasks that completed on first attempt with obvious approach
+
+### Solution File Format
+
+Write to `~/.loki/solutions/{category}/{slug}.md` where slug is the title in kebab-case.
+
+```yaml
+---
+title: "Connection pool exhaustion under load"
+category: performance
+tags: [database, pool, timeout, postgres]
+symptoms:
+  - "ECONNREFUSED on database queries under load"
+  - "Pool timeout exceeded errors in production"
+root_cause: "Default pool size of 10 insufficient for concurrent request volume"
+prevention: "Set pool size to 2x expected concurrent connections, add health checks"
+confidence: 0.85
+source_project: "auth-service"
+created: "2026-02-09T12:00:00Z"
+applied_count: 0
+---
+
+## Solution
+
+Increase the connection pool size in the database configuration. Add a connection
+health check that validates connections before returning them to the pool.
+
+## Context
+
+Discovered when the auth-service started timing out under moderate load (50 rps).
+Default pg pool size of 10 caused request queuing when each request held a connection
+for ~200ms. Fix: pool_size = 2 * max_concurrent_requests.
+
+## Related
+
+- See also: `performance/database-query-optimization.md`
+- See also: `deployment/connection-string-configuration.md`
+```
+
+### Categories
+
+Solutions are organized into 7 fixed categories:
+
+| Category | What Goes Here |
+|----------|---------------|
+| `security` | Auth bugs, injection fixes, secret handling, OWASP findings |
+| `performance` | N+1 queries, memory leaks, caching strategies, bundle optimization |
+| `architecture` | Design patterns, coupling fixes, abstraction improvements, SOLID violations |
+| `testing` | Test strategies, flaky test fixes, coverage improvements, mocking patterns |
+| `debugging` | Root cause analysis techniques, diagnostic approaches, logging patterns |
+| `deployment` | CI/CD fixes, Docker issues, environment config, infrastructure patterns |
+| `general` | Anything that doesn't fit above categories |
+
+### YAML Frontmatter Fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `title` | Yes | Concise description of the problem/solution |
+| `category` | Yes | One of the 7 categories above |
+| `tags` | Yes | Array of keywords for search/matching |
+| `symptoms` | Yes | Observable indicators of the problem |
+| `root_cause` | Yes | Underlying cause (not just the symptom) |
+| `prevention` | Yes | How to avoid this in future projects |
+| `confidence` | No | 0.0-1.0, how broadly applicable (default 0.7) |
+| `source_project` | No | Project where this was discovered |
+| `created` | Yes | ISO 8601 timestamp |
+| `applied_count` | No | Times this solution was loaded for a task (default 0) |
+
+---
+
+## Loading Solutions (REASON Phase)
+
+Before starting a task, check `~/.loki/solutions/` for relevant entries.
+
+### Matching Logic
+
+1. Extract keywords from the current task description/goal
+2. Scan solution files in `~/.loki/solutions/*/`
+3. Score each solution by:
+   - Tag matches against task keywords (2 points each)
+   - Symptom matches against error messages (3 points each)
+   - Category match against current phase (1 point)
+4. Return top 3 solutions sorted by score
+5. Inject into context as: `title | root_cause | prevention`
+
+### Context Injection Format
+
+```
+RELEVANT SOLUTIONS FROM PAST PROJECTS:
+1. [performance] Connection pool exhaustion under load
+   Root cause: Default pool size insufficient for concurrent requests
+   Prevention: Set pool size to 2x concurrent connections
+2. [security] JWT token not validated on WebSocket upgrade
+   Root cause: WebSocket middleware bypassed auth middleware
+   Prevention: Apply auth middleware to ALL transport layers
+```
+
+Keep injection under 500 tokens. Title + root_cause + prevention only.
+
+---
+
+## Deepen-Plan Phase
+
+After the ARCHITECTURE phase produces an initial plan, BEFORE starting DEVELOPMENT, spawn 4 parallel research agents to enhance the plan with concrete findings.
+
+### When to Run
+
+- After ARCHITECTURE phase completes and design is approved
+- Before INFRASTRUCTURE or DEVELOPMENT phase begins
+- **Only for standard/complex complexity tiers** (skip for simple -- overkill)
+- **Only when using Claude provider** (requires Task tool for parallel agents)
+- Skip if the project is a known template with well-understood patterns
+
+### Research Agents (4 parallel -- launch in ONE message)
+
+#### 1. Repo Analyzer
+
+```python
+Task(
+    subagent_type="general-purpose",
+    model="sonnet",
+    description="Research: Repo Analysis",
+    prompt="""Analyze this codebase for patterns relevant to the planned feature.
+
+    Plan summary: {plan_summary}
+
+    Find:
+    - Reusable components and utilities
+    - Established naming conventions and code patterns
+    - Similar past implementations to reference
+    - Shared infrastructure (auth, logging, error handling)
+
+    Output: Bullet list of patterns to follow and components to reuse.
+    Be specific -- include file paths and function names."""
+)
+```
+
+#### 2. Dependency Researcher
+
+```python
+Task(
+    subagent_type="general-purpose",
+    model="sonnet",
+    description="Research: Dependencies",
+    prompt="""Research best practices for these technologies: {tech_stack}
+
+    Check:
+    - Official documentation for recommended patterns
+    - Known pitfalls and common mistakes
+    - Version compatibility between dependencies
+    - Recommended configuration defaults
+
+    Output: Best practices list and pitfalls to avoid.
+    Cite sources where possible."""
+)
+```
+
+#### 3. Edge Case Finder
+
+```python
+Task(
+    subagent_type="general-purpose",
+    model="sonnet",
+    description="Research: Edge Cases",
+    prompt="""Identify edge cases and failure modes for this plan: {plan_summary}
+
+    Check:
+    - Concurrency and race conditions
+    - Network failures and timeouts
+    - Data validation (null, empty, oversized, malformed)
+    - Partial failures and error cascading
+    - Resource exhaustion (memory, connections, disk)
+    - Boundary conditions (first, last, zero, max)
+
+    Output: Prioritized list with suggested handling for each.
+    Mark each as Critical/High/Medium severity."""
+)
+```
+
+#### 4. Security Threat Modeler
+
+```python
+Task(
+    subagent_type="general-purpose",
+    model="sonnet",
+    description="Research: Threat Model",
+    prompt="""Perform threat modeling for this architecture: {architecture_summary}
+
+    Check:
+    - Authentication and authorization flows
+    - Data exposure and privacy concerns
+    - Injection surfaces (SQL, XSS, command, template)
+    - Authorization bypass scenarios
+    - Third-party dependency risks
+    - Supply chain attack surface
+
+    Output: STRIDE-based threat model with specific mitigations.
+    Mark each threat as Critical/High/Medium severity."""
+)
+```
+
+### After All 4 Complete
+
+1. **Update the architecture plan** with findings from all agents
+2. **Add edge cases** as explicit tasks in `.loki/queue/pending.json`
+3. **Save threat model** to `.loki/specs/threat-model.md`
+4. **Log enhancement summary** in CONTINUITY.md under "Plan Deepening Results"
+5. **Proceed** to INFRASTRUCTURE or DEVELOPMENT phase
+
+### Example Output Integration
+
+```markdown
+## Plan Deepening Results (4 agents, 2m 14s)
+
+### Repo Analysis
+- Found existing auth middleware at src/middleware/auth.ts -- reuse for new endpoints
+- Logging pattern uses winston with structured JSON -- follow same pattern
+- Database queries use repository pattern -- add new repository for feature
+
+### Dependencies
+- React Query v5 requires explicit cache invalidation -- don't rely on auto-refetch
+- Prisma 6.x has breaking change in nested writes -- use transactions instead
+
+### Edge Cases (3 Critical, 5 High)
+- [Critical] Concurrent user edits can cause data loss -- add optimistic locking
+- [Critical] File upload >100MB causes OOM -- add streaming upload
+- [High] Network timeout during payment creates orphaned transaction
+
+### Threat Model
+- [Critical] API endpoint /admin/* missing rate limiting
+- [High] User-uploaded filenames not sanitized -- path traversal risk
+```
+
+---
+
+## Composable Phases
+
+These phases can be invoked individually or as part of the full RARV+C cycle:
+
+| Phase | Maps To | What It Does |
+|-------|---------|-------------|
+| `plan` | REASON (first pass) | Analyze PRD, generate architecture, create task queue |
+| `deepen` | REASON (enhanced) | 4 research agents enhance the plan |
+| `work` | ACT | Execute highest-priority task |
+| `review` | REFLECT + VERIFY | 3 specialist reviewers on recent changes |
+| `compound` | COMPOUND | Extract structured solutions from learnings |
+
+When running via `autonomy/run.sh`, the full cycle executes automatically.
+When running via Claude Code skill directly, invoke phases as needed.

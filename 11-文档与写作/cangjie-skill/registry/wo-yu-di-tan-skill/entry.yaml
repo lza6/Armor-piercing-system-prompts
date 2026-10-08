@@ -1,0 +1,13 @@
+schema_version: 1
+slug: wo-yu-di-tan-skill
+name: 我与地坛 Skill
+summary: 从史铁生《我与地坛》中提炼限制、苦难、写作与自我安放的方法。
+source_type: github
+source_url: https://github.com/qbdx-hub/wo-yu-di-tan-skill
+skill_count: 6
+domains: [文学, 写作]
+language: [zh-CN]
+status: active
+quality: community
+featured: false
+use_cases: [理解生命困境, 辅助个人写作, 进行自我叙事]

@@ -1,0 +1,52 @@
+{
+  "skill": "hourly-rate-time",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我每天花 2 小时在网上比价省几十块，值吗？",
+      "expected_behavior": "激活 hourly-rate-time, 用个人时薪换算机会成本并给出外包/放弃建议",
+      "notes": "正面场景: 琐事时间成本"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "要不要请个保洁/助理？总觉得自己做更省钱。",
+      "expected_behavior": "激活 hourly-rate-time, 用『低于时薪就外包』判据分析",
+      "notes": "正面场景: 外包决策"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "我离财务自由还差什么？退休到底指什么？",
+      "expected_behavior": "激活 hourly-rate-time, 用退休三路径(被动收入覆盖/支出归零/热爱之事)与生活方式通胀检查回答",
+      "notes": "正面场景: 退休/自由规划"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "两个 offer 一个钱多事多一个钱少事少，我该选哪个？",
+      "expected_behavior": "不应激活本 skill 为唯一方案, 应激活 decision-heuristics (重大决定) 或 wealth-structure (结构)",
+      "notes": "跨 skill 混淆诱饵: 时间效率 vs 决策结构"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "给我讲讲宇宙大爆炸",
+      "expected_behavior": "科普信息查询, 不调用任何 skill",
+      "notes": "诱饵: 信息查询"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "周末陪家人逛公园算浪费时间吗？",
+      "expected_behavior": "边缘: 不激活完整流程; 若触发, 应明确『做想做的事就不是浪费』(本书原文), 不把休息当低效",
+      "notes": "边界: 效率 vs 生活"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

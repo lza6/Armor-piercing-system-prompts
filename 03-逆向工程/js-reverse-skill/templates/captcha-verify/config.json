@@ -1,0 +1,15 @@
+{
+  "target": {
+    "page_url": "<本 case 目标页>"
+  },
+  "captcha": {
+    "provider": "<由本 case 证据确定>",
+    "captcha_type": "<由本 case 证据确定>"
+  },
+  "solver": {
+    "mode": "<case-defined>",
+    "platform": "",
+    "api_key": ""
+  },
+  "verify_count": 5
+}

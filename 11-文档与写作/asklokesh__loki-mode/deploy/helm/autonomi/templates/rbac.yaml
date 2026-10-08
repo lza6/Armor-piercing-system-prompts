@@ -1,0 +1,36 @@
+{{- if .Values.security.rbac.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "autonomi.fullname" . }}
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "autonomi.fullname" . }}
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "autonomi.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "autonomi.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

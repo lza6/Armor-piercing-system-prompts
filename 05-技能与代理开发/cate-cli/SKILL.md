@@ -1,0 +1,238 @@
+---
+name: cate-cli
+description: Drive Cate browser, terminal, editor, panel, review, and coding-agent orchestration surfaces from a Cate terminal. Browser page automation targets Cate's live webviews directly.
+user-invocable: true
+---
+
+# Cate CLI
+
+`cate` is available inside Cate terminals and agent shells. It talks to the
+current workspace and requires the relevant Settings → CLI permission.
+
+Start by listing panels:
+
+```bash
+cate panel list
+```
+
+When working repeatedly with one panel, select it for the current agent or
+terminal session:
+
+```bash
+cate panel set 1a2b3c4d
+cate panel current
+```
+
+The selection is isolated by a per-terminal CLI session, so other agents and
+terminals keep their own targets. Short ids from `panel list`
+are accepted. Use `--panel <id>` only as a one-command override. Clear the
+selection to return to Cate's automatic focused/grouped resolution:
+
+```bash
+cate panel clear
+```
+
+Selections can point to any native panel. Browser and terminal commands reject
+a selected panel of the wrong type instead of silently controlling another
+panel. If a selected panel was closed, select another panel before continuing.
+
+## Browser workflow
+
+Browser control uses persistent JavaScript with the `cua` tab API. The old argv
+actions, selectors, page evaluation, and revisioned string refs have been removed.
+Start by binding a tab to get its accessibility state, then request a screenshot
+when visual context is useful:
+
+```bash
+cate browser run 'var tab = await cua.getTab({panelId:"<full-panel-id>"});'
+cate browser run 'await tab.getAXStateAndScreenshot();'
+```
+
+Use full panel IDs inside JavaScript. `--panel <id>` supports short IDs as an
+override for CLI panel resolution. Discover tabs with `await cua.listTabs()`.
+Create a tab with `await cua.createBrowserTab("https://example.com")`, or pass
+`{panelId:tab.panelId}` as the second argument to choose its panel. Pass
+`{newPanel:true}` to create a separate panel; Cate also creates one when needed.
+Bindings pin both panel and tab; they never silently follow a user's tab switch.
+
+Use numeric IDs from the latest AX observation. For example, after observing a form
+containing textbox 17 and button 42:
+
+```bash
+cate browser run 'await tab.setValue(17,"user@example.com"); await tab.click(42); await tab.waitFor({url:"**/dashboard"});'
+cate browser run 'await tab.getAXStateAndScreenshot();'
+```
+
+Do not guess IDs or coordinates. Observations contain `kind`, `observationId`,
+`documentId`, URL, title and viewport. AX observations (`kind:"ax"`) also contain
+accessibility state and structured elements with role, name, value and states.
+`getAXState()` normally emits a concise diff; `getAXState({disableDiffing:true})`
+emits the full tree. `getScreenshot()` returns only viewport pixels/identity
+(`kind:"image"`, empty state/elements), avoiding an AX scan. It does not refresh
+numeric IDs. `getAXStateAndScreenshot()` refreshes both together. The SDK keeps
+the last AX observation for numeric targets and the latest visual observation
+for coordinates. `{emit:false}` suppresses automatic output. `{profile:true}`
+adds phase timings, image bytes and estimated retained-cache usage. Each code
+cell retains at most 16 million serialized observation characters, including
+`emit:false`; split long screenshot loops across cells.
+
+The SDK carries the latest observation through each action and emits fresh state.
+Numeric IDs persist within one document; navigation requires fresh IDs. Coordinate
+actions use `[x,y]` in observed viewport CSS pixels and reject stale viewport
+coordinates. A dispatched click is not proof that a business operation completed:
+use `waitFor` or inspect the resulting state.
+
+```javascript
+await tab.click(42);                         // or [x,y]
+await tab.setValue(17, "replacement");
+await tab.typeText("insert at selection");
+await tab.pressKey("Return");
+await tab.selectText(17, "text", {selectionType:"cursor_after"});
+await tab.scroll([400,300], "down", 1);
+await tab.drag([100,100], [300,200]);
+await tab.setChecked(42, true);
+await tab.selectOption(42, ["DE"]);
+await tab.upload(42, "/authorized/file");
+await tab.waitFor({text:"Saved"});
+await tab.waitFor({element:42, state:"enabled"});
+await tab.goto("https://example.com");
+await tab.back(); await tab.forward(); await tab.reload();
+await tab.setViewport({width:1280,height:800});
+await tab.resize({width:800,height:600});
+await tab.downloads(); await tab.close();
+```
+
+Keep deterministic batches short and inspect unexpected changes before continuing.
+Use `var` for reusable bindings; top-level `await` is supported. The session has
+no Node.js, filesystem, network, or DOM evaluation access. Await every action.
+`nodeRepl.write(value)` adds text output. `cate browser reset` clears JavaScript
+bindings without closing tabs. Reset and timeout cancel queued and pending browser
+actions; input already dispatched cannot be undone. Sessions are isolated per
+terminal/agent through `CATE_CLI_SESSION_ID`; timed-out sessions reset.
+`typeText` resolves current focus before inserting at the current selection,
+including fields inside frames and shadow roots.
+
+`cate browser run 'await tab.getAXStateAndScreenshot();'` returns AX state and
+saves a screenshot to a temporary PNG file. Open the printed path with your image-viewing tool before visual
+reasoning. Shell output cannot itself attach pixels to the model. `--json`
+returns structured content with base64 image data; base64 text is not visual
+input. The same screenshot output works from `tab.getScreenshot()` in code.
+AX reads remain available in code for deterministic branches and extraction.
+
+Agent actions display a cursor and click ripples in the browser panel, without
+field bounding-box highlights. Filling and typing animate the cursor at the
+edited field. User input takes control back and cancels pending automation. Responsive viewport size and canvas
+panel size are independent; `resize` applies only to canvas panels with a 400×300
+minimum.
+
+## Other surfaces
+
+```bash
+cate editor open src/app.tsx:42
+cate panel create terminal
+cate panel create canvas
+cate panel set <id>
+cate panel current
+cate panel clear
+cate panel close <id>
+```
+
+Read a terminal before sending input. `type` does not append Enter:
+
+```bash
+cate panel set 1a2b3c4d
+cate terminal read
+cate terminal type npm test
+cate terminal press enter
+```
+
+Terminal input goes to whatever currently owns that PTY, including foreground
+TUIs. Never send keys until the panel id and current screen are verified.
+
+## Agent orchestration
+
+Use `cate agent` when a task benefits from visible, persistent delegation:
+independent parallel work, cross-provider review, or isolated implementation in
+a Cate worktree. Keep small, tightly coupled edits in the current agent.
+
+Discover registered runs before acting on an older mission or after context
+compaction:
+
+```bash
+cate agent list
+```
+
+Create a worker with a bounded, self-contained prompt and concrete success
+criteria. Cate chooses the first hook-ready registered agent when `--agent` is
+omitted:
+
+```bash
+cate agent create "Inspect the API boundary and report risks" --title "API scout"
+cate agent create "Implement the parser and run its focused tests" \
+  --agent codex --title "Parser" --new-worktree agent/parser
+cate agent create "Review the current worktree changes" --worktree <worktree-id>
+cate agent create "Continue in this terminal" --terminal <terminal-panel-id>
+```
+
+`--terminal` reuses an idle terminal panel by restarting its PTY with the
+selected agent. It rejects busy terminals, agent-owned terminals, and the
+calling terminal. Omit it to create a new terminal panel.
+
+Workers may recursively create and supervise their own workers with the same
+commands. This naturally forms an agent tree: each terminal owns the workers it
+creates, and each parent normally communicates with its direct children. Use
+recursion when another level of decomposition is genuinely useful, not merely
+to relay a simple instruction.
+
+Supervise workers through the agent lifecycle rather than typing into their
+terminals:
+
+```bash
+cate agent wait <run-id> [<run-id>...] --wait-timeout 10000
+cate agent inspect <run-id>
+cate agent send <run-id> "Please add the missing regression test"
+cate agent review <run-id>
+cate agent apply <run-id>
+cate agent keep <run-id>
+cate agent discard <run-id>
+cate agent stop <run-id>
+```
+
+Run ids may be the unique short ids printed by `cate agent list`. `wait` accepts
+5000–60000 milliseconds and may be called with no ids to monitor all live
+direct children. Call it again while workers remain active. `inspect` includes
+recent terminal output; use `cate terminal read --panel <panel-id>` only as a
+lower-level diagnostic fallback.
+
+Prefer `send` for follow-up work on the same responsibility. If
+`followUpSupported` is false, create a fresh worker instead. When a worker fails,
+inspect `failureReason`; a provider-specific authentication, quota, or service
+failure can justify retrying with a different registered `--agent`.
+
+For an isolated worker, ask it to run relevant checks and commit completed work,
+then use `review` before choosing `apply`, `keep`, or `discard`. Apply rechecks
+that the worktree is clean and mergeable. Discard permanently removes a
+worker-owned worktree and its branch, including uncommitted changes, without an
+interactive confirmation. Keep records that the worktree should remain for
+later. Review is read-only: a finished process or successful review does not
+mean its branch has been integrated. The parent remains responsible for
+verification and for reporting any uncommitted or unintegrated work.
+
+## Review panels
+
+Select a Review Panel once, inspect its comparison, and record structured
+findings. `--panel <id>` is an optional one-command override for every review
+command.
+
+```bash
+cate panel set <review-panel-id>
+cate review inspect
+cate review note add --file src/app.ts --line 42 --side new \
+  --severity error --body "Handle the rejected request"
+cate review note resolve <note-id>
+cate review complete
+```
+
+Use `complete` only when running as the review agent assigned by that Review
+Panel. Review commands record findings; they do not modify files, stage,
+commit, or push changes.

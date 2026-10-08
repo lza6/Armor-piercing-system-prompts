@@ -1,0 +1,17 @@
+{{- if and .Values.persistence.checkpoints.enabled (not .Values.persistence.checkpoints.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "autonomi.fullname" . }}-checkpoints
+  labels:
+    {{- include "autonomi.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.checkpoints.accessMode }}
+  {{- if .Values.persistence.checkpoints.storageClass }}
+  storageClassName: {{ .Values.persistence.checkpoints.storageClass | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.checkpoints.size }}
+{{- end }}

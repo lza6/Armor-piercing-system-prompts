@@ -1,0 +1,52 @@
+{
+  "skill": "reading-metaskill",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "我总想读书但每次卡在第 100 页就读不下去了，怎么办？",
+      "expected_behavior": "激活 reading-metaskill, 给无读完义务/跳读/穿插阅读的入门方案",
+      "notes": "正面场景: 阅读习惯障碍"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "想入门经济学，先读什么书比较好？",
+      "expected_behavior": "激活 reading-metaskill, 按原著优先原则推荐奠基读物并解释为什么",
+      "notes": "正面场景: 入门选书"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "怎么学习才能学得又快又牢？",
+      "expected_behavior": "激活 reading-metaskill, 给每日阅读习惯+以教促学+基础重建的组合",
+      "notes": "正面场景: 学习方法"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我刷短视频停不下来，晚上越刷越空虚，怎么办？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 screen-detox (多巴胺戒断)",
+      "notes": "跨 skill 混淆诱饵: 阅读 vs 戒断"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "给我写一篇《三体》的书评",
+      "expected_behavior": "创作任务, 不调用阅读习惯训练",
+      "notes": "诱饵: 书评≠阅读习惯"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我下个月要考 CFA，该按这本书的读法学吗？",
+      "expected_behavior": "边缘: 不激活完整流程(备考需系统应试策略), 但可提醒真题优先+以教促学",
+      "notes": "边界: 应试 vs 养成习惯"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

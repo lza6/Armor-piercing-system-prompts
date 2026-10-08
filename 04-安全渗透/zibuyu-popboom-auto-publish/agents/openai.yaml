@@ -1,0 +1,3 @@
+interface:
+  display_name: "Zibuyu PopBoom Auto Publish"
+  short_description: "Schedule videos and audit saved times after delivery"

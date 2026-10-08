@@ -1,0 +1,570 @@
+{
+  "schema_version": "6.6.0",
+  "state_revision": 2,
+  "project_id": "seq_airport_arrival",
+  "project_mode": "sequence_project",
+  "surface": {
+    "name": "unknown",
+    "profile": "conservative_generic",
+    "verified_at": null
+  },
+  "clip_budget_sec": null,
+  "prompt_budget": null,
+  "story": {
+    "logline": "A traveler escapes the airport crowd and reaches a waiting car.",
+    "story_promise": "A tense arrival resolves into a clean getaway.",
+    "objective": "Move the traveler from terminal exit to vehicle departure without losing screen direction.",
+    "initial_condition": "The traveler exits the terminal into rain and crowd pressure.",
+    "final_outcome": "The car pulls away into traffic after the traveler is safely inside.",
+    "target_duration_sec": 45,
+    "tone": "tense but controlled",
+    "medium": "live_action"
+  },
+  "world_bible": {
+    "location": "airport curbside pickup lane in light rain",
+    "screen_direction": "traveler moves left-to-right",
+    "vehicle_identity": "black sedan with rear passenger door",
+    "persistent_environment": "glass terminal doors, wet curb, taxi lights",
+    "character_specific_object": "creased paper airline tag looped around the suitcase handle",
+    "character_specific_object_provenance": "authored_choice"
+  },
+  "reference_registry": [
+    {
+      "tag": "@Image 1",
+      "role": "canonical traveler identity and wardrobe",
+      "preserve_exact_tag": true
+    },
+    {
+      "tag": "[Video 1]",
+      "role": "accepted Clip 01 continuity source",
+      "preserve_exact_tag": true
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "scene_01",
+      "scene_index": 1,
+      "narrative_function": "Complete the arrival handoff from terminal exit to vehicle departure.",
+      "arc_position": "release",
+      "location": "airport arrivals curb",
+      "time_of_day": "daytime",
+      "anchor_source": [
+        "@Image 1"
+      ],
+      "max_chain_depth": 2,
+      "audio_plan": "Clips carry curb ambience and sync SFX; score is unified in post.",
+      "assigned_clip_ids": [
+        "clip_01",
+        "clip_02",
+        "clip_03"
+      ],
+      "transition_out": "cut to black",
+      "status": "current"
+    }
+  ],
+  "beats": [
+    {
+      "beat_id": "beat_terminal_exit",
+      "description": "Traveler exits the terminal into curbside rain.",
+      "narrative_function": "establish pressure",
+      "status": "completed",
+      "assigned_clip_id": "clip_01",
+      "dependencies": []
+    },
+    {
+      "beat_id": "beat_reach_car",
+      "description": "Traveler reaches the open rear door.",
+      "narrative_function": "finish approach",
+      "status": "current",
+      "assigned_clip_id": "clip_02",
+      "dependencies": [
+        "beat_terminal_exit"
+      ]
+    },
+    {
+      "beat_id": "beat_enter_car",
+      "description": "Traveler gets into the car and closes the door.",
+      "narrative_function": "secure escape",
+      "status": "planned",
+      "assigned_clip_id": "clip_02",
+      "dependencies": [
+        "beat_reach_car"
+      ]
+    },
+    {
+      "beat_id": "beat_departure",
+      "description": "Vehicle leaves the crowd and disappears into traffic.",
+      "narrative_function": "resolution",
+      "status": "planned",
+      "assigned_clip_id": "clip_03",
+      "dependencies": [
+        "beat_enter_car"
+      ]
+    }
+  ],
+  "clips": [
+    {
+      "clip_id": "clip_01",
+      "parent_clip_id": null,
+      "scene_id": "scene_01",
+      "sequence_index": 1,
+      "prompt_version": "6.6.0",
+      "generation_mode": "T2V",
+      "source_clip_tag": null,
+      "status": "accepted_with_deviation",
+      "narrative_job": "Exit terminal and approach the open rear car door.",
+      "felt_intent": "The viewer notices that her pace never changes even when the waiting car comes within reach.",
+      "directors_read_lane": "narrative",
+      "authoring_state": {
+        "dramatic_function": "Advance arrival to the threshold of shelter without pretending the traveler reached it.",
+        "turn": "Public endurance at the terminal becomes shelter within two steps while exposure continues.",
+        "pov": "The traveler; the waiting car holds her gaze but remains visibly unreached at the accepted endpoint.",
+        "power_shift": "Rain and curb traffic still control her exposed movement; the car has not yet become her boundary.",
+        "hidden_want_objective": "Reach the waiting car without letting the curbside crowd see how exhausted she is.",
+        "obstacle_tactic": "The exposed curb, rain, and rolling suitcase invite a hurried release; she keeps one measured tempo and fixes her eyes on the open door.",
+        "subtext_contradiction": "The car promises relief, but the accepted take leaves her still performing public endurance.",
+        "visible_suppressed_behavior": "At a curb seam, her thumb hooks beneath the creased airline tag, then releases it without looking down.",
+        "non_transferable_detail": "A creased paper airline tag looped around the suitcase handle catches under her thumb at a curb seam.",
+        "non_transferable_detail_provenance": "authored_choice",
+        "non_transferable_detail_source": null,
+        "stock_solution_refused": "No relieved smile, sagging shoulders, or backward glance; replace them with the thumb catching and releasing the tag while her pace stays even.",
+        "value_before": "arrival is public endurance with shelter still distant",
+        "value_after": "shelter is within two steps while public endurance continues",
+        "prompt_carriers": [
+          "She sees the open rear door but keeps the same measured walking tempo.",
+          "At a curb seam, her thumb hooks beneath the creased airline tag, then releases it without looking down.",
+          "She remains two steps from the open rear door, mid-stride, with her face and shoulders held level."
+        ]
+      },
+      "contract_authoring_state_snapshots": [
+        {
+          "project_id": "seq_airport_arrival",
+          "clip_id": "clip_01",
+          "canon_revision": 1,
+          "state_revision": 1,
+          "authoring_state_sha256": "d71f3ea0b9c44d243b102b396cce28b83d921582f5fc409eb3209a82257aa045"
+        }
+      ],
+      "already_happened": [],
+      "this_clip_only": [
+        "beat_terminal_exit",
+        "beat_reach_car"
+      ],
+      "reserved_for_later": [
+        "beat_enter_car",
+        "beat_departure"
+      ],
+      "planned_start_state": {
+        "character": {
+          "canonical_identity_id": "traveler_from_@Image 1",
+          "wardrobe": "charcoal coat, small black suitcase",
+          "location": "inside terminal threshold",
+          "position_in_frame": "left third",
+          "pose": "walking out",
+          "travel_direction": "left-to-right",
+          "motion_vector": "steady walk toward curb",
+          "emotional_state": "focused"
+        },
+        "environment": {
+          "persistent_environment": "glass terminal doors, wet curb, taxi lights",
+          "vehicle_identity": "black sedan with rear passenger door",
+          "lighting_phase": "cool rain reflections"
+        },
+        "camera": {
+          "camera_phase": "tracking beside traveler",
+          "focus_state": "traveler and open door"
+        },
+        "audio": {
+          "audio_phase": "airport curb ambience, no completed dialogue"
+        },
+        "reference_tags": [
+          "@Image 1"
+        ]
+      },
+      "planned_end_state": {
+        "character": {
+          "canonical_identity_id": "traveler_from_@Image 1",
+          "wardrobe": "charcoal coat, small black suitcase",
+          "location": "beside open rear car door",
+          "position_in_frame": "center right",
+          "pose": "hand near door frame",
+          "travel_direction": "left-to-right",
+          "motion_vector": "slowing to stop at door",
+          "emotional_state": "focused"
+        },
+        "environment": {
+          "persistent_environment": "glass terminal doors, wet curb, taxi lights",
+          "vehicle_identity": "black sedan with rear passenger door",
+          "lighting_phase": "cool rain reflections"
+        },
+        "camera": {
+          "camera_phase": "tracking ends near rear door",
+          "focus_state": "traveler and open door"
+        },
+        "audio": {
+          "audio_phase": "airport curb ambience, no completed dialogue"
+        },
+        "reference_tags": [
+          "@Image 1"
+        ]
+      },
+      "observed_start_state": {
+        "character": {
+          "canonical_identity_id": "traveler_from_@Image 1",
+          "wardrobe": "charcoal coat, small black suitcase",
+          "location": "inside terminal threshold",
+          "position_in_frame": "left third",
+          "pose": "walking out",
+          "travel_direction": "left-to-right",
+          "motion_vector": "steady walk toward curb",
+          "emotional_state": "focused"
+        },
+        "environment": {
+          "persistent_environment": "glass terminal doors, wet curb, taxi lights",
+          "vehicle_identity": "black sedan with rear passenger door",
+          "lighting_phase": "cool rain reflections"
+        },
+        "camera": {
+          "camera_phase": "tracking beside traveler",
+          "focus_state": "traveler and open door"
+        },
+        "audio": {
+          "audio_phase": "airport curb ambience, no completed dialogue"
+        },
+        "reference_tags": [
+          "@Image 1"
+        ]
+      },
+      "observed_end_state": {
+        "character": {
+          "canonical_identity_id": "traveler_from_@Image 1",
+          "wardrobe": "charcoal coat, small black suitcase",
+          "location": "two steps from the open rear car door",
+          "position_in_frame": "center right",
+          "pose": "mid-stride with suitcase rolling behind",
+          "travel_direction": "left-to-right",
+          "motion_vector": "continues two steps toward open door",
+          "emotional_state": "focused"
+        },
+        "environment": {
+          "persistent_environment": "glass terminal doors, wet curb, taxi lights",
+          "vehicle_identity": "black sedan with rear passenger door",
+          "lighting_phase": "cool rain reflections"
+        },
+        "camera": {
+          "camera_phase": "tracking beside traveler, still moving",
+          "focus_state": "traveler and open door"
+        },
+        "audio": {
+          "audio_phase": "airport curb ambience, no completed dialogue"
+        },
+        "reference_tags": [
+          "@Image 1",
+          "[Video 1]"
+        ]
+      },
+      "continuity_locks": [
+        "canonical_identity_id",
+        "wardrobe",
+        "travel_direction",
+        "vehicle_identity",
+        "creased paper airline tag",
+        "persistent_environment",
+        "reference_tags"
+      ],
+      "allowed_changes": [
+        "traveler may finish the remaining two steps in Clip 02"
+      ],
+      "continuity_breaks": [
+        "planned endpoint not reached"
+      ],
+      "accepted_deviations": [
+        "traveler ended two steps from the open door"
+      ],
+      "transition_in": "first clip",
+      "transition_out": "handoff from observed final frame",
+      "open_motion_vectors": [
+        "traveler continues two steps left-to-right",
+        "camera continues lateral track"
+      ],
+      "handoff_requirements": [
+        "Clip 02 starts two steps from open door",
+        "do not replay terminal exit",
+        "do not start inside the car"
+      ],
+      "extension_depth": 0
+    },
+    {
+      "clip_id": "clip_02",
+      "parent_clip_id": "clip_01",
+      "scene_id": "scene_01",
+      "sequence_index": 2,
+      "prompt_version": "6.6.0",
+      "generation_mode": "V2V",
+      "source_clip_tag": "[Video 1]",
+      "status": "ready",
+      "narrative_job": "Complete the last two steps, reach the open rear door, enter the car, and close the door.",
+      "felt_intent": "The viewer hears public exposure end when the door thump cuts the curb noise.",
+      "directors_read_lane": "narrative",
+      "authoring_state": {
+        "dramatic_function": "Convert shelter from a visible promise into a boundary she closes herself.",
+        "turn": "Public endurance continues two steps from the car, then curb noise and exposure are cut off by the shut door.",
+        "pov": "The traveler; the camera stays at her wet shoulder until the closed door removes the curb from her sensory field.",
+        "power_shift": "The curb controls her exposure at the start; she controls the boundary when her hand pulls the door shut.",
+        "hidden_want_objective": "Get behind closed glass without giving the curbside crowd a readable release.",
+        "obstacle_tactic": "Two exposed steps and rain on her face invite a visible reaction; she redirects the wiping impulse into folding the tag under the suitcase handle before entering.",
+        "subtext_contradiction": "She accepts shelter through an exact practical gesture while her face continues to deny that she needed it.",
+        "visible_suppressed_behavior": "Her fingers start toward the rain on her cheek, then redirect to fold the creased tag beneath the suitcase handle.",
+        "non_transferable_detail": "A creased paper airline tag looped around the suitcase handle is folded beneath the handle only after the car can shield the action.",
+        "non_transferable_detail_provenance": "authored_choice",
+        "non_transferable_detail_source": null,
+        "stock_solution_refused": "No shoulder drop, backward glance, or relieved smile; replace them with the redirected hand, inward-facing tag, and the door thump cutting curb noise.",
+        "value_before": "shelter is within two steps while public endurance continues",
+        "value_after": "the closed door severs public exposure without a performed release",
+        "prompt_carriers": [
+          "Her fingers start toward the rain on her cheek, then redirect to fold the creased airline tag beneath the suitcase handle.",
+          "She keeps the suitcase upright until the rear door shuts, then turns it so the folded tag faces the seatback.",
+          "The door thump cuts the curb noise while her face and shoulders remain level."
+        ]
+      },
+      "contract_authoring_state_snapshots": [
+        {
+          "project_id": "seq_airport_arrival",
+          "clip_id": "clip_02",
+          "canon_revision": 2,
+          "state_revision": 2,
+          "authoring_state_sha256": "58b0b8a63c6a4459ae9dff8f6f4aefdc58b8713087494b73ee39044a94fd60d6"
+        }
+      ],
+      "already_happened": [
+        "beat_terminal_exit"
+      ],
+      "this_clip_only": [
+        "beat_reach_car",
+        "beat_enter_car"
+      ],
+      "reserved_for_later": [
+        "beat_departure"
+      ],
+      "planned_start_state": {
+        "character": {
+          "canonical_identity_id": "traveler_from_@Image 1",
+          "wardrobe": "charcoal coat, small black suitcase",
+          "location": "two steps from the open rear car door",
+          "position_in_frame": "center right",
+          "pose": "mid-stride with suitcase rolling behind",
+          "travel_direction": "left-to-right",
+          "motion_vector": "continues two steps toward open door",
+          "emotional_state": "focused"
+        },
+        "environment": {
+          "persistent_environment": "glass terminal doors, wet curb, taxi lights",
+          "vehicle_identity": "black sedan with rear passenger door",
+          "lighting_phase": "cool rain reflections"
+        },
+        "camera": {
+          "camera_phase": "tracking beside traveler, still moving",
+          "focus_state": "traveler and open door"
+        },
+        "audio": {
+          "audio_phase": "airport curb ambience, no completed dialogue"
+        },
+        "reference_tags": [
+          "@Image 1",
+          "[Video 1]"
+        ]
+      },
+      "planned_end_state": {
+        "character": {
+          "canonical_identity_id": "traveler_from_@Image 1",
+          "wardrobe": "charcoal coat visible through window",
+          "location": "inside rear passenger seat",
+          "position_in_frame": "behind closed door window",
+          "pose": "seated and still",
+          "travel_direction": "left-to-right",
+          "motion_vector": "body motion stops inside car",
+          "emotional_state": "relieved"
+        },
+        "environment": {
+          "persistent_environment": "glass terminal doors, wet curb, taxi lights",
+          "vehicle_identity": "black sedan with rear passenger door",
+          "lighting_phase": "cool rain reflections"
+        },
+        "camera": {
+          "camera_phase": "tracking settles beside closed door",
+          "focus_state": "closed door and traveler silhouette"
+        },
+        "audio": {
+          "audio_phase": "door close thump over airport curb ambience"
+        },
+        "reference_tags": [
+          "@Image 1",
+          "[Video 1]"
+        ]
+      },
+      "observed_start_state": null,
+      "observed_end_state": null,
+      "continuity_locks": [
+        "canonical_identity_id",
+        "wardrobe",
+        "travel_direction",
+        "vehicle_identity",
+        "creased paper airline tag",
+        "persistent_environment",
+        "reference_tags"
+      ],
+      "allowed_changes": [
+        "traveler may move from curb into rear seat",
+        "door may close after entry"
+      ],
+      "continuity_breaks": [],
+      "accepted_deviations": [],
+      "transition_in": "seamless continuation from observed Clip 01 final frame",
+      "transition_out": "door closed; vehicle has not departed",
+      "open_motion_vectors": [
+        "traveler continues two steps left-to-right",
+        "camera continues lateral track then settles"
+      ],
+      "handoff_requirements": [
+        "exclude terminal exit",
+        "exclude vehicle departure"
+      ],
+      "extension_depth": 1
+    },
+    {
+      "clip_id": "clip_03",
+      "parent_clip_id": "clip_02",
+      "scene_id": "scene_01",
+      "sequence_index": 3,
+      "prompt_version": "6.6.0",
+      "generation_mode": "V2V",
+      "source_clip_tag": "[Video 2]",
+      "status": "planned",
+      "narrative_job": "Vehicle leaves the curb and disappears into traffic.",
+      "felt_intent": "The viewer watches terminal light leave the creased tag and not return.",
+      "directors_read_lane": "narrative",
+      "authoring_state": {
+        "dramatic_function": "Pay off the arrival by letting the terminal lose visual possession of the traveler.",
+        "turn": "The closed car is a temporary boundary, then the terminal disappears and departure becomes the settled direction.",
+        "pov": "The traveler through the suitcase at her knees; the terminal is registered as moving light rather than a reaction close-up.",
+        "power_shift": "The terminal still occupies the rear glass at the start; the moving car removes it from the frame by the end.",
+        "hidden_want_objective": "Let the terminal disappear without turning departure into a public declaration.",
+        "obstacle_tactic": "Terminal light keeps crossing the rear window; she presses the lifted corner of the creased tag flat and slides the suitcase deeper into the footwell.",
+        "subtext_contradiction": "She completes departure by tending to an ordinary travel object rather than acknowledging the building behind her.",
+        "visible_suppressed_behavior": "Her forefinger lifts one corner of the tag as terminal light reaches it, then presses the same crease flat.",
+        "non_transferable_detail": "A creased paper airline tag looped around the suitcase handle catches one final stripe of terminal light.",
+        "non_transferable_detail_provenance": "authored_choice",
+        "non_transferable_detail_source": null,
+        "stock_solution_refused": "No wistful rear-window look, head turn, or face close-up; replace them with terminal light crossing the tag and leaving it dark.",
+        "value_before": "the closed door severs public exposure without a performed release",
+        "value_after": "departure is settled when the terminal no longer reaches her frame",
+        "prompt_carriers": [
+          "A stripe of terminal light crosses the creased airline tag at her knees.",
+          "Her forefinger lifts one corner of the tag, then presses the same crease flat as she slides the suitcase deeper into the footwell.",
+          "End when the terminal light leaves the tag and does not return."
+        ]
+      },
+      "already_happened": [
+        "beat_terminal_exit",
+        "beat_reach_car",
+        "beat_enter_car"
+      ],
+      "this_clip_only": [
+        "beat_departure"
+      ],
+      "reserved_for_later": [],
+      "planned_start_state": {
+        "character": {
+          "canonical_identity_id": "traveler_from_@Image 1",
+          "wardrobe": "charcoal coat visible through window",
+          "location": "inside rear passenger seat",
+          "position_in_frame": "behind closed door window",
+          "pose": "seated and still",
+          "travel_direction": "left-to-right",
+          "motion_vector": "body motion stops inside car",
+          "emotional_state": "relieved"
+        },
+        "environment": {
+          "persistent_environment": "glass terminal doors, wet curb, taxi lights",
+          "vehicle_identity": "black sedan with rear passenger door",
+          "lighting_phase": "cool rain reflections"
+        },
+        "camera": {
+          "camera_phase": "tracking settles beside closed door",
+          "focus_state": "closed door and traveler silhouette"
+        },
+        "audio": {
+          "audio_phase": "door close thump over airport curb ambience"
+        },
+        "reference_tags": [
+          "@Image 1",
+          "[Video 1]"
+        ]
+      },
+      "planned_end_state": {
+        "character": {
+          "canonical_identity_id": "traveler_from_@Image 1",
+          "wardrobe": "charcoal coat visible through window",
+          "location": "inside departing black sedan",
+          "position_in_frame": "rear window silhouette",
+          "pose": "seated and still",
+          "travel_direction": "left-to-right",
+          "motion_vector": "vehicle accelerates left-to-right into traffic",
+          "emotional_state": "relieved"
+        },
+        "environment": {
+          "persistent_environment": "glass terminal doors, wet curb, taxi lights",
+          "vehicle_identity": "black sedan with rear passenger door",
+          "lighting_phase": "cool rain reflections"
+        },
+        "camera": {
+          "camera_phase": "holds curb as sedan leaves",
+          "focus_state": "departing sedan"
+        },
+        "audio": {
+          "audio_phase": "engine pull-away over airport curb ambience"
+        },
+        "reference_tags": [
+          "@Image 1",
+          "[Video 2]"
+        ]
+      },
+      "observed_start_state": null,
+      "observed_end_state": null,
+      "continuity_locks": [
+        "canonical_identity_id",
+        "wardrobe",
+        "travel_direction",
+        "vehicle_identity",
+        "creased paper airline tag",
+        "persistent_environment",
+        "reference_tags"
+      ],
+      "allowed_changes": [
+        "vehicle may pull away from curb"
+      ],
+      "continuity_breaks": [],
+      "accepted_deviations": [],
+      "transition_in": "provisional next shot after Clip 02 acceptance",
+      "transition_out": "story resolution",
+      "open_motion_vectors": [
+        "vehicle accelerates left-to-right"
+      ],
+      "handoff_requirements": [
+        "do not finalize until Clip 02 is accepted"
+      ],
+      "extension_depth": 2
+    }
+  ],
+  "take_history": [
+    {
+      "take_id": "take_clip01_a",
+      "clip_id": "clip_01",
+      "verdict": "accept_with_deviation",
+      "evidence": "Traveler is still two steps from the open rear door at the final frame."
+    }
+  ],
+  "current_clip_id": "clip_02",
+  "canon_revision": 2,
+  "updated_at": "2026-06-20"
+}

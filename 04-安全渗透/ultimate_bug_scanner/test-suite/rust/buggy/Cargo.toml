@@ -1,0 +1,13 @@
+[package]
+name = "ubs_rust_buggy"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[[bin]]
+name = "buggy-unwrap"
+path = "buggy_unwrap.rs"
+
+[[bin]]
+name = "async-block"
+path = "async_block.rs"

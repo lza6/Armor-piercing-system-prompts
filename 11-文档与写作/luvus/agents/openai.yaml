@@ -1,0 +1,4 @@
+interface:
+  display_name: "Luvus"
+  short_description: "Control Luvus agents, workspaces, and UHP"
+  default_prompt: "Use $luvus to inspect the live UHP capabilities before planning a harness integration."

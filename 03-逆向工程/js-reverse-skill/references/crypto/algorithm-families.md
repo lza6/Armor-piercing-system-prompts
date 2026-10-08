@@ -1,0 +1,128 @@
+# 算法家族站点清单
+
+> **触发条件**：IDENTIFY 识别目标站点时读，匹配已知算法家族
+> **知识分级**：本文件的站点↔参数↔SDK 映射属于 T1 识别指纹（仅用于识别与路由，见 SKILL.md 厂商知识分级）；具体字段语义与加密结构（T2）以本次 case 证据、`references/captcha/captcha-providers.md` 与 `cases/` 为准。
+
+## 站点速查表
+
+| 站点 / 域名 | 签名参数 | SDK / 特征 | 推荐方案 | 对应案例 |
+|---|---|---|---|---|
+| douyin.com | a_bogus | webmssdk / _SdkGlueInit / byted_acrawler | jsdom 环境伪装 | `cases/jsvmp-xhr-interceptor-env-emulation.md` |
+| tiktok.com | X-Bogus / X-Gnarly | webmssdk / cacheOpts | jsdom 环境伪装 | `cases/jsvmp-dual-sign-xhr-intercept-cacheOpts-jsdom-firefox.md` |
+| nmpa.gov.cn | NfBCSins2OywS | sdenv / 412 / RS 6 | sdenv 纯 Node.js | `cases/jsvmp-ruishu6-cookie-412-sdenv.md` |
+| 其他瑞数站点 | FSSBBIl1UgzbN7N / _RSG | 200KB 混淆 + 412 | sdenv 纯 Node.js | 同 nmpa |
+| 通用 JSVMP | - | JSVMP 源码插桩 | 路径 A 算法追踪 | `cases/universal-vmp-source-instrumentation.md` |
+| Aliyun WAF 站点 | acw_sc__v2 | acw_sc 系列签名 | 纯算还原 | 通用流程 |
+| Akamai 站点 | sensor_data / _abck | acmescripts | 源码级插桩 + 补环境 | 通用流程 |
+| obfuscator.io 站点 | _0x 前缀 | OB 混淆 | AST 反混淆 + 通用流程 | `assets/ast-patterns/` |
+| reese84 站点 | reese84 | Reese84 challenge | AST 反混淆 + 补环境 | `assets/ast-patterns/patterns.md` |
+| 极验 geetest4 | w / challenge | geetest4 | AST 反混淆 + 验证码交接 | `assets/ast-patterns/patterns.md` |
+| 顶象 dingxiang | dx | dingxiang | AST 反混淆 | `assets/ast-patterns/patterns.md` |
+| 网易 yidun | 易盾验证参数 | yidun | AST 反混淆 | `assets/ast-patterns/patterns.md` |
+| 同花顺 | token | tonghuashun | AST 反混淆 | `assets/ast-patterns/patterns.md` |
+| 小红书 | x-s / x-t | xhs | AST 反混淆 | `assets/ast-patterns/patterns.md` |
+| 百度指数 | ascToken token | window.aes_encrypt / gtk 哈希族 | 纯算还原（自研哈希 + AES-CBC） | 通用流程 |
+| youdao.com | sign / mysticTime | URI 伪装常量派生 + key-getter | 纯算还原（md5 + AES-128-CBC） | 通用流程 |
+
+## 识别关键词
+
+### 抖音 / TikTok 系
+```
+webmssdk / byted_acrawler / _SdkGlueInit / cacheOpts
+a_bogus / X-Bogus / X-Gnarly
+bdms.paths / bdms.init
+```
+
+### 瑞数系
+```
+sdenv / acmescripts
+FSSBBIl1UgzbN7N / NfBCSins2OywS / _RSG
+meta-12（RS 6 特征）
+412 → 302 → 200 redirect chain
+```
+
+### Akamai 系
+```
+acmescripts / sensor_data / _abck
+```
+
+### Aliyun WAF
+```
+acw_sc__v2 / acw_tc
+```
+
+### 百度系
+```
+String.fromCharCode(103,116,107) 拼出 "gtk" 再取 window 属性（属性名混淆，明文检索盲区）
+gtk 种子按 "." 切两段数字 + 操作串驱动位运算循环（3 字符步进，"+" 标志位切换 移位/加法 与 异或，& 4294967295 掩码）
+超长输入 >30 字符截断：头 10 + 中 10 + 尾 10（含 surrogate 对分支，翻译 tk 与指数 token 同族）
+token 形态：<固定seed时间戳>_<实时ms>_<base64(AES-CBC-PKCS7(JSON))>，JSON 绑 ua/url/platform/clientTs/version
+写死的固定 seed 是可过期参数（源码注释自认"请求失败请更新"）→ 交付必须定位 seed 生成来源，禁止照抄
+```
+
+### 密钥来源两形态（下发 / 常量派生）
+```
+动态下发型：sign = md5(常量盐拼 KV 串) 只为调密钥下发接口，响应返回 secretKey/aesKey/aesIv
+识别信号：keyid / secretKey / aesKey / aesIv / pointParam（pointParam 声明签名覆盖的字段集）
+排查分支：JS 里找不到密钥来源时，先查前置接口响应是否下发密钥，再回 JS 死磕
+常量派生型：密钥常量伪装成 URI 样式（xxx://query/key/…），md5 后 hex 截 16 字节当 AES-128-CBC key/iv
+两形态可在同一站点并存（不同接口不同密钥形态），两条线都要查
+```
+
+### 混淆特征
+```
+_0x（OB 混淆）
+switch-case 状态机 + while(true)（控制流平坦化）
+eval(...) / new Function(...)（打包）
+200KB+ 文件 + 字节码数组（JSVMP）
+String.fromCharCode(...) 拼敏感属性名（103,116,107 = "gtk"，静态明文检索盲区）
+\xHH 十六进制转义 + b('0x..') 字符串数组索引（OB 变体）
+```
+
+### RSA 家族（浏览器侧签名常见两形态）
+```
+确定性 RSA-1024（JSVMP 内嵌 JSBN，字节码尾部 28-bit limbs 字面量 m324665p2098959...，
+固定 0x01 PKCS#1 填充，hex2b64 非标准编码）→ match28：Node BigInt 模幂纯算
+随机 RSA-1024（混淆 JS 内嵌 JSEncrypt，X.509 SPKI hex 公钥 30819f300d06092a864886f70d01...，
+crypto.getRandomValues(Uint32Array 256) 随机填充源，标准 base64 172 字符）→ match27：
+Node crypto.publicEncrypt(RSA_PKCS1_PADDING) 纯算；明文含未知常量用候选 X×公钥扫描实证
+```
+
+## 按反爬类型分类
+
+### 签名型反爬（环境即签名）
+- 瑞数（nmpa 等）
+- Akamai
+- Shape Security
+
+**特征**：redirect_chain 反复 412/302 → 200
+**路径**：补环境（sdenv 纯 Node.js）
+
+### 行为型反爬（参数签名 + 拦截器）
+- 抖音
+- TikTok
+- 字节系
+
+**特征**：HTTP 200 正常加载 + webmssdk
+**路径**：路径 D 环境伪装（补环境）
+
+### 纯混淆（无环境检测）
+- obfuscator.io 类
+- 各类小站
+
+**特征**：`_0x` 大量前缀
+**路径**：AST 反混淆 + 通用流程
+
+## 验证码家族（封装层本 skill / 识别求解参考 web-verify-patcher）
+
+| 类型 | 特征 | 处理 |
+|---|---|---|
+| 极验 geetest3/4 | gt.js / challenge / w 参数 | 封装层本 skill（references/captcha/）；识别求解参考 web-verify-patcher |
+| 顶象 dingxiang | dx 验证码 | 同上 |
+| 网易 yidun | 易盾验证参数 | 同上 |
+| 同花顺验证码 | 验证码组件 | 同上 |
+| Cloudflare Turnstile | cf-turnstile | 同上 |
+| hCaptcha | h-captcha | 同上 |
+| reCAPTCHA | g-recaptcha | 同上 |
+
+验证码场景分层处理：封装层逆向（verify 接口加密参数/轨迹加密）走本 skill `references/captcha/` 子域；题型识别与图像求解参考 `web-verify-patcher`（源自 xbsReverseSkill）。

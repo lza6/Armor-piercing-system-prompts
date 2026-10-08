@@ -1,0 +1,5 @@
+# Minimal DCG Configuration
+# Bare minimum for DCG to function - only core packs enabled
+
+[packs]
+enabled = ["core.git", "core.filesystem"]

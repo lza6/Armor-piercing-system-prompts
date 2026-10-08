@@ -1,0 +1,16 @@
+[project]
+name = "ultimate-bug-scanner"
+version = "0.0.0"
+description = "Utility tooling for the Ultimate Bug Scanner project"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.14,<3.15"
+dependencies = []
+
+[dependency-groups]
+# Test-only: validates real ubs outputs against `ubs --schema` in test_cli_contract.py.
+dev = ["jsonschema>=4.23"]
+
+[tool.uv]
+managed = true
+python-preference = "only-managed"

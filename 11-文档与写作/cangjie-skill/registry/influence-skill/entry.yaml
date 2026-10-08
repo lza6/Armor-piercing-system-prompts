@@ -1,0 +1,13 @@
+schema_version: 1
+slug: influence-skill
+name: 影响力 Skill
+summary: 把经典说服原则转为顺从机制分析、沟通设计与防御判断工具。
+source_type: github
+source_url: https://github.com/kangarooking/influence-skill
+skill_count: 12
+domains: [心理, 沟通]
+language: [zh-CN]
+status: active
+quality: verified
+featured: false
+use_cases: [设计说服沟通, 识别影响机制, 防范不当操控]

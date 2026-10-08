@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "wigolo"
+version = "0.2.1"
+description = "Thin Python client for the wigolo local-first web intelligence REST API"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+authors = [{ name = "Towhid Khan" }]
+keywords = ["wigolo", "web", "search", "crawl", "fetch", "mcp"]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/KnockOutEZ/wigolo"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/wigolo"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/wigolo",
+  "README.md",
+  "LICENSE",
+]

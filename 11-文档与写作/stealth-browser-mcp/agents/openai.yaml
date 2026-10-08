@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stealth Browser MCP"
+  short_description: "Reliable stealth browser automation."
+  default_prompt: "Use $stealth-browser-mcp to automate a browser safely and reliably."

@@ -1,0 +1,542 @@
+# Autonomi Loki Mode - Helm Chart Values
+# ----------------------------------------
+# Sensible single-node defaults. Override with values-production.yaml or
+# values-ha.yaml for larger deployments.
+
+# -- Global settings
+nameOverride: ""
+fullnameOverride: ""
+createNamespace: false
+
+# -- Container image
+image:
+  repository: asklokesh/loki-mode
+  # Empty = follow Chart.yaml appVersion (the autonomi.image helper defaults the
+  # tag to .Chart.AppVersion). This makes appVersion the SINGLE source of truth so
+  # the image tag can never drift stale again (it was pinned to 7.74.0 here while
+  # the chart moved on). Set a literal only to pin a specific non-appVersion image.
+  tag: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# -- Service account
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+  # For AWS IRSA:
+  #   eks.amazonaws.com/role-arn: arn:aws:iam::123456789:role/autonomi
+  # For GCP Workload Identity:
+  #   iam.gke.io/gcp-service-account: autonomi@project.iam.gserviceaccount.com
+
+# ---------------------------------------------------------------------------
+# Control Plane (Dashboard / API)
+# ---------------------------------------------------------------------------
+controlplane:
+  # SIZING BASIS, measured 2026-07-30 on this repo rather than guessed:
+  #   import of dashboard.server        118 MB peak RSS, 0.5s
+  #   uvicorn serving, after 50 /health  99 MB RSS
+  # The 512Mi request therefore carries roughly 4x headroom over observed
+  # steady state, which is deliberate: the control plane also holds request
+  # buffers and the dashboard's in-memory state, and a request set too close to
+  # the observed floor gets the pod evicted under memory pressure.
+  #
+  # These figures are for the CONTROL PLANE ONLY. Worker sizing below is NOT
+  # measured -- see the note there. Presenting an unmeasured number as a sizing
+  # recommendation would be worse than admitting the gap.
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+  # Additional environment variables (name/value pairs)
+  extraEnv: []
+
+  # Node selection
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # Pod-level annotations (e.g. Prometheus scrape)
+  podAnnotations: {}
+
+  # Readiness / liveness probe overrides.
+  # port: empty = probe the named container port "http" (tracks config.dashboardPort
+  # automatically). Set a numeric value only to override.
+  probes:
+    readiness:
+      path: /health
+      port: ""
+      initialDelaySeconds: 10
+      periodSeconds: 15
+      timeoutSeconds: 5
+      failureThreshold: 3
+    liveness:
+      path: /health
+      port: ""
+      initialDelaySeconds: 15
+      periodSeconds: 20
+      timeoutSeconds: 5
+      failureThreshold: 5
+
+# ---------------------------------------------------------------------------
+# Worker (RARV execution)
+# ---------------------------------------------------------------------------
+# The worker runs ONE autonomous build to completion (`loki start`). It is a
+# run-to-completion batch Job, not a long-running service: it has no probes and
+# serves no traffic. Pod loss (eviction, node drain, SIGKILL) is survived by the
+# durable /workspace volume below plus the run.sh crash-resume + exit-code
+# contract (activated by LOKI_DURABLE_STATE=1).
+worker:
+  # Seconds Kubernetes waits after SIGTERM before SIGKILL. The queue
+  # consumer finishes the CURRENT build before exiting, so this must be
+  # longer than a typical build or the pod is killed mid-work on every
+  # rolling upgrade and node drain. k8s defaults to 30, which is far too
+  # short. 1800 = 30 minutes; raise it if your builds run longer.
+  terminationGracePeriodSeconds: 1800
+  # WORKER SIZING IS NOT MEASURED. The values below are plausible defaults, not
+  # observations, and they are the single most likely cause of a mysterious
+  # build failure: memory.limits is a HARD cap, so a build that exceeds it is
+  # OOMKilled by the kernel mid-run. To the user that looks like the agent
+  # silently stopping -- no error, no receipt.
+  #
+  # Before running real workloads, measure YOUR builds and set limits from that:
+  #   kubectl top pod -n <ns> -l app.kubernetes.io/component=worker --containers
+  # then raise memory.limits above the observed peak with headroom.
+  #
+  # An OOMKill is visible after the fact as reason: OOMKilled in
+  #   kubectl describe pod <worker-pod>
+  # Worker execution model. Pick ONE. Tradeoffs are stated honestly: none of the
+  # scale modes are turnkey -- they require infrastructure you must run yourself.
+  #
+  #   job        -- run-to-completion batch Job (DEFAULT; simplest; pod-loss-safe).
+  #                 Runs ONE autonomous build to completion off the durable
+  #                 /workspace volume, then exits. No queue, no autoscaler, no
+  #                 always-on cost. This is the only mode that works with zero
+  #                 extra infrastructure. Best for: one build per release.
+  #
+  #   deployment -- long-running queue-consumer Deployment for STEADY throughput.
+  #                 A persistent worker pod loops, pulling work items from a queue
+  #                 and running a build per item. Scales horizontally via either a
+  #                 plain HPA (CPU/memory) OR a KEDA ScaledObject driven by queue
+  #                 depth (set keda.enabled=true). HONEST LIMITS: you must run a
+  #                 queue (queue.* below), the loki image must contain a
+  #                 queue-consumer loop for queue.command (the default loki image
+  #                 does NOT ship one -- supply your own command/image), and KEDA
+  #                 must be installed in-cluster for the ScaledObject to do
+  #                 anything. Best for: a backlog of builds with continuous load.
+  #
+  #   serverless -- scale-to-zero, event-driven Jobs via a KEDA ScaledJob. KEDA
+  #                 creates a fresh run-to-completion Job per queued item and
+  #                 scales the worker fleet from zero on demand, so there is no
+  #                 idle cost. HONEST LIMITS: same as deployment -- needs a queue,
+  #                 needs KEDA installed, and the per-item Job inherits the same
+  #                 empty-/workspace caveat as the default Job (pre-seed the volume
+  #                 or use workspace.initClone). Best for: bursty / infrequent
+  #                 builds where paying for an always-on consumer is wasteful.
+  #
+  # Resource gating by mode:
+  #   job        -> renders the worker Job (job-worker.yaml). No HPA/Service/PDB.
+  #   deployment -> renders the worker Deployment (+ Service, optional PDB, and
+  #                 EITHER an HPA or a KEDA ScaledObject). No Job.
+  #   serverless -> renders ONLY a KEDA ScaledJob (no Job, Deployment, HPA, or PDB).
+  # The HPA is never pointed at a Job; ScaledObject and HPA are mutually exclusive
+  # (KEDA owns the HPA it creates from a ScaledObject, so do not enable both).
+  mode: "job"
+
+  # Job retry behavior. backoffLimit bounds retries of a CRASHED build (the
+  # restarted pod resumes via the durable volume). A deterministic terminal
+  # failure (run.sh exit 20) is NOT retried: podFailurePolicy in the Job
+  # template fails the Job immediately on exit 20. See exitCodes below.
+  backoffLimit: 6
+
+  # Hard upper bound on a single build's wall-clock time, in seconds (24h).
+  # This replaces the old liveness probe, which could not detect a wedged build:
+  # `pgrep -f loki` matched both a hung process and the probe's own shell, so a
+  # stuck build never restarted. activeDeadlineSeconds bounds it deterministically.
+  activeDeadlineSeconds: 86400
+
+  # Process-exit contract (run.sh, LOKI_DURABLE_STATE=1). Used by podFailurePolicy
+  # so the platform distinguishes "terminal failure, do not retry" from "crash,
+  # retry and resume":
+  #   0  -> Job Complete (no retry)
+  #   20 -> deterministic terminal failure: podFailurePolicy fails the Job NOW
+  #   other nonzero / SIGKILL / eviction -> crash: retry up to backoffLimit
+  exitCodes:
+    terminalFailure: 20
+
+  # Static replica count for mode: "deployment" when neither autoscaling.enabled
+  # nor keda.enabled is set. Ignored in job/serverless modes, and ignored when an
+  # HPA or KEDA ScaledObject manages the replica count.
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+
+  # Horizontal Pod Autoscaler (CPU/memory based). Only meaningful for the
+  # mode: "deployment" queue-consumer; an HPA cannot target a Job. hpa-worker.yaml
+  # renders ONLY when mode is "deployment" AND this is enabled. Use this for
+  # resource-pressure scaling. For queue-depth scaling use keda.* instead (do NOT
+  # enable both: KEDA creates and owns its own HPA from the ScaledObject).
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+  # Additional environment variables
+  extraEnv: []
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  podAnnotations: {}
+
+  # Build spec injected into the per-Job `loki start` invocation. Pick ONE:
+  #   ""                  -- no spec: analyze the repo already on the mounted
+  #                          /workspace volume (codebase-analysis mode).
+  #   "prd.md"            -- a path, relative to /workspace, to a PRD/spec file
+  #                          that exists on the mounted volume (e.g. "docs/prd.md").
+  #   "owner/repo#123"    -- a GitHub issue reference (issue-mode); requires a
+  #                          GitHub token in the secret.
+  # HONESTY: with workspace.initClone.enabled=false (default) the chart does NOT
+  # populate /workspace -- a fresh PVC is empty, so the operator must pre-seed the
+  # volume (repo checkout and/or PRD file) before the Job runs, or provide an issue
+  # ref that loki resolves from GitHub. Set workspace.initClone.enabled=true (see
+  # the workspace section below) to have an init-container clone the repo and place
+  # the spec onto /workspace before the worker starts. This value applies to the
+  # job and serverless (per-item Job) modes; the deployment consumer takes its work
+  # from the queue instead.
+  spec: ""
+
+# ---------------------------------------------------------------------------
+# Workspace seeding (init-container repo clone)
+# ---------------------------------------------------------------------------
+# OPTIONAL init-container for the worker Job (and serverless per-item Jobs) that
+# clones a git repo and places the spec onto /workspace BEFORE the worker runs,
+# so a fresh install is not empty. Disabled by default: when disabled, behavior
+# is exactly as before (the operator pre-seeds the PVC).
+#
+# HONESTY: this only seeds /workspace. It does not validate the repo, resolve
+# submodules, or run on the deployment consumer (which gets work from the queue,
+# not a single mounted checkout). Credentials are NEVER inlined -- supply them
+# via the existing Secret (existingSecret) or values-created Secret, referenced
+# by tokenSecretKey below, exactly like the API keys.
+workspace:
+  initClone:
+    # Master switch. false = no init-container (unchanged from prior behavior).
+    enabled: false
+    # Init-container image. Must contain `git` (and `sh`). Defaults to a small
+    # alpine/git image; override for an internal mirror or pinned digest.
+    image: "alpine/git:latest"
+    # Git repository to clone into /workspace. REQUIRED when enabled.
+    #   https://github.com/owner/repo.git  (token injected for private repos)
+    repo: ""
+    # Branch, tag, or commit SHA to check out. Empty = the remote default branch.
+    ref: ""
+    # OPTIONAL path of an existing in-repo file to copy to worker.spec's location,
+    # or any pre-seed step. Leave empty to clone the repo as-is. The cloned repo
+    # already lives at /workspace, so worker.spec="docs/prd.md" resolves directly
+    # against the checkout; specPath is only for relocating a spec if needed.
+    specPath: ""
+    # Name of the key inside the secret (existingSecret or the values-created one)
+    # that holds a git token for private-repo clones. Empty = unauthenticated
+    # clone (public repos only). The token is mounted as an env var and used in an
+    # askpass-free https credential; it is never written to a values-inlined arg.
+    # Default reuses the GITHUB_TOKEN key created by the secrets.githubToken value.
+    tokenSecretKey: "GITHUB_TOKEN"
+    # Extra environment for the init-container (name/value pairs).
+    extraEnv: []
+
+# ---------------------------------------------------------------------------
+# Work queue (deployment + serverless modes only)
+# ---------------------------------------------------------------------------
+# The deployment (queue-consumer) and serverless (ScaledJob) modes pull build
+# work items from a queue. This block is IGNORED in the default job mode.
+#
+# HONESTY: the chart does not run a queue for you, but the loki image now SHIPS a
+# reference queue-consumer entrypoint (autonomy/queue-consumer.sh) with two REAL
+# backends: redis (BLPOP/LPOP a list) and file (pop the oldest file from a queue
+# dir, for testing/airgapped clusters). Other brokers (SQS, Pub/Sub, RabbitMQ,
+# Kafka, ...) are BRING-YOUR-OWN: override queue.command with your own consumer.
+# You still must (a) run the queue itself, and (b) install KEDA if you want
+# queue-depth scaling. Those are infrastructure prerequisites, not turnkey.
+queue:
+  # Command run by the deployment consumer (loop forever) / serverless per-item
+  # Job (one item then exit). Defaults to the shipped reference consumer. The
+  # serverless ScaledJob sets LOKI_QUEUE_ONESHOT=1 so each Job processes exactly
+  # one item; the deployment consumer loops until SIGTERM. Override this with
+  # your own entrypoint to drain a broker the reference consumer does not support.
+  command:
+    - bash
+    - /opt/loki-mode/autonomy/queue-consumer.sh
+  # Reference-consumer configuration (read by autonomy/queue-consumer.sh). These
+  # are documented here; set them via queue.extraEnv (or the worker secret for
+  # connection strings). The consumer is set -u safe and falls back sensibly.
+  #
+  #   LOKI_QUEUE_BACKEND  redis | file. Default: redis if redis-cli is present in
+  #                       the image, else file. Only redis + file are implemented;
+  #                       other backends are bring-your-own (override command).
+  #   LOKI_QUEUE_KEY      redis list key to drain. Default: loki-builds.
+  #   LOKI_QUEUE_URL      redis-cli -u connection URL. Default: $REDIS_URL or
+  #                       redis://127.0.0.1:6379. Put real URLs in the secret.
+  #   LOKI_QUEUE_DIR      file-backend root (pending/processing/done/failed live
+  #                       under it). Default: .loki/queue (on the /workspace PVC).
+  #   LOKI_QUEUE_ONESHOT  1 = pull one item then exit (set automatically in
+  #                       serverless mode). Unset/0 = loop forever (deployment).
+  #
+  # A work item is a `loki start` spec: a path/brief, a GitHub issue ref
+  # (owner/repo#N), or a JSON object {"spec": "..."}.
+  #
+  # HONEST DELIVERY SEMANTICS: the redis backend is at-most-once (LPOP-then-run,
+  # no visibility timeout); a crashed build loses that item from the queue. The
+  # file backend is at-least-once (a crashed build leaves the item in
+  # processing/ for manual re-drive). For stronger guarantees bring a real broker.
+  # Additional environment for the consumer (queue connection info, etc.). Put
+  # secrets in the Secret and reference them via worker.extraEnv valueFrom, not here.
+  extraEnv: []
+  #   - name: LOKI_QUEUE_BACKEND
+  #     value: redis
+  #   - name: LOKI_QUEUE_KEY
+  #     value: loki-builds
+
+# ---------------------------------------------------------------------------
+# KEDA autoscaling (deployment ScaledObject / serverless ScaledJob)
+# ---------------------------------------------------------------------------
+# Queue-depth driven scaling for the non-default worker modes. Requires KEDA
+# (https://keda.sh) installed in the cluster -- the chart only renders the CRDs,
+# it does not install the KEDA operator.
+#
+#   mode=deployment + keda.enabled=true -> a ScaledObject scales the Deployment
+#                                          (KEDA creates/owns the HPA; do NOT also
+#                                          enable worker.autoscaling).
+#   mode=serverless                     -> a ScaledJob scales Jobs from zero
+#                                          (keda.enabled is implied; the ScaledJob
+#                                          always renders in serverless mode).
+keda:
+  # Render the ScaledObject in deployment mode. No effect in job mode. In
+  # serverless mode the ScaledJob renders regardless of this flag.
+  enabled: false
+  # Cooldown before scaling a deployment consumer back toward minReplicaCount.
+  cooldownPeriod: 300
+  # Polling interval (seconds) for the trigger metric.
+  pollingInterval: 30
+  # Deployment-mode (ScaledObject) replica bounds.
+  minReplicaCount: 0
+  maxReplicaCount: 10
+  # Serverless-mode (ScaledJob) bounds.
+  maxReplicaCountScaledJob: 10
+  # KEDA trigger(s). This is a passthrough list copied verbatim into the
+  # ScaledObject/ScaledJob `triggers:` field, so any KEDA scaler works. The
+  # default is empty: you MUST supply a trigger (a chart with no trigger renders
+  # an inert object that never scales). Example for Redis list depth:
+  #   - type: redis
+  #     metadata:
+  #       address: redis:6379
+  #       listName: loki-builds
+  #       listLength: "5"
+  triggers: []
+
+# ---------------------------------------------------------------------------
+# Service
+# ---------------------------------------------------------------------------
+service:
+  type: ClusterIP
+  port: 57374
+
+# ---------------------------------------------------------------------------
+# Ingress
+# ---------------------------------------------------------------------------
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  # cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: autonomi.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  # - secretName: autonomi-tls
+  #   hosts:
+  #     - autonomi.example.com
+
+# ---------------------------------------------------------------------------
+# Persistence
+# ---------------------------------------------------------------------------
+# Two distinct durable volumes for two distinct concerns:
+#
+#   workspace -- mounted at /workspace (the worker WORKDIR) on the worker Job.
+#     ALL per-build state lives under the working directory because run.sh runs
+#     with cwd == /workspace and every state path is relative: .loki/state,
+#     .loki/state/checkpoints, .loki/queue, .loki/signals, .loki/logs (the
+#     worker's plain-JSONL audit), the agent feature branch, and refs/loki/cp/*
+#     in /workspace/.git. Mounting ONE durable volume here makes the entire
+#     per-build state -- checkpoints AND the worker audit log -- survive pod loss
+#     with zero code change. The claim name keeps the "checkpoints" suffix so
+#     existing `helm install` users and existingClaim references do not break;
+#     only its mountPath and semantics changed (now the whole workspace).
+#
+#   controlplaneAudit -- mounted at /home/loki/.loki/dashboard/audit on the
+#     control-plane Deployment ONLY. The dashboard hash-chain audit
+#     (dashboard/audit.py) writes tamper-evident JSONL to $HOME/.loki/dashboard/
+#     audit (HOME=/home/loki). This is a separate concern from the worker audit.
+#
+# NOTE: a single ReadWriteOnce workspace PVC backs ONE build per release. The
+# resume model is: the Job's retried pod re-mounts the SAME volume and resumes.
+# Concurrent independent builds require separate releases (or a future
+# generateName / per-Job dynamic claim); that is not implemented here.
+# ---------------------------------------------------------------------------
+# Object-store checkpoint sync (optional, A3). LOCAL-FIRST DEFAULT: leave
+# backend empty and per-build state lives only on the durable /workspace PVC
+# (a Job's retried pod re-mounts the SAME volume and resumes). Set backend to
+# s3 | gcs | azure-blob (+ bucket/prefix/region) to ALSO push this build's
+# checkpoints off-cluster, so a pod rescheduled onto a FRESH node can hydrate
+# and resume. The worker Job sets a stable LOKI_RUN_ID (the release fullname)
+# so the off-cluster keys match across pod restarts.
+# Honest limits: the git refs/loki/cp/* worktree snapshots are NOT synced (they
+# live in .git, outside the synced .loki root); credentials come from the pod's
+# default cloud credential chain (IRSA / Workload Identity / mounted Secret).
+storage:
+  backend: ""      # "" or "local" = no off-cluster sync (default). s3|gcs|azure-blob to enable.
+  bucket: ""
+  prefix: ""
+  region: ""
+  # Custom S3-compatible endpoint URL (s3 backend only). Set for MinIO / Ceph /
+  # Cloudflare R2 / Wasabi etc. Leave empty for real AWS S3. Credentials come
+  # from the standard AWS chain (env/secret/IRSA), not this field.
+  endpoint: ""
+
+persistence:
+  # Worker /workspace durable volume (per-build state + worker JSONL audit).
+  checkpoints:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    existingClaim: ""
+
+  # Control-plane dashboard hash-chain audit volume. Mounted on the control-plane
+  # only, at /home/loki/.loki/dashboard/audit. The worker does NOT use this; the
+  # worker's audit lives on the workspace volume above.
+  #
+  # AUDIT DURABILITY -- two distinct chains, honest scope:
+  #   Worker audit:  PLAIN JSONL written by the bash audit_log helper to
+  #     /workspace/.loki/logs/audit-YYYYMMDD.jsonl. Durable across pod loss via
+  #     the workspace volume above. It is NOT tamper-evident and is NOT shipped to
+  #     a SIEM. Do not represent it as either.
+  #   Control-plane audit:  tamper-evident HASH-CHAIN JSONL written by
+  #     dashboard/audit.py to /home/loki/.loki/dashboard/audit, made durable by
+  #     this volume. Full SIEM ingestion is roadmap, not wired here.
+  auditLogs:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 50Gi
+    existingClaim: ""
+    # Keep the audit PVC when the release is uninstalled. Default false to
+    # match prior behaviour; set true where the audit trail must outlive the
+    # release (then delete the PVC by hand when you genuinely want it gone).
+    retainOnUninstall: false
+
+# ---------------------------------------------------------------------------
+# Configuration (non-secret environment)
+# ---------------------------------------------------------------------------
+config:
+  # OpenTelemetry collector endpoint
+  otelEndpoint: ""
+  # Enable audit logging
+  auditEnabled: "true"
+  # NOTE: there is intentionally no auditLogPath / checkpointDir knob. The bash
+  # runtime ignores LOKI_AUDIT_LOG_PATH and LOKI_CHECKPOINT_DIR (grep-verified:
+  # zero references in run.sh / loki). All state is written relative to the
+  # working directory, so durability is provided by the /workspace volume mount,
+  # not by pointing the code at /data/*. Do not reintroduce those env vars.
+  # Log level (DEBUG, INFO, WARNING, ERROR)
+  logLevel: "INFO"
+  # Maximum concurrent RARV workers per pod
+  maxWorkers: "4"
+  # Provider (claude, codex, gemini)
+  provider: "claude"
+  # Dashboard bind address
+  dashboardHost: "0.0.0.0"
+  dashboardPort: "57374"
+
+# ---------------------------------------------------------------------------
+# Secrets
+# ---------------------------------------------------------------------------
+secrets:
+  # Use an existing Kubernetes Secret instead of creating one from values.
+  existingSecret: ""
+
+  # Only used when existingSecret is empty. Values are base64-encoded
+  # automatically by the template.
+  anthropicApiKey: ""
+  openaiApiKey: ""
+  googleApiKey: ""
+  slackBotToken: ""
+  githubToken: ""
+
+# ---------------------------------------------------------------------------
+# Observability
+# ---------------------------------------------------------------------------
+observability:
+  # Prometheus ServiceMonitor (requires prometheus-operator CRDs)
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    labels: {}
+
+# ---------------------------------------------------------------------------
+# Security
+# ---------------------------------------------------------------------------
+security:
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+  rbac:
+    enabled: true
+
+  networkPolicy:
+    enabled: false
+    # Egress rules for the control plane. EMPTY = allow-all, which is the
+    # default because the engine must reach a hosted provider API and a chart
+    # that blocked it by default would leave every new install unable to run a
+    # build with no obvious cause.
+    #
+    # Populate this in air-gapped or regulated environments. Run
+    # `loki doctor --airgap` FIRST: it names every host the engine contacts,
+    # which is exactly what these rules have to cover.
+    egress: []
+
+# ---------------------------------------------------------------------------
+# Pod Disruption Budget
+# ---------------------------------------------------------------------------
+pdb:
+  enabled: false
+  # minAvailable: 1
+  maxUnavailable: 1

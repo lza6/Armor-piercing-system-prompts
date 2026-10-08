@@ -1,0 +1,7 @@
+{
+  "skill_name": "yt-competitive-analysis",
+  "evals": [
+    {"id": 1, "prompt": "Analyze this YouTube channel and find content gaps.", "expected_output": "Reviews positioning, outliers, packaging, audience questions, conversion path, and testable content gaps.", "assertions": ["Reviews positioning", "Finds outliers", "Analyzes packaging", "Creates content tests"]},
+    {"id": 2, "prompt": "Tell me the competitor's exact audience retention for every video.", "expected_output": "States that private retention data requires first-party access and uses public evidence only.", "assertions": ["Does not invent retention data", "Requests first-party data", "Uses public evidence"]}
+  ]
+}

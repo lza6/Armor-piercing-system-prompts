@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "outputs": [
+    {
+      "taskId": "fact-001",
+      "facts": [
+        { "taskId": "fact-001", "fact": "TypeScript", "required": true, "category": "factual" },
+        { "taskId": "fact-001", "fact": "type checking", "required": false, "category": "factual" },
+        { "taskId": "fact-001", "fact": "typescriptlang.org", "required": false, "category": "citation" }
+      ]
+    },
+    {
+      "taskId": "fact-002",
+      "facts": [
+        { "taskId": "fact-002", "fact": "LTS", "required": true, "category": "factual" },
+        { "taskId": "fact-002", "fact": "Node.js", "required": true, "category": "factual" },
+        { "taskId": "fact-002", "fact": "nodejs.org", "required": false, "category": "citation" }
+      ]
+    },
+    {
+      "taskId": "fact-003",
+      "facts": [
+        { "taskId": "fact-003", "fact": "vitest.config", "required": true, "category": "factual" },
+        { "taskId": "fact-003", "fact": "test", "required": true, "category": "factual" }
+      ]
+    },
+    {
+      "taskId": "research-001",
+      "facts": [
+        { "taskId": "research-001", "fact": "Playwright", "required": true, "category": "factual" },
+        { "taskId": "research-001", "fact": "Puppeteer", "required": true, "category": "factual" },
+        { "taskId": "research-001", "fact": "browser", "required": true, "category": "factual" }
+      ]
+    },
+    {
+      "taskId": "research-002",
+      "facts": [
+        { "taskId": "research-002", "fact": "FTS5", "required": true, "category": "factual" },
+        { "taskId": "research-002", "fact": "SQLite", "required": true, "category": "factual" }
+      ]
+    },
+    {
+      "taskId": "extract-001",
+      "facts": [
+        { "taskId": "extract-001", "fact": "middleware", "required": true, "category": "factual" },
+        { "taskId": "extract-001", "fact": "request", "required": true, "category": "factual" },
+        { "taskId": "extract-001", "fact": "response", "required": true, "category": "factual" }
+      ]
+    },
+    {
+      "taskId": "extract-002",
+      "facts": [
+        { "taskId": "extract-002", "fact": "launch", "required": true, "category": "factual" },
+        { "taskId": "extract-002", "fact": "headless", "required": false, "category": "factual" }
+      ]
+    },
+    {
+      "taskId": "compare-001",
+      "facts": [
+        { "taskId": "compare-001", "fact": "bun", "required": true, "category": "factual" },
+        { "taskId": "compare-001", "fact": "node", "required": true, "category": "factual" },
+        { "taskId": "compare-001", "fact": "performance", "required": false, "category": "factual" }
+      ]
+    },
+    {
+      "taskId": "docs-001",
+      "facts": [
+        { "taskId": "docs-001", "fact": "zod", "required": true, "category": "factual" },
+        { "taskId": "docs-001", "fact": "schema", "required": true, "category": "factual" }
+      ]
+    },
+    {
+      "taskId": "docs-002",
+      "facts": [
+        { "taskId": "docs-002", "fact": "better-sqlite3", "required": true, "category": "factual" },
+        { "taskId": "docs-002", "fact": "prepare", "required": false, "category": "factual" }
+      ]
+    }
+  ]
+}

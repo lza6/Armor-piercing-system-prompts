@@ -1,0 +1,29 @@
+# wigolo
+
+> wigolo is a local-first web-intelligence server for AI agents: web search, page fetch, site crawl, structured extraction, hybrid semantic discovery, multi-step research, autonomous data gathering, page diffing, change watching, and a persistent local knowledge cache. It runs on the user's machine (Node.js 20+), needs no API keys for core work, and speaks MCP over stdio for local coding agents, MCP over HTTP + a REST API for remote/self-hosted agents, and a plain CLI for scripts. Results are transparent: per-result evidence scores, citations with source spans, per-engine telemetry, honestly labeled failures. All data stays in ~/.wigolo. License: AGPL-3.0-only.
+
+Install: `npx wigolo init` (unattended full setup; `--agents=claude-code` wires an agent)
+
+Website: https://knockoutez.github.io/wigolo/
+Repository: https://github.com/KnockOutEZ/wigolo
+
+## Packages
+
+- npm: `wigolo` (server + CLI), `wigolo-sdk` (TypeScript client), `wigolo-vercel-ai-sdk` (Vercel AI SDK tools)
+- PyPI: `wigolo` (Python client), `wigolo-langchain`, `wigolo-crewai`, `wigolo-llamaindex`
+
+## Docs
+
+- [Docs index](docs/README.md): map of all documentation pages
+- [Getting started](docs/getting-started.md): npx wigolo init, first search, doctor/verify
+- [Installation](docs/installation.md): npm, Docker (ghcr.io/knockoutez/wigolo), MCP bundle/registries, agent auto-wire matrix, uninstall
+- [Configuration](docs/configuration.md): env vars and config.json — search backends (core|searxng|hybrid), fetch/browser knobs, on-device models, optional LLM providers, cache TTLs, serve policy, telemetry (off by default)
+- [Tools](docs/tools.md): the 10 tools — search, fetch, crawl, cache, extract, find_similar, research, agent, diff, watch — with params and response fields
+- [CLI](docs/cli.md): management commands, one-shot tools, interactive shell, --json contract
+- [REST API](docs/rest-api.md): wigolo serve, POST /v1/{tool}, /openapi.json, remote MCP endpoints, fail-closed auth, resource limits
+- [SDKs](docs/sdks.md): wigolo-sdk (TS), wigolo (Python), LangChain/CrewAI/LlamaIndex/Vercel AI SDK integrations
+- [Self-hosting](docs/self-hosting.md): VPS/Docker deployment, tokens, wiring n8n and remote agents, resource sizing, datacenter-IP limits, reverse proxies
+- [Skills](docs/skills.md): 11 agent skill packs, install scopes, receipts model
+- [Plugins](docs/plugins.md): custom search-engine and extractor plugins
+- [Troubleshooting](docs/troubleshooting.md): symptom-to-fix table, blocked_by_challenge, logs, FAQ
+- [Privacy & security](docs/privacy-security.md): local-only data, credential handling, serve hardening, SSRF guards, disclosure policy

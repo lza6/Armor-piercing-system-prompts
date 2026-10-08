@@ -1,0 +1,58 @@
+# Autonomi Loki Mode - Production Values
+# ----------------------------------------
+# Use with: helm install autonomi ./deploy/helm/autonomi -f deploy/helm/autonomi/values-production.yaml
+
+# The control-plane audit log is a single-writer hash chain (dashboard/audit.py),
+# so the audit-writing control plane runs a single replica. >1 replica against
+# the chart's ReadWriteOnce audit volume is rejected by a render-time preflight
+# (it would hang extra pods Pending and corrupt the chain if shared RWM). See
+# values-ha.yaml for the full rationale and the horizontal-scale path.
+controlplane:
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "57374"
+    prometheus.io/path: "/metrics"
+
+# The worker is a run-to-completion Job (one build per release). replicas /
+# autoscaling do not apply and are intentionally omitted. Concurrent builds =
+# separate releases.
+worker:
+  resources:
+    requests:
+      cpu: "1"
+      memory: 2Gi
+    limits:
+      cpu: "4"
+      memory: 4Gi
+
+persistence:
+  # /workspace durable volume (per-build state + worker JSONL audit).
+  checkpoints:
+    enabled: true
+    size: 50Gi
+
+  # Control-plane hash-chain audit volume.
+  auditLogs:
+    enabled: true
+    size: 100Gi
+
+config:
+  logLevel: "WARNING"
+  maxWorkers: "8"
+
+security:
+  networkPolicy:
+    enabled: true
+
+  rbac:
+    enabled: true

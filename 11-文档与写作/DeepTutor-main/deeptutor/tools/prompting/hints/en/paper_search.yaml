@@ -1,0 +1,6 @@
+short_description: "Search arXiv papers for academic background and recent methods."
+when_to_use: "Use when the task needs research literature, state-of-the-art methods, or scholarly references."
+input_format: "A concise keyword query, usually in English."
+guideline: "Use paper search for research-oriented questions, not standard textbook knowledge."
+note: "Paper search is strongest for academic topics and current research trends."
+phase: "expansion"

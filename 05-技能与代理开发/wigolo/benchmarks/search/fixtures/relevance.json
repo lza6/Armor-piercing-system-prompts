@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "judgments": [
+    { "queryId": "docs-001", "url": "https://www.typescriptlang.org/docs/handbook/utility-types.html", "grade": 3 },
+    { "queryId": "docs-001", "url": "https://www.typescriptlang.org/docs/handbook/2/mapped-types.html", "grade": 2 },
+    { "queryId": "docs-001", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object", "grade": 0 },
+    { "queryId": "docs-002", "url": "https://playwright.dev/docs/api/class-page#page-goto", "grade": 3 },
+    { "queryId": "docs-002", "url": "https://playwright.dev/docs/navigations", "grade": 2 },
+    { "queryId": "error-001", "url": "https://stackoverflow.com/questions/14782232/how-to-avoid-cannot-read-properties-of-undefined", "grade": 3 },
+    { "queryId": "error-002", "url": "https://stackoverflow.com/questions/20259473/econnrefused", "grade": 3 },
+    { "queryId": "concept-001", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop", "grade": 3 },
+    { "queryId": "concept-001", "url": "https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick", "grade": 2 },
+    { "queryId": "code-001", "url": "https://expressjs.com/en/guide/error-handling.html", "grade": 3 },
+    { "queryId": "multi-001", "url": "https://vitest.dev/api/vi.html", "grade": 3 },
+    { "queryId": "multi-001", "url": "https://vitest.dev/guide/mocking.html", "grade": 2 },
+
+    { "queryId": "tutorial-001", "url": "https://react.dev/reference/react/useEffect#specifying-reactive-dependencies", "grade": 3 },
+    { "queryId": "tutorial-001", "url": "https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development", "grade": 2 },
+    { "queryId": "tutorial-001", "url": "https://blog.logrocket.com/understanding-react-useeffect-cleanup-function/", "grade": 2 },
+
+    { "queryId": "tutorial-002", "url": "https://docs.python.org/3/library/asyncio-task.html#asyncio.gather", "grade": 3 },
+    { "queryId": "tutorial-002", "url": "https://docs.python.org/3/library/asyncio-task.html#asyncio.wait", "grade": 3 },
+    { "queryId": "tutorial-002", "url": "https://stackoverflow.com/questions/42231161/asyncio-gather-vs-asyncio-wait", "grade": 2 },
+
+    { "queryId": "api-001", "url": "https://docs.github.com/en/rest/pulls/pulls#create-a-pull-request", "grade": 3 },
+    { "queryId": "api-001", "url": "https://docs.github.com/en/rest/pulls", "grade": 2 },
+    { "queryId": "api-001", "url": "https://stackoverflow.com/questions/19614550/how-to-create-pull-request-using-github-api", "grade": 1 },
+
+    { "queryId": "api-002", "url": "https://stripe.com/docs/api/payment_intents/create", "grade": 3 },
+    { "queryId": "api-002", "url": "https://stripe.com/docs/payments/payment-intents", "grade": 2 },
+
+    { "queryId": "comparison-001", "url": "https://bun.sh/docs/benchmarks", "grade": 2 },
+    { "queryId": "comparison-001", "url": "https://medium.com/@bun-vs-node/bun-vs-node-js-performance-comparison-2024", "grade": 1 },
+    { "queryId": "comparison-001", "url": "https://www.phoronix.com/review/bun-nodejs-benchmarks", "grade": 2 },
+
+    { "queryId": "comparison-002", "url": "https://www.postgresql.org/docs/current/datatype-json.html", "grade": 3 },
+    { "queryId": "comparison-002", "url": "https://dev.mysql.com/doc/refman/8.0/en/json.html", "grade": 3 },
+    { "queryId": "comparison-002", "url": "https://www.percona.com/blog/postgresql-vs-mysql-json-support/", "grade": 2 },
+
+    { "queryId": "recent-001", "url": "https://deno.com/blog/v2.0", "grade": 3 },
+    { "queryId": "recent-001", "url": "https://docs.deno.com/runtime/manual/advanced/migrate_deprecations", "grade": 2 },
+
+    { "queryId": "recent-002", "url": "https://devblogs.microsoft.com/typescript/announcing-typescript-5-5/", "grade": 3 },
+    { "queryId": "recent-002", "url": "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-5.html", "grade": 3 },
+    { "queryId": "recent-002", "url": "https://www.totaltypescript.com/typescript-5-5", "grade": 1 },
+
+    { "queryId": "debug-001", "url": "https://nodejs.org/api/addons.html", "grade": 2 },
+    { "queryId": "debug-001", "url": "https://github.com/nicolo-ribaudo/tc39-proposal-nodejs-debugging/issues/1", "grade": 0 },
+    { "queryId": "debug-001", "url": "https://stackoverflow.com/questions/25400524/node-js-native-addon-segfault-debugging", "grade": 3 },
+
+    { "queryId": "debug-002", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS", "grade": 3 },
+    { "queryId": "debug-002", "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSPreflightDidNotSucceed", "grade": 3 },
+    { "queryId": "debug-002", "url": "https://stackoverflow.com/questions/21783079/cors-preflight-request-failing", "grade": 2 },
+
+    { "queryId": "config-001", "url": "https://nginx.org/en/docs/http/websocket.html", "grade": 3 },
+    { "queryId": "config-001", "url": "https://www.nginx.com/blog/websocket-nginx/", "grade": 2 },
+
+    { "queryId": "config-002", "url": "https://docs.docker.com/compose/compose-file/05-services/#healthcheck", "grade": 3 },
+    { "queryId": "config-002", "url": "https://docs.docker.com/engine/reference/builder/#healthcheck", "grade": 2 },
+    { "queryId": "config-002", "url": "https://stackoverflow.com/questions/42567475/docker-compose-check-if-service-is-healthy", "grade": 1 },
+
+    { "queryId": "security-001", "url": "https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/", "grade": 3 },
+    { "queryId": "security-001", "url": "https://datatracker.ietf.org/doc/html/rfc6749#section-10.4", "grade": 2 },
+    { "queryId": "security-001", "url": "https://stackoverflow.com/questions/27726066/jwt-refresh-token-flow", "grade": 2 },
+
+    { "queryId": "multi-002", "url": "https://react.dev/reference/rsc/server-components", "grade": 3 },
+    { "queryId": "multi-002", "url": "https://nextjs.org/docs/app/building-your-application/rendering/server-components", "grade": 3 },
+    { "queryId": "multi-002", "url": "https://nextjs.org/docs/app/building-your-application/routing", "grade": 2 }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "skill_name": "marketing-os",
+  "evals": [
+    {"id": 1, "prompt": "Build a 90-day marketing operating system for my SaaS.", "expected_output": "Checks context, selects an outcome, routes to specialist skills, defines metrics, tools, review gates, and next actions.", "assertions": ["Checks product context", "Selects a primary outcome", "Routes to specialist skills", "Defines metrics and review gates"]},
+    {"id": 2, "prompt": "I have no product context yet. Write my full launch campaign.", "expected_output": "Stops for missing context and routes to product-marketing before producing campaign assets.", "assertions": ["Detects missing context", "Does not invent campaign details", "Routes to product-marketing"]}
+  ]
+}

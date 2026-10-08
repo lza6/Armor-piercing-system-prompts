@@ -1,0 +1,62 @@
+# wigolo in HTTP serve mode (StreamableHTTP + SSE MCP transport).
+#
+# Unlike the default stdio image command, `serve` exposes an HTTP daemon with a
+# /health endpoint, so this compose snippet adds a healthcheck. Use this for
+# remote / multi-client MCP setups; for a single local stdio client, prefer the
+# plain `docker run -i` line from the README (no compose, no port).
+#
+#   docker compose -f packaging/compose.serve.yml up
+#
+# The named volume persists the local cache, on-device models, the browser
+# engine binary, and encrypted keys across restarts. Point MCP clients at
+# http://localhost:3333/mcp (StreamableHTTP) or /sse.
+#
+# The daemon also serves a REST API at /v1 (OpenAPI at /openapi.json) — see the
+# "REST API & self-host" section of the README.
+#
+# NON-LOOPBACK BIND REQUIRES A TOKEN. This snippet binds --host 0.0.0.0 inside
+# the container so the published port is reachable, which is a non-loopback
+# bind: the daemon FAILS CLOSED and refuses to start unless you set
+# WIGOLO_API_TOKEN (uncomment below) or explicitly opt into open access with
+# --allow-unauthenticated. Uncomment the token line before `up`, or the
+# container will exit on start.
+
+services:
+  wigolo:
+    image: ghcr.io/knockoutez/wigolo
+    # Bind the daemon to all interfaces INSIDE the container so the published
+    # port is reachable; the port is only exposed to the host below.
+    command: ["serve", "--host", "0.0.0.0", "--port", "3333"]
+    ports:
+      - "3333:3333"
+    volumes:
+      - wigolo-data:/data
+    environment:
+      # Keyless + local by default. Add an LLM provider + key here to enable
+      # answer synthesis, e.g. WIGOLO_LLM_PROVIDER / GEMINI_API_KEY.
+      WIGOLO_DATA_DIR: /data
+      # REQUIRED for this 0.0.0.0 bind — set a long random secret. Bearer this
+      # token on every /v1, /openapi.json, shim, and MCP request.
+      # WIGOLO_API_TOKEN: "change-me-to-a-long-random-secret"
+      #
+      # File-based alternative (keeps the token out of `docker inspect` /
+      # /proc/<pid>/environ — pair with a Docker/compose secret mount):
+      # WIGOLO_API_TOKEN_FILE: /run/secrets/wigolo_token
+      #
+      # To bind publicly WITHOUT a token (only behind your own auth proxy),
+      # opt in explicitly instead of setting a token:
+      # WIGOLO_SERVE_ALLOW_UNAUTHENTICATED: "1"
+    healthcheck:
+      # The daemon serves /health over HTTP; the stdio default command does not,
+      # which is why no healthcheck is baked into the image itself.
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3333/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      # Generous grace period: the first request may trigger on-device model
+      # and browser-engine downloads into the volume.
+      start_period: 120s
+    restart: unless-stopped
+
+volumes:
+  wigolo-data:

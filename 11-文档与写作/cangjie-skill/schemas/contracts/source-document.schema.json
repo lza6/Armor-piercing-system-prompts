@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cangjie-skill.org/schemas/contracts/source-document.schema.json",
+  "title": "SourceDocument Contract v1",
+  "description": "核心共享契约（ADR-003）：外部预处理仓库必须遵守。核心自身首版只处理原生 Markdown/TXT。",
+  "type": "object",
+  "required": ["schema_version", "source_id", "version_id", "title", "media_type", "elements"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "source_id": { "type": "string", "description": "稳定 ID，文件改名不得自动变成新来源" },
+    "version_id": { "type": "string", "pattern": "^sha256:[0-9a-f]+$", "description": "由规范化字节确定性计算" },
+    "title": { "type": "string" },
+    "media_type": { "enum": ["markdown", "txt", "pdf", "html", "epub", "docx", "pptx", "xlsx", "subtitle", "audio", "video"] },
+    "language": { "type": "array", "items": { "type": "string" } },
+    "parser": { "type": "string", "description": "解析器名称@版本" },
+    "elements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["element_id", "type", "content_hash"],
+        "properties": {
+          "element_id": { "type": "string", "pattern": "^el-[0-9]{6}$" },
+          "type": { "enum": ["heading", "paragraph", "list", "table", "image", "formula", "transcript", "frame", "code"] },
+          "text": { "type": "string" },
+          "heading_path": { "type": "array", "items": { "type": "string" } },
+          "page": { "type": ["integer", "null"] },
+          "time_start_ms": { "type": ["integer", "null"] },
+          "time_end_ms": { "type": ["integer", "null"] },
+          "bbox": { "type": ["array", "null"], "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+          "asset_ref": { "type": ["string", "null"] },
+          "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+          "content_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]+$" }
+        }
+      }
+    }
+  }
+}

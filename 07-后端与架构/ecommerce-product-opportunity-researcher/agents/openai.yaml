@@ -1,0 +1,11 @@
+interface:
+  display_name: E-commerce Product Opportunity Researcher
+  short_description: Find and validate ecommerce product opportunities
+  default_prompt: Use $ecommerce-product-opportunity-researcher to find, score, and validate product opportunities for my market.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

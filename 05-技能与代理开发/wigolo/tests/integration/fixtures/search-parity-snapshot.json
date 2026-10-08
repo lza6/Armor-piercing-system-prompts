@@ -1,0 +1,13 @@
+{
+  "_comment": "Scaffold snapshot for tests/integration/search-legacy-parity.test.ts. The parity test is gated on RUN_LEGACY_PARITY=1 because it needs a reachable SearXNG instance. Snapshot regeneration: with WIGOLO_SEARCH=searxng and SearXNG reachable, run `npx tsx scripts/capture-search-parity-snapshot.ts > tests/integration/fixtures/search-parity-snapshot.json`. Snapshot generator script not yet implemented — tracked as Phase 1 follow-up. Until then, RUN_LEGACY_PARITY=1 should not be set.",
+  "queries": [
+    {
+      "query": "typescript provider pattern",
+      "expectedUrls": []
+    },
+    {
+      "query": "vitest skipif pattern",
+      "expectedUrls": []
+    }
+  ]
+}

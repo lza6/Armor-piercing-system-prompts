@@ -1,0 +1,4 @@
+av>=14,<19
+numpy>=2,<3
+opencv-python-headless>=4.10,<6
+Pillow>=11,<13

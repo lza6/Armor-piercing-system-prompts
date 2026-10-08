@@ -1,0 +1,12 @@
+{
+  "TARGET_URL": "https://example.com/api/search",
+  "HOME_URL": "https://example.com/",
+  "INIT_URL": "https://example.com/api/init",
+  "METHOD": "GET",
+  "USER_AGENT": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+  "IMPERSONATE": "chrome135",
+  "SIGN_PARAM_NAME": "sign",
+  "DEVICE_COOKIE": "",
+  "extraHeaders": {},
+  "responseValidation": null
+}

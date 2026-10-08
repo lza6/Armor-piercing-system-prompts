@@ -1,0 +1,52 @@
+{
+  "skill": "game-selection",
+  "version": "0.1.0",
+  "source_book": "《纳瓦尔宝典：财富与幸福指南》 — 纳瓦尔·拉维坎特",
+  "darwin_compatible": true,
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "同事总在背后贬低我的项目，我该反击吗？",
+      "expected_behavior": "激活 game-selection, 识别地位游戏(零和)并给出不应战/回到正和与内在记分卡的建议",
+      "notes": "正面场景: 被攻击时识别游戏"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "看到朋友创业成功，我心里酸酸的，怎么处理这种妒忌？",
+      "expected_behavior": "激活 game-selection, 用妒忌消解法(要么完全交换身份要么不妒忌)+单人游戏校准",
+      "notes": "正面场景: 妒忌消解"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "大家都卷学历卷职位，我该加入还是退出？",
+      "expected_behavior": "激活 game-selection, 分析零和地位游戏结构并给退出/重定义记分卡建议",
+      "notes": "正面场景: 内卷识别"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "和认识多年的老朋友该不该继续深交？",
+      "expected_behavior": "不应激活本 skill 为主, 应激活 long-term-compounding (复利) 或 peer-selection (同伴)",
+      "notes": "跨 skill 混淆诱饵: 博弈分类 vs 关系决策"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "帮我翻译这段英文",
+      "expected_behavior": "翻译任务, 不调用任何 skill",
+      "notes": "诱饵: 非求助场景"
+    },
+    {
+      "id": "edge-01",
+      "type": "edge_case",
+      "prompt": "我在公司必须参与晋升竞争，这算地位游戏吗？怎么玩不伤自己？",
+      "expected_behavior": "边缘: 激活, 承认必要的位置游戏, 给出'把它当工具而非身份'的参与方式与内在记分卡保护",
+      "notes": "边界: 必须参与的零和游戏"
+    }
+  ],
+  "minimum_pass_rate": 0.8,
+  "notes": "3 条 should_trigger + 2 条 should_not_trigger(含 1 条跨 skill 诱饵) + 1 条 edge_case"
+}

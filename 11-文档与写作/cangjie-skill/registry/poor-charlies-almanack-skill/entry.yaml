@@ -1,0 +1,13 @@
+schema_version: 1
+slug: poor-charlies-almanack-skill
+name: 穷查理宝典 Skill
+summary: 将查理·芒格的多元思维模型转化为决策、判断与反偏差工具。
+source_type: github
+source_url: https://github.com/kangarooking/poor-charlies-almanack-skill
+skill_count: 12
+domains: [决策, 投资]
+language: [zh-CN]
+status: active
+quality: verified
+featured: true
+use_cases: [组合多元思维模型, 检查决策偏差, 复盘错误判断]

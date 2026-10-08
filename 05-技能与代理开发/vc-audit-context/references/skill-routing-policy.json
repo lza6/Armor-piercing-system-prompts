@@ -1,0 +1,8 @@
+{
+  "canonicalRoutingSurfaces": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "process/context/generated-skills-catalog.json"
+  ],
+  "allowlistedSkills": {}
+}

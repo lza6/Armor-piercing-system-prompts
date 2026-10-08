@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sponsor forwarding hops. Not destinations, and a crawler fetching one would
+# count as a click — which would inflate what we report to sponsors.
+Disallow: /go/
+
+Sitemap: https://knockoutez.github.io/wigolo/sitemap.xml
