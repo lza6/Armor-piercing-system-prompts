@@ -235,38 +235,6 @@ cangjie-skill 是一个更大的 skill 生态的一部分：
 - [shenqistart](https://github.com/shenqistart) — 贡献外部 [book2skill](https://github.com/shenqistart/book2skill) 引用，并补充中英日 README 更新
 - [qbdx-hub](https://github.com/qbdx-hub) — 贡献 6 个 Cangjie 整书/章节蒸馏示例仓库，并补充中英日 README 引用
 
-## 关于作者
-
-**袋鼠帝 kangarooking** — AI 博主，独立开发者。AI Top 公众号「袋鼠帝 AI 客栈」主理人
-
-<img src="https://raw.githubusercontent.com/kangarooking/cangjie-skill/main/assets/wechat-personal-qr.jpg" width="220" alt="袋鼠帝个人微信二维码">
-
-火山引擎领航 KOL，百度千帆开发者大使，GLM 布道师，Trae 昆明第一任 Fellow
-
-| 平台 | 链接 |
-|------|------|
-| 𝕏 Twitter（袋鼠帝） | https://x.com/aikangarooking |
-| 小红书（袋鼠帝） | https://xhslink.com/m/5YejKvIDBbL |
-| 抖音（袋鼠帝） | https://v.douyin.com/hYpsjphuuKc |
-| 公众号 | 袋鼠帝 AI 客栈 |
-| 视频号 | AI 袋鼠帝 |
-
-微信公众号「袋鼠帝 AI 客栈」二维码：
-
-![](https://raw.githubusercontent.com/kangarooking/cangjie-skill/main/assets/kangarooking-gzh.png)
-
-如果你也想把书、长视频、播客、课程里的方法论蒸馏成可调用的 Agent Skills，欢迎加入 cangjie-skill 企微交流群：
-
-<img src="https://raw.githubusercontent.com/kangarooking/cangjie-skill/main/assets/wecom-cangjie-group-qr.png" width="220" alt="cangjie-skill 企微交流群二维码">
-
-## ⭐ Star History
-
-如果这个项目帮到了你，点个 Star 支持一下～
-
-<a href="https://www.star-history.com/?repos=kangarooking%2Fcangjie-skill&type=date&legend=top-left">
- <img alt="Star History Chart" src="./assets/star-history.svg" />
-</a>
-
 ## License
 
 MIT License. See [LICENSE](./LICENSE).

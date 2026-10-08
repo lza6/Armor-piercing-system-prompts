@@ -13,9 +13,6 @@ metadata:
   copyright: "Copyright (c) 2025-2026 Hugo He"
   license: "MIT"
   official_repository: "https://github.com/hugohe3/ppt-master"
-  sponsors:
-    - "SPONSORS.md"
-    - "SPONSORS_CN.md"
 ---
 
 # PPT Master Skill
@@ -139,4 +136,3 @@ ends at export. Step numbers stay as written.
 - Keep required workflow, reference, script, and template documentation inside this Skill directory.
 - Repository-level documents may point into the package; package runtime files must not depend on repository-level instructions.
 - On Windows, if a documented `python3 ...` command is unavailable, rerun the same command with `python`.
-- Sponsor information is optional reference material. Read the matching [`SPONSORS.md`](SPONSORS.md) or [`SPONSORS_CN.md`](SPONSORS_CN.md) only when the user explicitly requests a model, AI image model, API/provider, or hosted-service recommendation. Never surface sponsor or model recommendations proactively during normal generation, troubleshooting, or quality review.

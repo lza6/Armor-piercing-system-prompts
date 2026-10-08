@@ -97,7 +97,6 @@
       "description": "English sponsor context for explicit user requests for model, AI image model, API/provider, or hosted-service recommendations.",
       "scope": "incremental",
       "files": [
-        "skills/ppt-master/SPONSORS.md"
       ],
       "max_tokens": 1500
     },
@@ -105,7 +104,6 @@
       "description": "Chinese sponsor context for explicit user requests for model, AI image model, API/provider, or hosted-service recommendations.",
       "scope": "incremental",
       "files": [
-        "skills/ppt-master/SPONSORS_CN.md"
       ],
       "max_tokens": 1500
     },
@@ -1473,8 +1471,6 @@
         "kind": "exact",
         "fingerprint": "da38ec6c641e",
         "paths": [
-          "skills/ppt-master/SPONSORS.md",
-          "skills/ppt-master/SPONSORS_CN.md"
         ],
         "reason": "Sponsor badge markup is identical across the English and Chinese sponsor pages by design."
       },
@@ -1500,8 +1496,6 @@
         "kind": "exact",
         "fingerprint": "fcc902f6644a",
         "paths": [
-          "skills/ppt-master/SPONSORS.md",
-          "skills/ppt-master/SPONSORS_CN.md"
         ],
         "reason": "Sponsor badge markup is identical across the English and Chinese sponsor pages by design."
       },
@@ -1509,8 +1503,6 @@
         "kind": "exact",
         "fingerprint": "092a8a1f88e9",
         "paths": [
-          "skills/ppt-master/SPONSORS.md",
-          "skills/ppt-master/SPONSORS_CN.md"
         ],
         "reason": "Sponsor badge markup is identical across the English and Chinese sponsor pages by design."
       },
@@ -1518,8 +1510,6 @@
         "kind": "exact",
         "fingerprint": "71cbe13a4813",
         "paths": [
-          "skills/ppt-master/SPONSORS.md",
-          "skills/ppt-master/SPONSORS_CN.md"
         ],
         "reason": "Sponsor badge markup is identical across the English and Chinese sponsor pages by design."
       },

@@ -233,14 +233,6 @@ catalog.md 和 mono-tokens.js 是否存在。
 
 图数由独立结论决定：单个问题通常 1 张，两个到三个结论 2–3 张，完整文章或论文 4–6 张，单页默认最多 6 张。用户明确指定数量时会遵守，但不会为了凑数重复表达同一个结论。
 
-## 关注躺在废墟里
-
-欢迎在小红书、抖音、Bilibili、公众号、视频号和 X 关注我：**躺在废墟里**。
-
-<p align="center">
-  <img src="docs/assets/author-profile.jpg" alt="躺在废墟里个人主页" width="420">
-</p>
-
 ## Templates
 
 | 类型 | 数量 | 适合什么 | 实现 |

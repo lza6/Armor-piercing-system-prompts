@@ -20,23 +20,6 @@
 
 ---
 
-## Support the Project
-
-If you find this collection valuable and appreciate the effort involved in obtaining and sharing these insights, please consider supporting the project.
-
-You can show your support via:
-
-- **Cryptocurrency:**  
-  - **BTC:** `bc1q7zldmzjwspnaa48udvelwe6k3fef7xrrhg5625`  
-  - **LTC:** `LRWgqwEYDwqau1WeiTs6Mjg85NJ7m3fsdQ`  
-  - **ETH:** `0x3f844B2cc3c4b7242964373fB0A41C4fdffB192A`
-- **Patreon:** https://patreon.com/lucknite
-- **Ko-fi:** https://ko-fi.com/lucknite
-
-Thank you for your support!
-
----
-
 # Sponsors
 
 Sponsor the most comprehensive repository of AI system prompts and reach thousands of developers.
@@ -59,4 +42,3 @@ Sponsor the most comprehensive repository of AI system prompts and reach thousan
 - **Discord**: `x1xhlol`
 - **Email**: `lucasvalbuena@pm.me`
 
-**Drop a star if you find this useful!**

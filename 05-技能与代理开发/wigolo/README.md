@@ -128,25 +128,6 @@ Here's what one real result looks like, dissected. It includes the failed engine
 
 </div>
 
-## Sponsors
-
-Thank you to the sponsors below, who help keep wigolo maintained and free for everyone to use. Their support goes straight into the work.
-
-<div align="center">
-
-<a href="https://knockoutez.github.io/wigolo/go/testmu/?ref=readme">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="assets/sponsors/testmu-ai-dark.svg">
-<img alt="TestMu AI" src="assets/sponsors/testmu-ai.svg" width="240">
-</picture>
-</a>
-
-<sub>**[TestMu AI](https://knockoutez.github.io/wigolo/go/testmu/?ref=readme)** (formerly LambdaTest) is the world's first full-stack agentic AI quality engineering platform, trusted by 18,000+ enterprises.</sub>
-
-</div>
-
-**wigolo is free for all and is meant to stay that way.** If you or your company would like to help keep it maintained, there's room for more sponsors — reach out at **[ktowhid20@gmail.com](mailto:ktowhid20@gmail.com)**, or see [SPONSORS.md](SPONSORS.md) for the terms. A one-off via [Buy Me a Coffee](https://buymeacoffee.com/knockoutez) is welcome too.
-
 ## Benchmark
 
 > **All four tools converged on the same core answer, and only one of them handed back verbatim, byte-pinned evidence while doing it.**
@@ -350,7 +331,6 @@ wigolo is in **public beta**. Everything documented here works and is held to a 
 - 💡 **[Request a feature](https://github.com/KnockOutEZ/wigolo/issues/new?template=feature_request.yml)** — something it should do
 - 💬 **[Ask anything](https://github.com/KnockOutEZ/wigolo/discussions)** — questions, setups, show & tell
 
-If wigolo earns a place in your setup, three things keep it going: a ⭐ **star** (it's how open source gets found), a **[☕ coffee](https://buymeacoffee.com/knockoutez)** (there's no paid tier and never will be), or **[an email](mailto:ktowhid20@gmail.com)** that goes straight to the one developer who wrote the code.
 
 ## Troubleshooting
 
@@ -428,9 +408,5 @@ Bug reports, feature requests, and PRs are all welcome; see **[CONTRIBUTING.md](
 <div align="center">
 <br>
 
-wigolo is free and actively maintained, and it's meant to stay that way.
-If it saves you a metered search bill, a ⭐, a sharp issue, or a **[☕ coffee](https://buymeacoffee.com/knockoutez)** helps keep it sustainable.
-
-<sub>Built and maintained by <a href="https://github.com/KnockOutEZ">@KnockOutEZ</a> · <a href="mailto:ktowhid20@gmail.com">ktowhid20@gmail.com</a> · <a href="https://x.com/yourtowhid">X</a> · <a href="https://www.linkedin.com/in/yourtowhid/">LinkedIn</a></sub>
 
 </div>

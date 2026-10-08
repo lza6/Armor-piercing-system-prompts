@@ -91,16 +91,9 @@ This project collects and organizes system prompts from various mainstream LLMs,
 
 如有任何问题或建议，欢迎通过以下方式联系：
 
-- **微信公众号**：云中江树
 - **Email**：contact@langgpt.ai
 - **GitHub Issues**：在本项目中提出 Issue
 
-## 🙏 致谢 | Acknowledgments
-
-感谢所有为本项目做出贡献的开发者和社区成员！
 
 ---
 
-**Created by 云中江树 (微信公众号：云中江树)**
-
-*如果这个项目对您有帮助，请给我们一个 ⭐！*
